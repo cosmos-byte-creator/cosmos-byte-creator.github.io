@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cosmos Burger — Variações de intro</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #070605; color: #fff4e6; }
+    body { margin: 0; padding: 32px; }
+    h1 { margin: 0 0 8px; color: #f7a13a; }
+    p { color: #c9b9a7; margin: 0 0 28px; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    article { background: #120e0a; border: 1px solid #3a2513; border-radius: 12px; overflow: hidden; }
+    h2 { font-size: 15px; margin: 14px 16px; letter-spacing: .06em; color: #ffc36d; }
+    video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
+  </style>
+</head>
+<body>
+  <h1>Variações de intro</h1>
+  <p>Prévia local — nenhum destes vídeos está conectado à landing page.</p>
+  <main id="grid"></main>
+  <script>
+    const grid = document.querySelector('#grid');
+    for (let n = 1; n <= 10; n += 1) {
+      const id = String(n).padStart(2, '0');
+      grid.insertAdjacentHTML('beforeend', `<article><h2>INTRO VARIAÇÃO ${id}</h2><video controls preload="metadata" poster="videos-intro/poster-${id}.jpg"><source src="videos-intro/intro-variacao-${id}.mp4" type="video/mp4"></video></article>`);
+    }
+  </script>
+</body>
+</html>

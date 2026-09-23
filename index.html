@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cosmos Burguer — cardápio</title>
+<meta name="description" content="Sete hambúrgueres artesanais inspirados no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
+<meta name="theme-color" content="#07060A">
+<script>(function(){var p=new URLSearchParams(location.search).get("preview");if(p){document.documentElement.classList.add("preview");document.documentElement.dataset.preview=p}})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@85..125,400..900&amp;display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   COSMOS BURGUER — folha de estilo
+   Organização: 1 tokens · 2 base · 3 abertura · 4 header · 5 hero
+                6 planetas · 7 cards · 8 listas · 9 carrinho · 10 missão
+   ========================================================================= */
+
+/* ---------- 1. TOKENS ---------- */
+:root{
+  color-scheme: dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  --vazio:#07060A;
+  --fundo:#0C0A11;
+  --painel:#14111B;
+  --painel-alto:#1B1622;
+  --linha:rgba(255,255,255,.075);
+  --creme:#F4EBE0;
+  --fosco:#A3958C;
+  --brasa:#FF6A13;
+  --ouro:#FFC24B;
+  --magma:#8E1C07;
+  --ameixa:#241834;
+
+  --r-card:16px;
+  --r-pill:999px;
+  --t-rapido:140ms;
+  --t-medio:260ms;
+  --ease:cubic-bezier(.22,.7,.3,1);
+
+  --gap:16px;
+  --borda-pag:18px;
+  --barra:74px; /* altura da barra do carrinho */
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth; scroll-padding-top:calc(env(safe-area-inset-top, 0px) + 68px); -webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+
+/* ---------- 2. BASE ---------- */
+body{
+  margin:0;
+  background:var(--vazio);
+  color:var(--creme);
+  font-family:"Archivo","Archivo Fallback",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:16px; line-height:1.5;
+  font-variation-settings:"wdth" 100,"wght" 400;
+  overflow-x:hidden;
+}
+body.modal-planeta-aberto{overflow:hidden}
+img{max-width:100%; display:block}
+[hidden]{display:none!important}
+button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ouro); outline-offset:3px; border-radius:6px}
+.oculto-visual{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.env{width:100%; max-width:1180px; margin-inline:auto; padding-inline:var(--borda-pag)}
+
+h1,h2,h3{margin:0; font-variation-settings:"wdth" 118,"wght" 800; letter-spacing:-.01em; line-height:.95; text-transform:uppercase}
+p{margin:0}
+.preco{font-variation-settings:"wdth" 100,"wght" 700; font-variant-numeric:tabular-nums; color:var(--ouro)}
+
+/* estrelas: 2 camadas em background-image, zero elementos DOM */
+.estrelas{
+  position:absolute; inset:0; pointer-events:none; opacity:.55;
+  background-image:
+    radial-gradient(1.4px 1.4px at 22px 30px, rgba(255,255,255,.75), transparent 60%),
+    radial-gradient(1.2px 1.2px at 140px 88px, rgba(255,235,210,.55), transparent 60%),
+    radial-gradient(1px 1px at 236px 42px, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(1.6px 1.6px at 300px 190px, rgba(255,210,160,.5), transparent 60%),
+    radial-gradient(1px 1px at 76px 210px, rgba(255,255,255,.45), transparent 60%);
+  background-size:360px 260px;
+}
+
+/* ---------- 3. ABERTURA ---------- */
+#abertura{
+  position:fixed; inset:0; z-index:90; display:grid; place-items:center;
+  background:radial-gradient(120% 70% at 50% 120%, rgba(255,106,19,.30), transparent 62%), var(--vazio);
+}
+#abertura .estrelas{animation:deriva 5s linear infinite}
+@keyframes deriva{from{transform:translate3d(0,0,0)} to{transform:translate3d(-360px,0,0)}}
+#abertura .marca{animation:chega .55s var(--ease) both}
+#abertura .lema{animation:chega .5s var(--ease) .3s both; margin-top:14px}
+@keyframes chega{from{opacity:0; transform:translate3d(0,10px,0) scale(.97)} to{opacity:1; transform:none}}
+body.abrindo{overflow:hidden}
+#abertura.saindo{opacity:0; transition:opacity .4s var(--ease); pointer-events:none}
+
+/* marca tipográfica: o "O" é um planeta com anel */
+.marca{display:block; text-align:center; font-variation-settings:"wdth" 122,"wght" 900; text-transform:uppercase; line-height:.9}
+.marca-linha{display:flex; align-items:center; justify-content:center; gap:.02em; font-size:var(--tam,clamp(38px,13vw,86px))}
+.marca-o{position:relative; display:inline-block; width:.72em; height:.72em; margin:0 .06em; border-radius:50%;
+  background:radial-gradient(circle at 32% 28%, #FFE9B0, var(--ouro) 42%, var(--brasa) 78%, #7A2A00 100%);
+  box-shadow:0 0 22px rgba(255,140,40,.45), inset -4px -5px 12px rgba(0,0,0,.45)}
+.marca-o::after{content:""; position:absolute; left:50%; top:50%; width:1.34em; height:.44em; transform:translate(-50%,-50%) rotate(-19deg);
+  border:2px solid rgba(255,194,75,.9); border-radius:50%; box-shadow:0 0 12px rgba(255,140,40,.35)}
+.marca-sub{display:block; margin-top:.28em; font-size:calc(var(--tam,clamp(38px,13vw,86px)) * .235);
+  font-variation-settings:"wdth" 96,"wght" 600; letter-spacing:.46em; text-indent:.46em; color:var(--fosco)}
+.lema{text-align:center; color:var(--fosco); font-size:14px; letter-spacing:.02em}
+
+/* ---------- 4. HEADER ---------- */
+header{
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:40;
+  background:rgba(5,5,7,.94); backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,215,154,.1); box-shadow:0 8px 28px rgba(0,0,0,.2);
+}
+.header-in{display:flex; align-items:center; gap:22px; height:68px}
+.header-marca{--tam:18px; flex:0 0 auto}
+.header-marca .marca-linha{font-size:18px}
+.header-marca .marca-sub{display:none}
+.atalhos{display:flex; gap:2px; margin-left:auto; overflow-x:auto; scrollbar-width:none}
+.atalhos::-webkit-scrollbar{display:none}
+.atalhos a{
+  flex:0 0 auto; padding:9px 11px; border-radius:var(--r-pill); font-size:11px; text-decoration:none;
+  color:#AFA69D; font-variation-settings:"wdth" 104,"wght" 700; white-space:nowrap; letter-spacing:.075em; text-transform:uppercase;
+  transition:color var(--t-rapido) var(--ease), background var(--t-rapido) var(--ease);
+}
+.atalhos a:hover{color:#FFF5E8; background:rgba(255,194,75,.1)}
+@media (max-width:560px){.header-in{height:60px;gap:12px}.header-marca .marca-linha{font-size:16px}.atalhos a{padding:8px 9px;font-size:10px}}
+
+/* ---------- 5. HERO ---------- */
+.hero{position:relative; isolation:isolate; overflow:hidden; padding:clamp(72px,14vw,142px) 0 clamp(66px,11vw,108px);
+  background:radial-gradient(70% 44% at 50% 105%, rgba(219,80,16,.26), transparent 68%),linear-gradient(180deg,#08080A 0%,#050507 72%);
+}
+.hero::before{content:""; position:absolute; z-index:-1; inset:0; pointer-events:none; opacity:.65;
+  background:radial-gradient(1px 1px at 12% 25%,#FCE8C4 0 45%,transparent 55%),radial-gradient(1px 1px at 82% 30%,#FCE8C4 0 45%,transparent 55%),radial-gradient(1px 1px at 71% 70%,#FCE8C4 0 45%,transparent 55%),radial-gradient(1px 1px at 27% 78%,#FCE8C4 0 45%,transparent 55%); background-size:280px 220px}
+.hero::after{
+  content:""; position:absolute; z-index:-1; left:50%; bottom:-48vw; width:min(960px,132vw); aspect-ratio:1; transform:translateX(-50%); border-radius:50%;
+  border:1px solid rgba(255,183,90,.18); box-shadow:0 0 0 12vw rgba(255,126,34,.025),0 0 85px 22px rgba(255,90,10,.15); pointer-events:none;
+}
+.hero .env{position:relative; z-index:1; text-align:center}
+.hero .marca-linha{font-size:clamp(52px,10vw,118px); letter-spacing:-.045em}
+.hero .marca-sub{margin-top:.38em; color:#D5B481; font-size:clamp(11px,1.35vw,15px); letter-spacing:.6em; text-indent:.6em}
+.hero .lema{margin-top:22px; font-size:clamp(14px,2vw,18px); max-width:31ch; margin-inline:auto; color:#C9BDB0; line-height:1.55}
+.ctas{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:34px}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:52px; padding:0 22px;
+  border-radius:var(--r-pill); text-decoration:none; text-align:center;
+  font-variation-settings:"wdth" 108,"wght" 800; font-size:14px; letter-spacing:.06em; text-transform:uppercase;
+  transition:transform var(--t-rapido) var(--ease), filter var(--t-rapido) var(--ease), background var(--t-rapido) var(--ease);
+}
+.btn:active{transform:scale(.97)}
+.btn-primario{background:linear-gradient(168deg,#FFB04A,#F27A1D 56%,#C94C0B); color:#180A02; box-shadow:0 12px 28px -12px rgba(255,106,19,.5)}
+.btn-primario:hover{filter:brightness(1.07)}
+.btn-fantasma{border:1px solid rgba(255,215,154,.36); color:#F4D4A2; background:rgba(255,255,255,.018)}
+.btn-fantasma:hover{background:rgba(255,194,75,.1)}
+.hero-nota{margin-top:30px; text-align:center; font-size:11px; color:#8B827B; letter-spacing:.035em}
+.hero-destaque{max-width:43ch; margin:17px auto 0; padding:13px 18px; border:1px solid rgba(255,194,75,.2); border-radius:11px; background:linear-gradient(90deg,transparent,rgba(255,194,75,.075),transparent); color:#CFC1B3; text-align:center; font-size:12px; line-height:1.5}
+.hero-destaque strong{display:block; margin-bottom:3px; color:#F1C87D; font-variation-settings:"wdth" 106,"wght" 800; text-transform:uppercase; letter-spacing:.06em}
+
+/* ---------- 6. TRILHA DE PLANETAS ---------- */
+section{padding:clamp(40px,9vw,76px) 0; position:relative}
+.cabeca{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px}
+.cabeca h2{font-size:clamp(26px,7.6vw,44px)}
+.cabeca p{color:var(--fosco); font-size:14px; max-width:46ch}
+.secao-nota{color:var(--fosco); font-size:14px; margin-bottom:26px; max-width:52ch}
+
+#sistema{padding-top:clamp(48px,8vw,84px); padding-bottom:clamp(54px,9vw,92px); background:#050507; border-block:1px solid rgba(255,221,174,.07)}
+#sistema .cabeca{position:relative; margin-bottom:10px; padding-left:18px}
+#sistema .cabeca::before{content:""; position:absolute; left:0; top:3px; bottom:1px; width:2px; border-radius:2px; background:linear-gradient(var(--ouro),transparent)}
+#sistema .cabeca h2{font-size:clamp(30px,5vw,52px); letter-spacing:-.035em}
+#sistema .secao-nota{max-width:38ch; color:#958B82; padding-left:18px; font-size:13px}
+.trilha{
+  display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x proximity; padding:28px var(--borda-pag) 16px;
+  margin-inline:calc(var(--borda-pag) * -1); scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  background:linear-gradient(180deg,rgba(255,255,255,.012),transparent 82%);
+}
+.trilha::-webkit-scrollbar{display:none}
+.orbita{
+  position:relative; isolation:isolate; flex:0 0 auto; scroll-snap-align:center; display:grid; justify-items:center; gap:12px;
+  padding:18px 10px 13px; border:1px solid transparent; border-radius:16px; min-width:clamp(146px,18vw,196px);
+  background:transparent; box-shadow:none;
+  transition:background var(--t-medio) var(--ease), border-color var(--t-medio) var(--ease);
+}
+.trilha{align-items:center; gap:clamp(20px,3.2vw,40px)}
+#trilha .astro{--d:clamp(124px,17vw,174px)!important}
+.orbita .rotulo{font-size:clamp(13px,1.6vw,16px)}
+.orbita:hover{border-color:rgba(255,210,143,.18); background:radial-gradient(ellipse at 50% 48%, rgba(255,178,75,.075), transparent 64%)}
+.orbita[aria-current="true"]{border-color:rgba(255,193,98,.35); background:radial-gradient(ellipse at 50% 48%, rgba(255,145,38,.12), transparent 65%)}
+.orbita .rotulo{font-size:clamp(12px,1.4vw,14px); font-variation-settings:"wdth" 106,"wght" 700; color:#A99E93; letter-spacing:.07em; text-transform:uppercase}
+.orbita[aria-current="true"] .rotulo{color:#F5C46D}
+.orbita.em-orbita{z-index:2; border-color:rgba(255,193,98,.42); background:radial-gradient(ellipse at 50% 48%, rgba(255,145,38,.14), transparent 65%)}
+
+/* Planetas em CSS: as texturas mantêm a trilha leve, sem imagens extras. */
+.astro{
+  position:relative; isolation:isolate; border-radius:50%;
+  width:var(--d,52px); height:var(--d,52px);
+  background:radial-gradient(circle at 31% 27%, var(--c1), var(--c2) 48%, var(--c3) 100%);
+  box-shadow:inset -9px -11px 21px rgba(0,0,0,.64), inset 5px 5px 12px rgba(255,255,255,.18), 0 14px 26px -18px #000, 0 0 30px -7px var(--brilho,transparent);
+  transition:none;
+}
+.astro::before{
+  content:""; position:absolute; z-index:1; inset:0; border-radius:inherit; pointer-events:none;
+  background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.52) 0 1.8%, transparent 12%), linear-gradient(118deg, transparent 42%, rgba(0,0,0,.26) 76%, rgba(0,0,0,.72) 100%);
+  box-shadow:inset -10px -8px 16px rgba(0,0,0,.46), inset 2px 2px 4px rgba(255,255,255,.24);
+}
+.astro[data-anel]::after{
+  content:""; position:absolute; z-index:2; left:50%; top:50%; width:1.72em; height:.56em;
+  transform:translate(-50%,-50%) rotate(-18deg); border-radius:50%;
+  border:.09em solid rgba(255,231,182,.9); border-bottom-color:rgba(151,117,73,.45); box-shadow:0 1px 5px rgba(255,220,150,.34);
+  font-size:var(--d,52px);
+}
+.astro[data-anel="sutil"]::after{width:1.45em; height:.28em; border-width:.028em; border-color:rgba(212,199,174,.42); border-bottom-color:rgba(133,116,92,.22); box-shadow:none; transform:translate(-50%,-50%) rotate(-4deg)}
+.luas{position:absolute; z-index:3; inset:-24%; border:1px solid rgba(235,220,194,.18); border-radius:50%; pointer-events:none}
+.lua{position:absolute; width:9%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 32% 28%,#FFF9E8 0 16%,#BAB1A8 45%,#625C5B 100%); box-shadow:0 1px 5px rgba(0,0,0,.65)}
+.lua:nth-child(1){left:3%; top:19%}
+.lua:nth-child(2){right:1%; bottom:16%; width:7%; background:radial-gradient(circle at 32% 28%,#E6DECF 0 16%,#978E84 48%,#514A48 100%)}
+.lua:nth-child(3){right:19%; top:-1%; width:5.5%}
+.lua:nth-child(4){left:18%; bottom:-1%; width:6.5%; background:radial-gradient(circle at 32% 28%,#D5CCC0 0 16%,#837B74 48%,#46413E 100%)}
+.astro[data-p="jupiter"] .luas,.astro[data-p="saturno"] .luas{inset:-34%; border-color:rgba(235,220,194,.23)}
+.astro[data-p="marte"] .luas{inset:-28%; border-color:rgba(230,203,180,.14)}
+.astro[data-faixas]{background-image:
+  repeating-linear-gradient(6deg, rgba(0,0,0,.16) 0 6%, rgba(255,255,255,.07) 6% 11%, transparent 11% 17%),
+  radial-gradient(circle at 31% 27%, var(--c1), var(--c2) 48%, var(--c3) 100%)}
+.astro[data-sol]{box-shadow:0 0 36px 2px rgba(255,150,40,.55), inset -4px -6px 16px rgba(160,40,0,.45)}
+
+/* paletas dos corpos */
+[data-p="sol"]     {--c1:#FFF3CE;--c2:#FFC24B;--c3:#E05A00;--brilho:rgba(255,150,40,.6)}
+[data-p="mercurio"]{--c1:#DCD6CF;--c2:#9B938C;--c3:#4A4540}
+[data-p="venus"]   {--c1:#FFE7B8;--c2:#E3A85C;--c3:#8A4E1E;--brilho:rgba(255,190,110,.28)}
+[data-p="netuno"]  {--c1:#B7D8FF;--c2:#3869C8;--c3:#111E63;--brilho:rgba(80,130,255,.3)}
+[data-p="terra"]   {--c1:#BFE8FF;--c2:#2E7FC4;--c3:#123A63;--brilho:rgba(90,170,255,.28)}
+[data-p="marte"]   {--c1:#FFB58A;--c2:#C4562A;--c3:#5E2110;--brilho:rgba(255,110,50,.3)}
+[data-p="jupiter"] {--c1:#F6DEC0;--c2:#C89A6A;--c3:#6B4326}
+[data-p="saturno"] {--c1:#FBE9C4;--c2:#D8B074;--c3:#7A5A2C}
+[data-p="cometa"]  {--c1:#E8F4FF;--c2:#A9C3D8;--c3:#3E5468}
+[data-p="meteoro"] {--c1:#FFE39C;--c2:#D69A3A;--c3:#5C3A12}
+
+/* Marcas próprias dão identidade aos planetas sem aumentar o peso da página. */
+.astro[data-p="mercurio"]::before{background:radial-gradient(circle at 68% 32%, rgba(42,37,34,.4) 0 5%, transparent 5.8%),radial-gradient(circle at 35% 68%, rgba(55,50,45,.34) 0 8%, transparent 8.8%),radial-gradient(circle at 72% 72%, rgba(255,255,255,.22) 0 2.5%, transparent 3.3%),linear-gradient(118deg,transparent 42%,rgba(0,0,0,.3) 80%,rgba(0,0,0,.7))}
+.astro[data-p="venus"]::before{background:repeating-linear-gradient(164deg,rgba(255,244,203,.22) 0 3%,transparent 3% 10%),linear-gradient(118deg,transparent 42%,rgba(74,31,8,.34) 80%,rgba(35,15,5,.75))}
+.astro[data-p="netuno"]::before{background:repeating-linear-gradient(174deg,rgba(206,231,255,.16) 0 4%,rgba(9,33,112,.12) 4% 9%,transparent 9% 15%),radial-gradient(ellipse at 67% 61%,rgba(202,228,255,.34) 0 4%,transparent 8%),linear-gradient(118deg,transparent 42%,rgba(0,8,53,.38) 82%,rgba(0,4,34,.78))}
+.astro[data-p="terra"]::before{background:radial-gradient(ellipse at 38% 44%,rgba(68,145,67,.94) 0 13%,transparent 14%),radial-gradient(ellipse at 61% 64%,rgba(44,116,57,.88) 0 14%,transparent 15%),radial-gradient(ellipse at 72% 30%,rgba(189,207,125,.68) 0 7%,transparent 8%),linear-gradient(118deg,transparent 42%,rgba(0,18,42,.38) 82%,rgba(0,10,28,.78))}
+.astro[data-p="marte"]::before{background:radial-gradient(circle at 62% 36%,rgba(91,32,17,.42) 0 6%,transparent 7%),radial-gradient(circle at 31% 71%,rgba(96,29,13,.4) 0 8%,transparent 9%),repeating-linear-gradient(164deg,rgba(255,204,151,.13) 0 2%,transparent 2% 10%),linear-gradient(118deg,transparent 42%,rgba(52,13,7,.44) 82%,rgba(36,8,4,.78))}
+.astro[data-p="jupiter"]::before{background:radial-gradient(ellipse at 68% 63%,rgba(135,51,28,.72) 0 8%,rgba(229,151,101,.3) 9% 13%,transparent 14%),repeating-linear-gradient(4deg,rgba(122,67,37,.3) 0 5%,rgba(255,230,191,.16) 5% 11%,transparent 11% 17%),linear-gradient(118deg,transparent 42%,rgba(52,24,12,.4) 82%,rgba(34,14,7,.75))}
+.astro[data-p="saturno"]::before{background:repeating-linear-gradient(4deg,rgba(118,82,39,.25) 0 4%,rgba(255,235,190,.17) 4% 10%,transparent 10% 16%),linear-gradient(118deg,transparent 42%,rgba(71,43,17,.36) 82%,rgba(44,25,8,.72))}
+@media (prefers-reduced-motion: reduce){.orbita{transition:none}.astro{transition:none}}
+
+/* Descoberta em tela cheia: reaproveita a foto do cardápio, sem downloads extras. */
+.modal-planeta{position:fixed; z-index:90; inset:0; overflow-y:auto; overscroll-behavior:contain; padding:max(18px,env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) max(18px,env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px)); background:radial-gradient(95% 66% at 50% 0,rgba(255,106,19,.24),transparent 62%),linear-gradient(135deg,#120D18,var(--vazio) 62%); opacity:0; transition:opacity var(--t-medio) var(--ease)}
+.modal-planeta.aberto{opacity:1}
+.modal-planeta .janela{width:min(980px,100%); min-height:100%; margin:auto; display:grid; grid-template-columns:minmax(260px,.95fr) minmax(280px,1fr); align-content:center; gap:clamp(20px,4vw,52px); padding:clamp(10px,5vh,50px) 0}
+.modal-planeta .foto{position:relative; min-height:clamp(245px,48vh,520px); overflow:hidden; border:1px solid rgba(255,194,75,.25); border-radius:24px; background:#09080C; box-shadow:0 30px 54px -30px #000}
+.modal-planeta img{width:100%;height:100%;object-fit:cover}
+.modal-planeta .preco-popup{position:absolute; top:14px; right:14px; z-index:1; padding:9px 13px; border:1px solid rgba(255,224,155,.55); border-radius:var(--r-pill); background:rgba(9,7,11,.8); color:var(--ouro); box-shadow:0 5px 16px rgba(0,0,0,.3); font-size:clamp(17px,3vw,22px); font-variation-settings:"wdth" 100,"wght" 800; font-variant-numeric:tabular-nums}
+.modal-planeta .conteudo{align-self:center; display:grid; gap:15px}
+.modal-planeta .sobretitulo{color:var(--ouro); font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-variation-settings:"wdth" 105,"wght" 800}
+.modal-planeta h2{font-size:clamp(38px,8vw,72px)}
+.modal-planeta p{max-width:43ch; color:#D0C2B8; font-size:clamp(16px,2vw,19px); line-height:1.5}
+.modal-planeta .ir-lanche{min-height:54px; margin-top:5px; padding-inline:24px; font-size:14px}
+.modal-planeta .fechar-planeta{grid-column:1/-1; width:100%; min-height:62px; border:1px solid rgba(255,194,75,.56); border-radius:16px; background:rgba(255,194,75,.12); color:var(--ouro); font-variation-settings:"wdth" 106,"wght" 800; font-size:16px; letter-spacing:.04em; transition:background var(--t-rapido) var(--ease),transform var(--t-rapido) var(--ease)}
+.modal-planeta .fechar-planeta:hover{background:rgba(255,194,75,.22)}
+.modal-planeta .fechar-planeta:active{transform:scale(.985)}
+@media (max-width:650px){.modal-planeta .janela{grid-template-columns:1fr;gap:20px;padding:12px 0}.modal-planeta .foto{min-height:min(43vh,390px)}.modal-planeta .conteudo{gap:11px}.modal-planeta .ir-lanche{width:100%}}
+
+/* ---------- 7. CARDS DE HAMBÚRGUER ---------- */
+.grade{display:grid; gap:var(--gap); grid-template-columns:1fr}
+@media (min-width:700px){ .grade{grid-template-columns:repeat(2,1fr); --gap:20px} }
+@media (min-width:1080px){ .grade{grid-template-columns:repeat(3,1fr)} }
+
+.card{
+  position:relative; display:flex; flex-direction:column; overflow:hidden;
+  border-radius:var(--r-card); background:linear-gradient(180deg,var(--painel-alto),var(--painel));
+  border-top:1px solid rgba(255,194,75,.18);
+  scroll-margin-top:110px;
+  transition:transform var(--t-medio) var(--ease), box-shadow var(--t-medio) var(--ease);
+}
+/* Evita pintar os cards que ainda estão longe da janela de leitura. */
+@supports (content-visibility:auto){#burgers .card{content-visibility:auto; contain-intrinsic-size:auto 460px}}
+@media (hover:hover){ .card:hover{transform:translateY(-3px); box-shadow:0 22px 44px -26px rgba(0,0,0,.95)} }
+.card.alvo{box-shadow:0 0 0 2px rgba(255,194,75,.55), 0 22px 44px -26px #000}
+
+.palco{
+  position:relative; aspect-ratio:4/3; display:grid; place-items:center; overflow:hidden;
+  background:radial-gradient(85% 70% at 50% 118%, rgba(255,106,19,.42), transparent 62%), #0B0910;
+}
+.palco img{width:100%; height:100%; object-fit:cover}
+.palco .astro{--d:min(46vw,190px)}
+.palco .estrelas{opacity:.35}
+.tag-foto{
+  position:absolute; left:12px; bottom:12px; padding:5px 10px; border-radius:var(--r-pill);
+  background:rgba(7,6,10,.72); border:1px solid var(--linha); color:var(--fosco);
+  font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-variation-settings:"wdth" 96,"wght" 600;
+}
+.card-corpo{display:flex; flex-direction:column; gap:10px; padding:16px 16px 18px; flex:1}
+.card h3{font-size:clamp(24px,6.4vw,30px)}
+.card .desc{color:#C6B8AE; font-size:14.5px; line-height:1.45}
+.card .ingr{color:#8D8078; font-size:12.5px; line-height:1.45}
+.card-pe{display:flex; align-items:center; gap:12px; margin-top:auto; padding-top:6px}
+.card-pe .preco{font-size:22px; margin-right:auto}
+.btn-add{
+  min-height:46px; padding:0 18px; border-radius:var(--r-pill);
+  background:rgba(255,194,75,.12); border:1px solid rgba(255,194,75,.4); color:var(--ouro);
+  font-size:13px; letter-spacing:.05em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 700;
+  transition:background var(--t-rapido) var(--ease), transform var(--t-rapido) var(--ease), color var(--t-rapido) var(--ease);
+}
+.btn-add:hover{background:rgba(255,194,75,.2)}
+.btn-add:active{transform:scale(.95)}
+.btn-add.ok{background:var(--ouro); color:#1A0F00; border-color:var(--ouro)}
+
+/* ---------- 7B. COMBOS ---------- */
+#combos{background:linear-gradient(180deg,rgba(255,106,19,.04),transparent 35%,rgba(36,24,52,.2))}
+.combos-viewport{position:relative; max-width:1180px; margin:0 auto; padding-inline:var(--borda-pag)}
+.combos-track{
+  display:grid; grid-auto-flow:column; grid-auto-columns:calc((100% - 18px) / 2);
+  gap:18px; overflow-x:auto; overscroll-behavior-inline:contain; scroll-snap-type:x mandatory;
+  scrollbar-width:none; -webkit-overflow-scrolling:touch; padding:12px 2px 24px;
+}
+.combos-track::-webkit-scrollbar{display:none}
+.combo-card{
+  position:relative; min-width:0; min-height:390px; overflow:hidden; scroll-snap-align:start;
+  border:1px solid rgba(255,194,75,.2); border-radius:20px;
+  background:linear-gradient(155deg,rgba(38,24,28,.98),rgba(20,17,27,.98));
+  box-shadow:0 18px 40px -28px #000; cursor:pointer;
+  transition:transform var(--t-medio) var(--ease), border-color var(--t-medio) var(--ease), box-shadow var(--t-medio) var(--ease);
+}
+.combo-card:hover{transform:translateY(-4px); border-color:rgba(255,194,75,.52); box-shadow:0 24px 48px -28px #000}
+.combo-card:focus-visible{outline:3px solid var(--ouro); outline-offset:3px}
+.combo-imagem{position:relative; aspect-ratio:16/10; overflow:hidden; background:#08070A}
+.combo-imagem img{width:100%; height:100%; object-fit:cover; transition:transform .45s var(--ease), filter .3s var(--ease)}
+.combo-card:hover .combo-imagem img{transform:scale(1.035)}
+.combo-imagem::after{content:""; position:absolute; inset:50% 0 0; background:linear-gradient(transparent,rgba(5,4,7,.9)); pointer-events:none}
+.combo-convite{position:absolute; z-index:1; left:14px; right:14px; bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; color:#FFE4B0; font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
+.combo-convite span:last-child{color:var(--ouro); font-size:18px; line-height:1}
+.combo-detalhe{display:none; padding:20px; min-height:100%; flex-direction:column; gap:10px}
+.combo-card.aberto .combo-imagem{display:none}
+.combo-card.aberto .combo-detalhe{display:flex}
+.combo-card.aberto{cursor:default; border-color:rgba(255,194,75,.58); background:radial-gradient(100% 90% at 0 0,rgba(255,106,19,.18),transparent 66%),var(--painel)}
+.combo-selo{color:var(--ouro); font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
+.combo-detalhe h3{font-size:clamp(24px,3vw,34px)}
+.combo-detalhe p{color:#C6B8AE; font-size:13.5px; line-height:1.45}
+.combo-detalhe p strong{display:block; margin-bottom:3px; color:var(--ouro); font-size:10px; letter-spacing:.12em; text-transform:uppercase}
+.combo-condicao{padding:10px 12px; border-left:2px solid var(--brasa); background:rgba(255,106,19,.08); color:#D8C8BC!important; font-size:12px!important}
+.combo-detalhe .btn-add{width:100%; margin-top:auto}
+.combo-fechar{align-self:flex-start; color:var(--fosco); font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+.combo-fechar:hover{color:var(--creme)}
+.combo-nav{position:absolute; z-index:2; top:calc(50% - 18px); width:42px; height:42px; display:grid; place-items:center; border-radius:50%;
+  color:#1A0F00; background:var(--ouro); box-shadow:0 8px 22px -10px #000; font-size:24px; line-height:1}
+.combo-nav:hover{filter:brightness(1.1)}
+.combo-nav.prev{left:2px}.combo-nav.next{right:2px}
+.combos-ajuda{text-align:center; color:var(--fosco); font-size:12px; margin-top:2px}
+@media (max-width:699px){
+  .combos-track{grid-auto-columns:min(86vw,360px); padding-inline:4px}
+  .combo-card{min-height:410px}
+  .combo-nav{display:none}
+}
+@media (prefers-reduced-motion: reduce){.combo-imagem img{transition:none}}
+
+/* ---------- 8. LISTAS (acompanhamentos e bebidas) ---------- */
+.linhas{display:grid; gap:10px; grid-template-columns:1fr}
+@media (min-width:720px){ .linhas{grid-template-columns:repeat(2,1fr)} }
+#lista-acomp{
+  display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x proximity;
+  padding:14px var(--borda-pag) 18px; margin-inline:calc(var(--borda-pag) * -1);
+  scrollbar-width:none; -webkit-overflow-scrolling:touch;
+}
+#lista-acomp::-webkit-scrollbar{display:none}
+#lista-acomp .linha{
+  flex:0 0 min(82vw,360px); display:grid;
+  grid-template-columns:1fr auto; grid-template-areas:"imagem imagem" "texto texto" "preco botao";
+  align-items:center; gap:14px; padding:0 0 16px; overflow:hidden; scroll-snap-align:center;
+}
+#lista-acomp .miniatura{grid-area:imagem; width:100%; height:240px; border-radius:14px 14px 0 0}
+#lista-acomp .miniatura .astro{--d:175px}
+#lista-acomp .txt{grid-area:texto; padding:0 16px}
+#lista-acomp .preco{grid-area:preco; margin-left:16px; font-size:20px}
+#lista-acomp .btn-mini{grid-area:botao; margin-right:16px}
+.linha{
+  display:flex; align-items:center; gap:14px; padding:12px 14px; border-radius:14px;
+  background:var(--painel); border:1px solid var(--linha);
+}
+.linha .miniatura{flex:0 0 auto; width:62px; height:62px; border-radius:12px; display:grid; place-items:center; overflow:hidden;
+  background:radial-gradient(70% 70% at 50% 120%, rgba(255,106,19,.35), transparent 65%), #0B0910}
+.linha .miniatura img{width:100%; height:100%; object-fit:cover}
+.linha .miniatura .astro{--d:38px}
+.linha .txt{min-width:0; flex:1}
+.linha .nome{font-variation-settings:"wdth" 108,"wght" 700; font-size:15.5px; text-transform:uppercase; letter-spacing:.01em}
+.linha .desc{color:#8D8078; font-size:12.5px; line-height:1.4}
+.linha .preco{font-size:15px; white-space:nowrap}
+.btn-mini{
+  flex:0 0 auto; width:44px; height:44px; border-radius:50%; display:grid; place-items:center;
+  background:rgba(255,194,75,.12); border:1px solid rgba(255,194,75,.4); color:var(--ouro); font-size:22px; line-height:1;
+  transition:background var(--t-rapido) var(--ease), transform var(--t-rapido) var(--ease)}
+.btn-mini:hover{background:rgba(255,194,75,.22)}
+.btn-mini:active{transform:scale(.9)}
+.btn-mini.ok{background:var(--ouro); color:#1A0F00}
+
+/* ---------- 9. CARRINHO ---------- */
+.barra-carrinho{
+  position:fixed; left:0; right:0; bottom:0; z-index:50;
+  padding:10px var(--borda-pag) calc(10px + env(safe-area-inset-bottom, 0px));
+  background:rgba(10,8,14,.92); backdrop-filter:blur(12px); border-top:1px solid rgba(255,194,75,.22);
+  transform:translateY(120%); transition:transform var(--t-medio) var(--ease); visibility:hidden;
+}
+.barra-carrinho.visivel{transform:none; visibility:visible}
+.barra-in{display:flex; align-items:center; gap:12px; max-width:1180px; margin-inline:auto;
+  min-height:54px; padding:0 6px 0 16px; border-radius:var(--r-pill);
+  background:linear-gradient(168deg,#FF8A2B,var(--brasa) 55%,#D8410A); color:#180A02; width:100%}
+.barra-in .qtd{font-variation-settings:"wdth" 104,"wght" 700; font-size:14px}
+.barra-in .tot{margin-left:auto; font-variation-settings:"wdth" 100,"wght" 800; font-variant-numeric:tabular-nums; font-size:17px}
+.barra-in .abrir{padding:0 18px; height:42px; border-radius:var(--r-pill); background:#180A02; color:#FFD79A;
+  font-size:12.5px; letter-spacing:.07em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 700}
+
+.veu{position:fixed; inset:0; z-index:60; background:rgba(4,3,6,.66); backdrop-filter:blur(3px); opacity:0; visibility:hidden;
+  transition:opacity var(--t-medio) var(--ease), visibility var(--t-medio)}
+.veu.aberto{opacity:1; visibility:visible}
+
+.painel-inf{
+  position:fixed; left:0; right:0; bottom:0; z-index:70; max-height:88vh; display:flex; flex-direction:column;
+  background:var(--fundo); border-top:1px solid rgba(255,194,75,.25);
+  border-radius:22px 22px 0 0; transform:translateY(102%); visibility:hidden;
+  transition:transform var(--t-medio) var(--ease), visibility var(--t-medio);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+.painel-inf.aberto{transform:none; visibility:visible}
+@media (min-width:760px){
+  .painel-inf{left:auto; right:24px; bottom:24px; width:420px; max-height:min(78vh,720px); border-radius:20px; border:1px solid rgba(255,194,75,.25)}
+  .painel-inf:not(.aberto){transform:translateY(calc(100% + 24px))}
+}
+.painel-topo{display:flex; align-items:center; gap:12px; padding:18px var(--borda-pag) 12px; border-bottom:1px solid var(--linha)}
+.painel-topo h2{font-size:20px}
+.limpar-carrinho{margin-left:auto; padding:9px 12px; border:1px solid rgba(255,130,100,.42); border-radius:var(--r-pill); color:#FFAA8E; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
+.limpar-carrinho:hover{background:rgba(255,100,70,.12); color:#FFC1A8}
+.painel-topo .fechar{margin-left:0}
+.fechar{margin-left:auto; width:40px; height:40px; border-radius:50%; display:grid; place-items:center;
+  background:rgba(255,255,255,.06); color:var(--creme); font-size:18px}
+.painel-corpo{overflow-y:auto; padding:8px var(--borda-pag) 4px; flex:1; -webkit-overflow-scrolling:touch}
+.vazio{padding:28px 0 34px; text-align:center; color:var(--fosco); font-size:14px}
+
+.item{display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--linha)}
+.item .info{flex:1; min-width:0}
+.item .nome{font-variation-settings:"wdth" 106,"wght" 700; font-size:15px; text-transform:uppercase}
+.item .sub{color:var(--fosco); font-size:12.5px; font-variant-numeric:tabular-nums}
+.passo{display:flex; align-items:center; gap:2px; background:rgba(255,255,255,.05); border-radius:var(--r-pill); padding:3px}
+.passo button{width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-size:19px; color:var(--creme)}
+.passo button:hover{background:rgba(255,255,255,.08)}
+.passo .n{min-width:26px; text-align:center; font-variant-numeric:tabular-nums; font-variation-settings:"wdth" 100,"wght" 700}
+.item .preco{font-size:15px; min-width:74px; text-align:right}
+
+.cupom{display:flex; gap:8px; margin:16px 0 4px}
+.cupom input{
+  flex:1; min-width:0; height:48px; padding:0 14px; border-radius:12px; background:var(--painel);
+  border:1px solid var(--linha); color:var(--creme); font:inherit; text-transform:uppercase; letter-spacing:.06em;
+}
+.cupom input::placeholder{color:#6C625C; letter-spacing:normal; text-transform:none}
+.cupom button{height:48px; padding:0 18px; border-radius:12px; border:1px solid rgba(255,194,75,.4);
+  color:var(--ouro); background:rgba(255,194,75,.1); font-size:13px; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 700}
+.cashback-box{margin:16px 0 12px; padding:14px; border:1px solid rgba(127,217,154,.28); border-radius:14px; background:rgba(127,217,154,.06)}
+.cashback-cabeca{display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; font-variation-settings:"wdth" 104,"wght" 700}
+.cashback-valor{color:#7FD99A; font-size:18px; white-space:nowrap; font-variant-numeric:tabular-nums}
+.cashback-box p{margin-top:7px; color:var(--fosco); font-size:12px; line-height:1.45}
+.cashback-identificacao{display:grid; gap:7px; margin:14px 0 4px}
+.cashback-identificacao label{color:var(--fosco); font-size:12px}
+.cashback-form{display:flex; gap:8px}
+.cashback-form input{flex:1; min-width:0; height:44px; padding:0 12px; border-radius:11px; background:var(--painel); border:1px solid var(--linha); color:var(--creme); font:inherit}
+.cashback-form button{height:44px; padding:0 14px; border-radius:11px; color:#1A0F00; background:var(--ouro); font-size:12px; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
+.cashback-form button:hover{filter:brightness(1.08)}
+.contas .cashback-linha{color:#7FD99A}
+.aviso{font-size:12.5px; min-height:18px; margin-top:6px}
+.aviso.ok{color:#7FD99A}
+.aviso.erro{color:#FF9A7A}
+
+.contas{padding:14px 0 6px; display:grid; gap:7px; font-size:14px}
+.contas div{display:flex; justify-content:space-between; color:var(--fosco); font-variant-numeric:tabular-nums}
+.contas .total{color:var(--creme); font-size:20px; font-variation-settings:"wdth" 108,"wght" 800; padding-top:8px; border-top:1px solid var(--linha)}
+.contas .total .preco{font-size:24px}
+.painel-pe{padding:12px var(--borda-pag) 18px; border-top:1px solid var(--linha); display:grid; gap:8px}
+.painel-pe .btn{width:100%}
+.btn-copiar{min-height:44px; border-radius:var(--r-pill); color:var(--fosco); font-size:12.5px; letter-spacing:.05em; text-transform:uppercase}
+.btn-copiar:hover{color:var(--creme)}
+
+/* ---------- 10. MISSÃO COSMOS ---------- */
+.missao-chamada{
+  position:fixed; left:var(--borda-pag); right:var(--borda-pag); z-index:45;
+  bottom:calc(16px + env(safe-area-inset-bottom, 0px));
+  display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px;
+  background:rgba(20,16,27,.95); backdrop-filter:blur(10px); border:1px solid rgba(255,194,75,.3);
+  box-shadow:0 18px 40px -20px #000; transform:translateY(160%); visibility:hidden;
+  transition:transform 420ms var(--ease), visibility 420ms;
+}
+body.tem-itens .missao-chamada{bottom:calc(var(--barra) + 12px + env(safe-area-inset-bottom, 0px))}
+.missao-chamada.visivel{transform:none; visibility:visible}
+@media (min-width:760px){ .missao-chamada{left:auto; width:360px; right:24px} }
+.missao-chamada .txt{flex:1; min-width:0}
+.missao-chamada .t{font-variation-settings:"wdth" 106,"wght" 700; font-size:14px; text-transform:uppercase}
+.missao-chamada .d{color:var(--fosco); font-size:12.5px}
+.missao-chamada .agir{padding:0 14px; height:40px; border-radius:var(--r-pill); background:var(--ouro); color:#1A0F00;
+  font-size:12px; letter-spacing:.05em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800; white-space:nowrap}
+.missao-chamada .dispensar{width:32px; height:32px; border-radius:50%; color:var(--fosco); font-size:15px}
+
+.missao-modal{
+  position:fixed; z-index:70; left:50%; top:50%; transform:translate(-50%,-46%) scale(.96);
+  width:min(420px, calc(100vw - 32px)); padding:28px 22px 22px; border-radius:20px; text-align:center;
+  background:radial-gradient(100% 70% at 50% 0%, rgba(255,106,19,.22), transparent 62%), var(--fundo);
+  border:1px solid rgba(255,194,75,.3); opacity:0; visibility:hidden;
+  transition:opacity var(--t-medio) var(--ease), transform var(--t-medio) var(--ease), visibility var(--t-medio);
+}
+.missao-modal.aberto{opacity:1; transform:translate(-50%,-50%) scale(1); visibility:visible}
+.radar{position:relative; width:112px; height:112px; margin:6px auto 18px; border-radius:50%;
+  border:1px solid rgba(255,194,75,.3); overflow:hidden; background:rgba(255,194,75,.04)}
+.radar::before{content:""; position:absolute; inset:22%; border-radius:50%; border:1px solid rgba(255,194,75,.22)}
+.radar::after{content:""; position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0;
+  background:conic-gradient(from 0deg, rgba(255,194,75,.45), transparent 42%); animation:varredura 1.15s linear infinite}
+@keyframes varredura{to{transform:rotate(360deg)}}
+.missao-modal h2{font-size:24px; margin-bottom:8px}
+.missao-modal p{color:var(--fosco); font-size:14px}
+.codigo{display:inline-block; margin:18px 0 6px; padding:12px 22px; border-radius:12px; border:1px dashed rgba(255,194,75,.55);
+  font-variation-settings:"wdth" 118,"wght" 800; font-size:26px; letter-spacing:.14em; color:var(--ouro)}
+.missao-modal .btn{width:100%; margin-top:16px}
+.missao-modal .depois{margin-top:8px; width:100%; min-height:40px; color:var(--fosco); font-size:12.5px}
+
+/* ---------- RODAPÉ ---------- */
+footer{padding:44px 0 calc(120px + env(safe-area-inset-bottom, 0px)); border-top:1px solid var(--linha); color:#7E736C; font-size:13px}
+footer .env{display:grid; gap:14px}
+footer .marca-linha{font-size:20px; justify-content:flex-start}
+footer .marca{text-align:left}
+footer .marca-sub{font-size:8px; letter-spacing:.42em}
+.provisorio{padding:12px 14px; border-radius:12px; background:rgba(255,194,75,.06); border:1px solid rgba(255,194,75,.18); color:#C0AE9E; font-size:12.5px}
+
+/* toast de feedback */
+.toast{position:fixed; z-index:80; left:50%; bottom:calc(var(--barra) + 24px + env(safe-area-inset-bottom, 0px));
+  transform:translate(-50%,14px); opacity:0; pointer-events:none;
+  padding:10px 16px; border-radius:var(--r-pill); background:var(--ouro); color:#1A0F00;
+  font-size:13px; font-variation-settings:"wdth" 104,"wght" 700;
+  transition:opacity var(--t-medio) var(--ease), transform var(--t-medio) var(--ease)}
+.toast.visivel{opacity:1; transform:translate(-50%,0)}
+
+/* entrada dos cards — um único momento, curto */
+.revela{opacity:0; transform:translate3d(0,14px,0)}
+.revela.dentro{opacity:1; transform:none; transition:opacity .42s var(--ease), transform .42s var(--ease)}
+.card .desc{display:flex; flex-direction:column; gap:5px; padding-bottom:10px; border-bottom:1px solid var(--linha); color:var(--creme)}
+.card .ingr{display:flex; flex-direction:column; gap:5px; color:#C6B8AE}
+.card .campo{color:var(--ouro); font-size:10px; font-variation-settings:"wdth" 105,"wght" 800; letter-spacing:.12em; text-transform:uppercase}
+
+/* ---------- MOVIMENTO REDUZIDO / APARELHO MODESTO ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important}
+  .revela{opacity:1; transform:none}
+}
+body.leve .estrelas{animation:none!important}
+body.leve .hero::after{filter:none}
+body.leve .revela{opacity:1; transform:none}
+body.leve .veu{backdrop-filter:none}
+.preview #abertura{display:none!important}
+.preview body{overflow:auto!important}
+.preview{scroll-behavior:auto!important}
+.preview *, .preview *::before, .preview *::after{animation:none!important;transition:none!important}
+html[data-preview="sistema"] .hero{display:none!important}
+html[data-preview="burgers"] .hero,html[data-preview="burgers"] #sistema,html[data-preview="burgers"] #combos{display:none!important}
+
+/* =========================================================================
+   REDESIGN CINEMATOGRÁFICO — 2026
+   A camada abaixo substitui somente a apresentação. Dados e comportamento
+   permanecem no aplicativo original.
+   ========================================================================= */
+:root{
+  --vazio:#050506;
+  --fundo:#09090B;
+  --painel:#111012;
+  --painel-alto:#171416;
+  --creme:#F5EEE4;
+  --fosco:#A99F95;
+  --ouro:#FFC45F;
+  --brasa:#ED6A1D;
+  --magma:#9E2B0D;
+  --borda-pag:clamp(20px,4vw,64px);
+  --r-card:22px;
+}
+body{background:#050506;color:var(--creme)}
+body::before{content:"";position:fixed;z-index:-2;inset:0;pointer-events:none;background:radial-gradient(75% 42% at 52% -8%,rgba(237,106,29,.09),transparent 68%),linear-gradient(180deg,#050506,#080709 58%,#050506)}
+.env{max-width:1280px}
+h1,h2,h3{font-variation-settings:"wdth" 118,"wght" 850;letter-spacing:-.045em}
+
+/* navegação */
+header{position:sticky;top:0;background:rgba(5,5,6,.82);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:none;backdrop-filter:blur(20px) saturate(130%)}
+.header-in{height:72px;gap:28px}
+.header-marca .marca-linha{font-size:20px;letter-spacing:-.04em}
+.atalhos{gap:5px;align-items:center}
+.atalhos a{position:relative;padding:10px 12px;color:#B8AEA4;font-size:10px;letter-spacing:.12em}
+.atalhos a::after{content:"";position:absolute;left:12px;right:12px;bottom:5px;height:1px;background:var(--ouro);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
+.atalhos a:hover::after{transform:scaleX(1)}
+.atalhos .nav-pedir{margin-left:8px;padding:11px 17px;border:1px solid rgba(255,196,95,.5);color:var(--ouro)}
+.atalhos .nav-pedir::after{display:none}
+
+/* hero */
+.hero{position:relative;isolation:isolate;min-height:min(850px,calc(100svh - 72px));display:grid;align-items:stretch;padding:0;background:#050506;overflow:hidden}
+.hero::before{z-index:1;opacity:1;background:linear-gradient(90deg,#050506 0%,rgba(5,5,6,.98) 25%,rgba(5,5,6,.66) 47%,rgba(5,5,6,.08) 73%),linear-gradient(180deg,transparent 63%,#050506 100%)}
+.hero::after{z-index:1;left:auto;right:-15vw;bottom:-33vw;width:min(780px,76vw);border-color:rgba(255,196,95,.14);box-shadow:0 0 0 8vw rgba(237,106,29,.018),0 0 110px 12px rgba(237,106,29,.08)}
+.hero .estrelas{z-index:1;opacity:.16;mix-blend-mode:screen}
+.hero-media{position:absolute;z-index:0;inset:0;overflow:hidden}
+.hero-media img{width:100%;height:100%;object-fit:cover;object-position:center center;filter:saturate(.88) contrast(1.04)}
+.hero .env.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(360px,.82fr) minmax(420px,1.18fr);align-items:center;text-align:left;width:100%;padding-block:clamp(80px,10vh,130px)}
+.hero-copy{max-width:650px;display:grid;justify-items:start}
+.hero-kicker{display:flex;align-items:center;gap:14px;margin-bottom:24px;color:#E5D7C8;font-size:11px;font-variation-settings:"wdth" 110,"wght" 720;letter-spacing:.17em;text-transform:uppercase}
+.hero-kicker::before{content:"";width:42px;height:1px;background:linear-gradient(90deg,var(--brasa),var(--ouro))}
+.hero-title{font-size:clamp(58px,7.6vw,112px);line-height:.82;max-width:7.8ch;text-align:left;text-transform:uppercase;text-wrap:balance}
+.hero-title em{display:block;color:transparent;font-style:normal;-webkit-text-stroke:1.5px #D9B77C;text-shadow:0 0 40px rgba(237,106,29,.12)}
+.hero .lema{max-width:39ch;margin:30px 0 0;text-align:left;color:#C7BCB2;font-size:clamp(15px,1.5vw,19px);line-height:1.55}
+.hero .ctas{justify-content:flex-start;margin-top:34px}
+.hero .btn{min-height:56px;padding-inline:25px;border-radius:4px;font-size:11px;letter-spacing:.12em}
+.hero .btn-primario{background:linear-gradient(135deg,#FFD177,#F18A2D 58%,#C94812);box-shadow:0 18px 42px -20px rgba(237,106,29,.85)}
+.hero .btn-fantasma{background:rgba(5,5,6,.38);border-color:rgba(255,238,213,.24);color:#F5EEE4}
+.hero-meta{display:flex;align-items:center;gap:14px;margin-top:32px;color:#92877E;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.hero-meta i{width:4px;height:4px;border-radius:50%;background:var(--ouro);box-shadow:0 0 12px var(--ouro)}
+.hero-caption{position:absolute;z-index:2;right:var(--borda-pag);bottom:36px;display:flex;align-items:center;gap:12px;color:#C9BFB4;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.hero-caption::before{content:"07";display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,196,95,.35);border-radius:50%;color:var(--ouro)}
+
+/* títulos editoriais */
+section{padding:clamp(82px,10vw,136px) 0}
+.cabeca{align-items:flex-end;justify-content:space-between;margin-bottom:12px}
+.cabeca h2{font-size:clamp(40px,6.1vw,82px);letter-spacing:-.055em}
+.secao-nota{font-size:13px;line-height:1.65;color:#948A82}
+.section-index{display:block;margin-bottom:15px;color:var(--brasa);font-size:10px;font-variation-settings:"wdth" 110,"wght" 800;letter-spacing:.18em;text-transform:uppercase}
+
+/* sistema solar */
+#sistema{position:relative;min-height:650px;padding-block:clamp(72px,7vw,92px);overflow:hidden;background:radial-gradient(70% 55% at 50% 68%,rgba(237,106,29,.10),transparent 68%),#070708;border-block:1px solid rgba(255,255,255,.07)}
+#sistema::before{content:"";position:absolute;left:50%;top:46%;width:min(1200px,96vw);height:310px;transform:translate(-50%,-50%);border:1px solid rgba(255,196,95,.09);border-radius:50%;box-shadow:0 0 0 70px rgba(255,255,255,.015),0 0 0 140px rgba(255,255,255,.01);pointer-events:none}
+#sistema .cabeca{display:block;margin:0;padding:0}
+#sistema .cabeca::before{display:none}
+#sistema .cabeca h2{max-width:9ch;font-size:clamp(46px,6.2vw,84px)}
+#sistema .secao-nota{max-width:43ch;margin-top:16px;padding:0;color:#9D938B}
+.system-top{display:grid;grid-template-columns:1fr minmax(270px,.55fr);gap:34px;align-items:end}
+.system-instruction{justify-self:end;max-width:260px;padding:18px 0 4px;border-top:1px solid rgba(255,196,95,.32);color:#ACA197;font-size:11px;line-height:1.65;letter-spacing:.04em}
+.trilha{position:relative;z-index:2;align-items:end;gap:clamp(0px,1vw,14px);max-width:1500px;margin:34px auto 0;padding:24px max(var(--borda-pag),calc((100vw - 1380px)/2)) 18px;background:none;scroll-snap-type:x mandatory;scroll-padding-inline:42vw}
+.orbita{--escala:.78;--opacidade:.58;min-width:clamp(150px,15.5vw,226px);padding:10px 4px 6px;gap:16px;border:0;background:none;box-shadow:none;opacity:var(--opacidade);transition:opacity .38s var(--ease),filter .38s var(--ease)}
+.orbita:hover,.orbita[aria-current="true"],.orbita.em-orbita{border:0;background:none;box-shadow:none;opacity:1}
+.astro-real{position:relative;display:block;width:var(--diametro,clamp(128px,13vw,196px));aspect-ratio:1;background-image:url("images/generated/planetas-atlas-v1.webp");background-repeat:no-repeat;background-size:400% 200%;filter:drop-shadow(0 26px 22px rgba(0,0,0,.55));transition:width .45s var(--ease),filter .45s var(--ease)}
+.astro-real::before{content:"";position:absolute;inset:8%;z-index:-1;border-radius:50%;background:rgba(237,106,29,.18);filter:blur(24px);opacity:0;transition:opacity .35s var(--ease)}
+.orbita[aria-current="true"] .astro-real::before,.orbita:hover .astro-real::before{opacity:1}
+.orbita[aria-current="true"] .astro-real{filter:drop-shadow(0 32px 30px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(255,170,70,.16))}
+.astro-real[data-p="mercurio"]{background-position:0% 0%}
+.astro-real[data-p="venus"]{background-position:33.333% 0%}
+.astro-real[data-p="netuno"]{background-position:66.666% 0%}
+.astro-real[data-p="terra"]{background-position:100% 0%}
+.astro-real[data-p="marte"]{background-position:0% 100%}
+.astro-real[data-p="jupiter"]{background-position:33.333% 100%}
+.astro-real[data-p="saturno"]{background-position:66.666% 100%}
+.orbita .rotulo{display:grid;gap:4px;color:#837B74;font-size:10px;letter-spacing:.12em;text-align:center;transition:color .3s var(--ease),transform .3s var(--ease)}
+.orbita .rotulo strong{font-size:clamp(16px,1.7vw,22px);font-variation-settings:"wdth" 112,"wght" 800;letter-spacing:-.025em}
+.orbita[aria-current="true"] .rotulo{color:var(--ouro);transform:translateY(-3px)}
+.orbita[aria-current="true"] .rotulo strong{color:var(--creme)}
+
+/* combos */
+#combos{background:linear-gradient(180deg,#0A0809,#070708 75%);border-bottom:1px solid rgba(255,255,255,.06)}
+#combos .env:first-child{display:grid;grid-template-columns:1fr minmax(240px,.45fr);gap:30px;align-items:end}
+#combos .secao-nota{margin:0 0 9px auto}
+.combos-viewport{max-width:1320px;margin-top:34px}
+.combos-track{gap:22px;grid-auto-columns:calc((100% - 22px)/2);padding:12px 2px 28px}
+.combo-card{min-height:430px;border-color:rgba(255,255,255,.11);border-radius:18px;background:#0C0B0D;box-shadow:0 32px 70px -48px #000}
+.combo-imagem{aspect-ratio:16/9}
+.combo-imagem::after{inset:42% 0 0;background:linear-gradient(transparent,rgba(5,5,6,.94))}
+.combo-convite{bottom:18px;left:20px;right:20px}
+.combo-nav{width:48px;height:48px;background:rgba(9,8,9,.9);border:1px solid rgba(255,196,95,.55);color:var(--ouro)}
+
+/* cardápio */
+#burgers{background:radial-gradient(58% 28% at 8% 12%,rgba(237,106,29,.08),transparent 72%),#050506}
+#burgers .secao-nota{margin-bottom:38px}
+.grade{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+.card{grid-column:span 4;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(145deg,#141113,#0B0A0C);box-shadow:0 28px 60px -48px #000}
+.card:first-child{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(400px,.9fr);min-height:520px}
+.card:first-child .palco{aspect-ratio:auto;min-height:520px}
+.card:first-child .card-corpo{justify-content:center;padding:clamp(34px,4vw,54px)}
+.card:first-child h3{font-size:clamp(46px,4.4vw,64px);overflow-wrap:anywhere}
+.card:first-child .desc,.card:first-child .ingr{max-width:38ch}
+.palco{aspect-ratio:1/.82;background:#09080A}
+.palco::after{content:"";position:absolute;inset:54% 0 0;background:linear-gradient(transparent,rgba(5,5,6,.7));pointer-events:none}
+.palco img{transition:transform .55s var(--ease),filter .55s var(--ease)}
+.card:hover .palco img{transform:scale(1.035);filter:saturate(1.08)}
+.card-corpo{gap:13px;padding:22px 22px 24px}
+.card h3{font-size:clamp(29px,3vw,40px)}
+.card .desc{padding:0;border:0;color:#E1D5CA;font-size:13px}
+.card .ingr{color:#9F948B;font-size:12px}
+.card .campo{color:#C87435;font-size:9px}
+.card-pe{padding-top:10px}
+.card-pe .preco{font-size:21px}
+.btn-add{border-radius:4px;min-height:48px;background:rgba(255,196,95,.08)}
+
+/* acompanhamentos e bebidas */
+#acompanhamentos{background:#09080A;border-block:1px solid rgba(255,255,255,.06)}
+#lista-acomp{gap:20px;padding-top:30px}
+#lista-acomp .linha{flex-basis:min(80vw,410px);border-radius:16px;background:#100E10;border-color:rgba(255,255,255,.08)}
+#lista-acomp .miniatura{height:280px}
+#bebidas{padding-block:clamp(72px,8vw,105px)}
+#bebidas .linhas{margin-top:28px}
+#bebidas .linha{min-height:92px;border-radius:12px;background:#0E0D0F;border-color:rgba(255,255,255,.08)}
+
+footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,106,29,.10),transparent 65%);border-top:1px solid rgba(255,255,255,.07)}
+.provisorio{border-radius:4px;background:rgba(255,196,95,.045)}
+.modal-planeta{background:radial-gradient(72% 58% at 72% 12%,rgba(237,106,29,.16),transparent 68%),#050506}
+.modal-planeta .foto{border-radius:16px;border-color:rgba(255,196,95,.18)}
+.modal-planeta .fechar-planeta{border-radius:4px;background:rgba(255,196,95,.08)}
+.painel-inf{background:#09090B;border-color:rgba(255,196,95,.22)}
+
+@media (max-width:900px){
+  .atalhos a:not(.nav-pedir){display:none}
+  .atalhos .nav-pedir{display:block}
+  .hero{min-height:760px}
+  .hero::before{background:linear-gradient(180deg,rgba(5,5,6,.05) 0%,rgba(5,5,6,.28) 32%,rgba(5,5,6,.95) 74%,#050506 100%),linear-gradient(90deg,rgba(5,5,6,.35),transparent)}
+  .hero-media img{object-position:68% center}
+  .hero .env.hero-grid{grid-template-columns:1fr;align-items:end;padding-top:310px;padding-bottom:60px}
+  .hero-copy{align-self:end}
+  .hero-title{font-size:clamp(54px,13vw,86px)}
+  .hero-caption{display:none}
+  .system-top{grid-template-columns:1fr}.system-instruction{justify-self:start}
+  .grade{grid-template-columns:repeat(2,1fr)}
+  .card{grid-column:auto}
+  .card:first-child{grid-column:1/-1;grid-template-columns:1fr 1fr;min-height:420px}
+  .card:first-child .palco{min-height:420px}
+}
+@media (max-width:640px){
+  :root{--borda-pag:20px}
+  .header-in{height:64px}.header-marca .marca-linha{font-size:18px}
+  .atalhos .nav-pedir{padding:9px 13px;font-size:9px}
+  .hero{min-height:calc(100svh - 64px)}
+  .hero-media{height:52%;bottom:auto}
+  .hero-media img{object-position:64% 50%}
+  .hero::before{background:linear-gradient(180deg,rgba(5,5,6,.04) 0%,rgba(5,5,6,.12) 34%,rgba(5,5,6,.98) 52%,#050506 100%)}
+  .hero .env.hero-grid{padding-top:43vh;padding-bottom:38px}
+  .hero-kicker{margin-bottom:17px;font-size:9px}
+  .hero-title{font-size:clamp(48px,15.5vw,68px);line-height:.85}
+  .hero-title em{-webkit-text-stroke:1px #D9B77C}
+  .hero .lema{margin-top:22px;font-size:14px;max-width:32ch}
+  .hero .ctas{width:100%;margin-top:25px;display:grid;grid-template-columns:1.12fr .88fr;gap:9px}
+  .hero .btn{min-height:50px;padding-inline:11px;font-size:9px}
+  .hero-meta{margin-top:22px;font-size:8px}
+  section{padding-block:76px}
+  .cabeca h2{font-size:clamp(38px,13vw,58px)}
+  #sistema{min-height:620px;padding-top:74px}
+  #sistema .cabeca h2{font-size:clamp(46px,14vw,62px)}
+  .trilha{margin-top:28px;padding:20px calc(50vw - 82px) 14px;scroll-padding-inline:calc(50vw - 82px)}
+  .orbita{min-width:164px}
+  .astro-real{width:150px}
+  #combos .env:first-child{grid-template-columns:1fr}
+  #combos .secao-nota{margin:0}
+  .combos-track{grid-auto-columns:min(88vw,370px)}
+  .combo-card{min-height:390px}
+  .grade{grid-template-columns:1fr;gap:18px}
+  .card,.card:first-child{grid-column:auto;display:flex;min-height:0}
+  .card:first-child .palco{min-height:0;aspect-ratio:1/.82}
+  .card:first-child .card-corpo{padding:24px}
+  .card:first-child h3{font-size:42px}
+  .palco{aspect-ratio:1/.78}
+  #lista-acomp .linha{flex-basis:84vw}
+  #lista-acomp .miniatura{height:240px}
+}
+</style>
+</head>
+<body class="abrindo">
+
+<!-- ================= ABERTURA (5s) ================= -->
+<div id="abertura" aria-hidden="true">
+  <div class="estrelas"></div>
+  <div>
+    <span class="marca">
+      <span class="marca-linha"><span>C</span><span class="marca-o"></span><span>SMOS</span></span>
+      <span class="marca-sub">Burguer</span>
+    </span>
+    <p class="lema">O melhor hambúrguer num raio de 1000 anos-luz.</p>
+  </div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="env header-in">
+    <a class="header-marca" href="#topo" aria-label="Cosmos Burguer — início" style="text-decoration:none">
+      <span class="marca" aria-hidden="true">
+        <span class="marca-linha"><span>C</span><span class="marca-o"></span><span>SMOS</span></span>
+      </span>
+    </a>
+    <nav class="atalhos" aria-label="Categorias">
+      <a href="#burgers">Hambúrgueres</a>
+      <a href="#combos">Combos</a>
+      <a href="#acompanhamentos">Acompanhamentos</a>
+      <a href="#bebidas">Bebidas</a>
+      <a class="nav-pedir" href="#burgers">Montar pedido</a>
+    </nav>
+  </div>
+</header>
+
+<main id="topo">
+  <noscript><p style="padding:16px;text-align:center;color:#FFC24B">Este cardápio precisa de JavaScript. Ative-o ou chame no WhatsApp que a gente anota seu pedido.</p></noscript>
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div class="hero-media" aria-hidden="true">
+      <img src="images/generated/cosmos-hero-v1.webp" alt="" width="1672" height="941" fetchpriority="high" decoding="async">
+    </div>
+    <div class="estrelas"></div>
+    <div class="env hero-grid">
+      <div class="hero-copy">
+      <p class="hero-kicker">Cosmos Burguer · Missão 07</p>
+      <h1 class="hero-title">O sabor <em>é de outro mundo.</em></h1>
+      <p class="lema">O melhor hambúrguer num raio de 1000 anos-luz.</p>
+      <div class="ctas">
+        <a class="btn btn-primario" href="#sistema">Explorar o sistema solar</a>
+        <a class="btn btn-fantasma" href="#burgers">Ver cardápio</a>
+      </div>
+      <p class="hero-meta"><span>7 receitas planetárias</span><i></i><span>Pedido pelo WhatsApp</span></p>
+      </div>
+    </div>
+    <p class="hero-caption">Duplo burger · bacon · cheddar</p>
+  </div>
+
+  <!-- ================= SISTEMA SOLAR ================= -->
+  <section id="sistema" aria-labelledby="t-sistema">
+    <div class="env system-top">
+      <div>
+        <span class="section-index">01 · Sistema solar</span>
+        <div class="cabeca"><h2 id="t-sistema">Escolha seu planeta</h2></div>
+        <p class="secao-nota">Sete mundos, sete receitas. Centralize um planeta e abra a transmissão para conhecer o hambúrguer correspondente.</p>
+      </div>
+      <p class="system-instruction">Arraste para navegar · toque para descobrir · o planeta em foco revela sua missão.</p>
+    </div>
+    <div class="trilha" id="trilha" role="group" aria-label="Navegação pelos planetas"></div>
+  </section>
+
+  <!-- ================= COMBOS ================= -->
+  <section id="combos" aria-labelledby="t-combos">
+    <div class="env">
+      <div><span class="section-index">02 · Coordenadas em dupla</span><div class="cabeca"><h2 id="t-combos">Combos intergalácticos</h2></div></div>
+      <p class="secao-nota">Toque em um card para trocar a arte pelas informações do combo. Arraste para os lados para explorar a sessão.</p>
+    </div>
+    <div class="combos-viewport">
+      <button class="combo-nav prev" type="button" data-combo-mover="-1" aria-label="Ver combos anteriores">‹</button>
+      <div class="combos-track" id="grade-combos" aria-label="Combos disponíveis"></div>
+      <button class="combo-nav next" type="button" data-combo-mover="1" aria-label="Ver próximos combos">›</button>
+    </div>
+    <p class="combos-ajuda">Deslize horizontalmente · a viagem continua nos dois sentidos</p>
+  </section>
+
+  <!-- ================= HAMBÚRGUERES ================= -->
+  <section id="burgers" aria-labelledby="t-burgers">
+    <div class="env">
+      <span class="section-index">03 · Cardápio orbital</span>
+      <div class="cabeca"><h2 id="t-burgers">Explore os planetas</h2></div>
+      <p class="secao-nota">Carne fresca, pão assado no dia, montagem na hora do pedido.</p>
+      <div class="grade" id="grade-burgers"></div>
+    </div>
+  </section>
+
+  <!-- ================= ACOMPANHAMENTOS ================= -->
+  <section id="acompanhamentos" aria-labelledby="t-acomp">
+    <div class="env">
+      <span class="section-index">04 · Cinturão de asteroides</span>
+      <div class="cabeca"><h2 id="t-acomp">Acompanhamentos</h2></div>
+      <p class="secao-nota">Fritura na hora, sal na medida.</p>
+      <div class="linhas" id="lista-acomp"></div>
+    </div>
+  </section>
+
+  <!-- ================= BEBIDAS ================= -->
+  <section id="bebidas" aria-labelledby="t-bebidas">
+    <div class="env">
+      <span class="section-index">05 · Reabastecimento</span>
+      <div class="cabeca"><h2 id="t-bebidas">Bebidas</h2></div>
+      <p class="secao-nota">Tudo gelado.</p>
+      <div class="linhas" id="lista-bebidas"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="env">
+      <span class="marca" aria-hidden="true">
+        <span class="marca-linha"><span>C</span><span class="marca-o"></span><span>SMOS</span></span>
+        <span class="marca-sub">Burguer</span>
+      </span>
+      <p>Hambúrgueres artesanais e batatas. Pedidos pelo WhatsApp <strong>(16) 99212-5648</strong>, todos os dias das 18h à meia-noite.</p>
+      <p class="provisorio" id="nota-provisoria">Versão inicial: preços, ingredientes e fotos são provisórios. Confirme tudo antes de divulgar o link.</p>
+    </div>
+  </footer>
+</main>
+
+<!-- ================= CARRINHO ================= -->
+<div class="barra-carrinho" id="barra-carrinho">
+  <button class="barra-in" id="abrir-carrinho" aria-haspopup="dialog" aria-controls="painel-carrinho">
+    <span class="qtd" id="barra-qtd">0 itens</span>
+    <span class="tot" id="barra-total">R$ 0,00</span>
+    <span class="abrir">Ver pedido</span>
+  </button>
+</div>
+
+<div class="veu" id="veu" hidden></div>
+
+<div class="painel-inf" id="painel-carrinho" role="dialog" aria-modal="true" aria-labelledby="t-carrinho" hidden>
+  <div class="painel-topo">
+    <h2 id="t-carrinho">Seu pedido</h2>
+    <button class="limpar-carrinho" id="limpar-carrinho" type="button" hidden>Esvaziar</button>
+    <button class="fechar" id="fechar-carrinho" aria-label="Fechar pedido">✕</button>
+  </div>
+  <div class="painel-corpo">
+    <div id="itens-carrinho"></div>
+    <div id="area-cashback" hidden>
+      <div class="cashback-box">
+        <div class="cashback-cabeca">
+          <span>Cashback para a próxima compra</span>
+          <strong class="cashback-valor" id="cashback-valor">—</strong>
+        </div>
+        <p id="cashback-status">O cashback não reduz o valor deste pedido. Ele fica reservado para sua próxima compra após a confirmação da loja.</p>
+      </div>
+      <div class="cashback-identificacao">
+        <label for="campo-celular">Seu WhatsApp para autenticar a reserva</label>
+        <div class="cashback-form">
+          <input id="campo-celular" type="tel" placeholder="(16) 99999-9999" autocomplete="tel" inputmode="tel">
+          <button id="reservar-cashback" type="button">Confirmar</button>
+        </div>
+      </div>
+      <p class="aviso" id="aviso-cashback" role="status"></p>
+      <div class="contas" id="contas"></div>
+    </div>
+  </div>
+  <div class="painel-pe" id="pe-carrinho" hidden>
+    <a class="btn btn-primario" id="enviar-pedido" href="#" target="_blank" rel="noopener">🚀 Enviar pedido</a>
+    <button class="btn-copiar" id="copiar-pedido">Copiar pedido em texto</button>
+  </div>
+</div>
+
+<!-- ================= MISSÃO COSMOS ================= -->
+<div class="missao-chamada" id="missao-chamada" hidden>
+  <div class="txt">
+    <p class="t">🚨 Sinal detectado</p>
+    <p class="d">Uma transmissão desconhecida foi encontrada.</p>
+  </div>
+  <button class="agir" id="missao-abrir">Interceptar</button>
+  <button class="dispensar" id="missao-dispensar" aria-label="Ignorar sinal">✕</button>
+</div>
+
+<div class="missao-modal" id="missao-modal" role="dialog" aria-modal="true" aria-labelledby="t-missao" hidden>
+  <div id="missao-conteudo"></div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<section class="modal-planeta" id="modal-planeta" role="dialog" aria-modal="true" aria-labelledby="t-planeta" hidden></section>
+
+<script>
+/* =========================================================================
+   COSMOS BURGUER — aplicação
+   Módulos: 1 CONFIG · 2 MENU (dados) · 3 CASHBACK · 4 utilitários
+            5 render · 6 carrinho · 7 cupom · 8 whatsapp · 9 missão · 10 boot
+   Nada de dados de produto no HTML: tudo vem de MENU.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  /* ---------- 1. CONFIG — mexa aqui ---------- */
+  const CONFIG = {
+    marca: "COSMOS BURGUER",
+    // Número do WhatsApp da loja: 55 + DDD + número, só dígitos. ⚠️ PLACEHOLDER
+    whatsapp: "5516992125648",
+    moeda: "BRL",
+    // Texto que abre a mensagem enviada ao WhatsApp
+    saudacao: "COSMOS BURGUER 🚀",
+    // Abertura animada (ms). 0 desliga.
+    aberturaMs: 5000,
+    // A "Missão Cosmos" só aparece depois que a pessoa passa desta seção
+    missaoGatilho: "#bebidas"
+  };
+
+  const IMG = "images/";
+  const IMAGENS = {
+    mercurio: IMG + "MercurioIA.webp",
+    venus: IMG + "VenusIA.webp",
+    netuno: IMG + "NetunoIA.webp",
+    terra: IMG + "TerraIA.webp",
+    marte: IMG + "Marte.webp",
+    jupiter: IMG + "JupiterIA.webp",
+    saturno: IMG + "SaturnoIA.webp",
+    lascas: IMG + "Lascas%20de%20cometaIA.webp",
+    meteoritos: IMG + "MeteoritodeQueijoIA.webp",
+    aneis: IMG + "AneisdeSaturnoIA.webp",
+    guarana: IMG + "guaranalata.webp",
+    comboVortice: IMG + "combo/ComboVortice.webp",
+    comboVorticeDuplo: IMG + "combo/ComboVorticeDuplo.webp",
+    comboAbducao: IMG + "combo/Comboabducao.webp"
+  };
+
+  /* ---------- 2. MENU — todos os produtos ----------
+     preco em CENTAVOS (inteiro) para nunca errar arredondamento.
+     imagem: null  -> mostra o planeta em CSS + selo "foto em breve"
+     imagem: "..." -> caminho do arquivo, URL ou data URI
+     ⚠️ preços e ingredientes desta versão são PLACEHOLDER.            */
+  const MENU = [
+    { id:"mercurio", categoria:"burger", nome:"Mercúrio", planeta:"mercurio", simbolo:"☿", tamanho:34,
+      quantidade:"1 hambúrguer",
+      descricao:"Hambúrguer, queijo mussarela, cebola roxa, molho cheddar e salada",
+      ingredientes:"", preco:2490, imagem:IMAGENS.mercurio, curiosidade:"É o planeta mais próximo do Sol e completa uma volta ao redor dele em apenas 88 dias terrestres." },
+    { id:"venus", categoria:"burger", nome:"Vênus", planeta:"venus", simbolo:"♀", tamanho:44,
+      quantidade:"1 hambúrguer",
+      descricao:"Hambúrguer, queijo cheddar, cebola roxa, molho baconnese e salada",
+      ingredientes:"", preco:2490, imagem:IMAGENS.venus, curiosidade:"Vênus gira tão devagar que um dia por lá dura mais que um ano venusiano." },
+    { id:"netuno", categoria:"burger", nome:"Netuno", planeta:"netuno", simbolo:"♆", tamanho:46, luas:1,
+      quantidade:"1 hambúrguer",
+      descricao:"Hambúrguer, queijo mussarela, cebola caramelizada, molho Catupiry e salada",
+      ingredientes:"", preco:2490, imagem:IMAGENS.netuno, curiosidade:"Os ventos de Netuno podem passar de 2.000 km/h — entre os mais rápidos do Sistema Solar." },
+    { id:"terra", categoria:"burger", nome:"Terra", planeta:"terra", simbolo:"🌎", tamanho:48, luas:1,
+      quantidade:"1 hambúrguer",
+      descricao:"Hambúrguer, bacon, picles, queijo cheddar, molho grill e salada",
+      ingredientes:"", preco:2790, imagem:IMAGENS.terra, curiosidade:"Até hoje, a Terra é o único mundo conhecido com oceanos líquidos estáveis na superfície." },
+    { id:"marte", categoria:"burger", nome:"Marte", planeta:"marte", simbolo:"♂", tamanho:42, luas:2,
+      quantidade:"2 hambúrgueres",
+      descricao:"2 hambúrgueres, queijo mussarela, cebola roxa, molho cheddar, bacon e salada",
+      ingredientes:"", preco:3490, imagem:IMAGENS.marte, curiosidade:"Marte abriga o Olympus Mons, o maior vulcão conhecido do Sistema Solar." },
+    { id:"jupiter", categoria:"burger", nome:"Júpiter", planeta:"jupiter", simbolo:"♃", tamanho:60, faixas:true, anel:"sutil", luas:4,
+      quantidade:"2 hambúrgueres",
+      descricao:"2 hambúrgueres, queijo cheddar, cebola roxa, molho baconnese, bacon e salada",
+      ingredientes:"", preco:3490, imagem:IMAGENS.jupiter, curiosidade:"Júpiter é tão grande que caberiam mais de 1.300 planetas Terra dentro dele." },
+    { id:"saturno", categoria:"burger", nome:"Saturno", planeta:"saturno", simbolo:"♄", tamanho:52, anel:"principal", luas:4,
+      quantidade:"2 hambúrgueres",
+      descricao:"2 hambúrgueres, queijo mussarela, cebola caramelizada, molho Catupiry, bacon e salada",
+      ingredientes:"", preco:3490, imagem:IMAGENS.saturno, curiosidade:"Os anéis de Saturno são compostos sobretudo de gelo e pequenos fragmentos rochosos." },
+
+    { id:"combo-vortice", categoria:"combo", nome:"Combo Vórtice", planeta:"jupiter",
+      quantidade:"2 lanches artesanais de 1 hambúrguer + 1 refrigerante de sua escolha",
+      descricao:"Combo com 2 lanches artesanais de 1 hambúrguer cada e 1 refrigerante de sua escolha.",
+      condicoes:"Apenas R$ 49,90. Entrega grátis.", preco:4990, imagem:IMAGENS.comboVortice },
+    { id:"combo-vortice-duplo", categoria:"combo", nome:"Combo Vórtice Duplo", planeta:"saturno",
+      quantidade:"2 lanches artesanais de 2 hambúrgueres + 1 refrigerante de sua escolha",
+      descricao:"Combo com 2 lanches artesanais de 2 hambúrgueres cada e 1 refrigerante de sua escolha.",
+      condicoes:"Apenas R$ 64,90. Entrega grátis.", preco:6490, imagem:IMAGENS.comboVorticeDuplo },
+    { id:"combo-abducao", categoria:"combo", nome:"Combo Abdução", planeta:"marte",
+      quantidade:"3 lanches artesanais de 1 hambúrguer + 1 refrigerante de sua escolha",
+      descricao:"Combo com 3 lanches artesanais de 1 hambúrguer cada e 1 refrigerante de sua escolha.",
+      condicoes:"Apenas R$ 69,90. Entrega grátis.", preco:6990, imagem:IMAGENS.comboAbducao },
+
+    { id:"lascas", categoria:"acompanhamento", nome:"Lascas de Cometa Fritas", planeta:"cometa",
+      descricao:"Batata rústica com casca, sal grosso e alecrim.", ingredientes:"", preco:2490, imagem:IMAGENS.lascas },
+    { id:"aneis", categoria:"acompanhamento", nome:"Anéis de Saturno", planeta:"saturno", anel:true,
+      descricao:"Cebola empanada na hora, com molho defumado.", ingredientes:"", preco:2490, imagem:IMAGENS.aneis },
+    { id:"meteoritos", categoria:"acompanhamento", nome:"Meteoritos de Queijo", planeta:"meteoro",
+      descricao:"Bolinhas de muçarela crocantes por fora, derretidas por dentro.", ingredientes:"", preco:2490, imagem:IMAGENS.meteoritos },
+
+    { id:"coca", categoria:"bebida", nome:"Coca-Cola", planeta:"marte",
+      descricao:"Lata 350ml", ingredientes:"", preco:700, imagem:null },
+    { id:"guarana", categoria:"bebida", nome:"Guaraná", planeta:"jupiter",
+      descricao:"Lata 350ml", ingredientes:"", preco:650, imagem:IMAGENS.guarana }
+  ];
+
+  /* ---------- 3. CASHBACK ---------- */
+  const CASHBACK = {
+    codigo: "COSMOS10",
+    percentual: 10,
+    rotulo: "10% de cashback para a próxima compra"
+  };
+
+  /* ---------- 4. UTILITÁRIOS ---------- */
+  const $  = (s, e) => (e || document).querySelector(s);
+  const $$ = (s, e) => Array.prototype.slice.call((e || document).querySelectorAll(s));
+  const brl = new Intl.NumberFormat("pt-BR", { style:"currency", currency:CONFIG.moeda });
+  const preco = c => c === null || c === undefined ? "Preço a confirmar" : brl.format(c / 100);
+  const acharProduto = id => MENU.filter(p => p.id === id)[0];
+  const reduzido = () => !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const emPrevia = document.documentElement.classList.contains("preview");
+
+  const guardar = {
+    ler(chave, padrao) {
+      try { const v = localStorage.getItem(chave); return v ? JSON.parse(v) : padrao; }
+      catch (e) { return padrao; }
+    },
+    escrever(chave, valor) {
+      try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) {}
+    }
+  };
+
+  function toast(msg) {
+    const t = $("#toast");
+    t.textContent = msg;
+    t.classList.add("visivel");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove("visivel"), 1600);
+  }
+
+  // Esfera CSS de um corpo celeste (placeholder de foto e ícone de navegação)
+  function esferaHTML(p, tamanho) {
+    const attrs = [
+      'class="astro"',
+      'data-p="' + (p.planeta || "mercurio") + '"',
+      p.luas ? 'data-luas="' + p.luas + '"' : "",
+      p.anel ? 'data-anel="' + p.anel + '"' : "",
+      p.faixas ? 'data-faixas="1"' : "",
+      p.planeta === "sol" ? 'data-sol="1"' : "",
+      tamanho ? 'style="--d:' + tamanho + 'px"' : ""
+    ].filter(Boolean).join(" ");
+    const luas = p.luas ? '<span class="luas">' + '<i class="lua"></i>'.repeat(Math.min(p.luas, 3)) + '</span>' : "";
+    return "<span " + attrs + " aria-hidden=\"true\">" + luas + "</span>";
+  }
+
+  function planetaRealHTML(p) {
+    return '<span class="astro-real" data-p="' + p.planeta + '" aria-hidden="true"></span>';
+  }
+
+  function focarPlaneta(id, mover) {
+    const botoes = $$("#trilha .orbita");
+    const ativo = botoes.findIndex(function (botao) { return botao.getAttribute("data-ir") === id; });
+    if (ativo < 0) return;
+    const medidas = window.innerWidth <= 640 ? [182,128,108,92] : [230,168,138,116];
+    botoes.forEach(function (botao, indice) {
+      const distancia = Math.abs(indice - ativo);
+      const opacidade = distancia === 0 ? 1 : Math.max(.26, .76 - distancia * .18);
+      botao.style.setProperty("--diametro", medidas[Math.min(distancia, 3)] + "px");
+      botao.style.setProperty("--opacidade", opacidade.toFixed(2));
+      botao.setAttribute("aria-current", String(indice === ativo));
+    });
+    if (mover) {
+      const trilha = $("#trilha");
+      const destino = botoes[ativo].offsetLeft - (trilha.clientWidth - botoes[ativo].offsetWidth) / 2;
+      const comportamento = mover === "instant" || reduzido() ? "auto" : "smooth";
+      trilha.scrollTo({ left:destino, behavior:comportamento });
+    }
+  }
+
+  /* ---------- 5. RENDER ---------- */
+  function palcoHTML(p) {
+    if (p.imagem) {
+      return '<div class="palco"><img src="' + p.imagem + '" alt="Hambúrguer ' + p.nome +
+             '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="800" height="600"></div>';
+    }
+    return '<div class="palco"><span class="estrelas"></span>' + esferaHTML(p) +
+           '<span class="tag-foto">foto em breve</span></div>';
+  }
+
+  function cardHTML(p) {
+    return '' +
+      '<article class="card revela" id="card-' + p.id + '">' +
+        palcoHTML(p) +
+        '<div class="card-corpo">' +
+          '<h3>' + p.nome + '</h3>' +
+          '<p class="desc"><span class="campo">Porção</span>' + (p.quantidade || "Hambúrguer artesanal") + '</p>' +
+          '<p class="ingr"><span class="campo">Ingredientes</span>' + p.descricao + '</p>' +
+          '<div class="card-pe">' +
+            '<span class="preco">' + preco(p.preco) + '</span>' +
+            '<button class="btn-add" data-add="' + p.id + '">Adicionar</button>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+  }
+
+  function linhaHTML(p) {
+    const mini = p.imagem
+      ? '<img src="' + p.imagem + '" alt="' + p.nome + '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="124" height="124">'
+      : esferaHTML(p, 38);
+    return '' +
+      '<div class="linha" id="card-' + p.id + '">' +
+        '<div class="miniatura">' + mini + '</div>' +
+        '<div class="txt">' +
+          '<p class="nome">' + p.nome + '</p>' +
+          '<p class="desc">' + p.descricao + '</p>' +
+        '</div>' +
+        '<span class="preco">' + preco(p.preco) + '</span>' +
+        '<button class="btn-mini" data-add="' + p.id + '" aria-label="Adicionar ' + p.nome + ' ao pedido">+</button>' +
+      '</div>';
+  }
+
+  function comboHTML(p) {
+    return '' +
+      '<article class="combo-card revela" data-combo-card="' + p.id + '" tabindex="0" aria-label="' + p.nome + '. Toque para ver os detalhes.">' +
+        '<div class="combo-imagem">' +
+          '<img src="' + p.imagem + '" alt="' + p.nome + '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="1536" height="1024">' +
+          '<div class="combo-convite"><span>Toque para ver detalhes</span><span>↗</span></div>' +
+        '</div>' +
+        '<div class="combo-detalhe">' +
+          '<span class="combo-selo">Combo Cosmos</span>' +
+          '<h3>' + p.nome + '</h3>' +
+          '<p><strong>Inclui</strong>' + p.quantidade + '</p>' +
+          '<p><strong>Ingredientes e escolhas</strong>' + p.descricao + '</p>' +
+          '<p><strong>Valor</strong>' + preco(p.preco) + '</p>' +
+          '<p class="combo-condicao">' + p.condicoes + '</p>' +
+          '<button class="btn-add" data-add="' + p.id + '">Adicionar ao carrinho</button>' +
+          '<button class="combo-fechar" type="button" data-combo-fechar>Voltar para a imagem</button>' +
+        '</div>' +
+      '</article>';
+  }
+
+  function montarCombos() {
+    const pista = $("#grade-combos");
+    const combos = MENU.filter(p => p.categoria === "combo");
+    const repetidos = combos.concat(combos, combos);
+    pista.innerHTML = repetidos.map(comboHTML).join("");
+
+    requestAnimationFrame(function () {
+      pista.scrollLeft = pista.scrollWidth / 3;
+    });
+
+    let ajustando = false;
+    pista.addEventListener("scroll", function () {
+      if (ajustando || !pista.scrollWidth) return;
+      const ciclo = pista.scrollWidth / 3;
+      if (pista.scrollLeft < ciclo * .45) {
+        ajustando = true; pista.scrollLeft += ciclo; ajustando = false;
+      } else if (pista.scrollLeft > ciclo * 1.55) {
+        ajustando = true; pista.scrollLeft -= ciclo; ajustando = false;
+      }
+    }, { passive:true });
+  }
+
+  function montarCardapio() {
+    $("#grade-burgers").innerHTML  = MENU.filter(p => p.categoria === "burger").map(cardHTML).join("");
+    $("#lista-acomp").innerHTML    = MENU.filter(p => p.categoria === "acompanhamento").map(linhaHTML).join("");
+    $("#lista-bebidas").innerHTML  = MENU.filter(p => p.categoria === "bebida").map(linhaHTML).join("");
+    montarCombos();
+
+    // trilha de planetas
+    $("#trilha").innerHTML = MENU.filter(p => p.categoria === "burger").map(function (p) {
+      return '<button class="orbita" type="button" aria-current="false" aria-expanded="false" data-ir="' + p.id + '">' +
+               planetaRealHTML(p) +
+               '<span class="rotulo"><span>' + p.simbolo + '</span><strong>' + p.nome + '</strong></span>' +
+             '</button>';
+    }).join("");
+    requestAnimationFrame(function () { focarPlaneta("terra", "instant"); });
+  }
+
+  let ultimoPlaneta = null;
+
+  function modalPlanetaHTML(p) {
+    return '<div class="janela"><div class="foto"><img src="' + p.imagem + '" alt="Hambúrguer ' + p.nome + '" width="800" height="600" decoding="async"><span class="preco-popup">' + preco(p.preco) + '</span></div>' +
+      '<div class="conteudo"><span class="sobretitulo">Sinal do planeta</span><h2 id="t-planeta">' + p.simbolo + ' ' + p.nome + '</h2>' +
+      '<p>' + p.curiosidade + '</p><button class="btn btn-primario ir-lanche" type="button" data-ir-lanche="' + p.id + '">Ver hambúrguer ' + p.nome + '</button></div>' +
+      '<button class="fechar-planeta" type="button" data-fechar-planeta>← Voltar à órbita</button></div>';
+  }
+
+  function fecharPlaneta() {
+    const modal = $("#modal-planeta");
+    if (modal.hidden) return;
+    modal.classList.remove("aberto");
+    document.body.classList.remove("modal-planeta-aberto");
+    $$(".orbita").forEach(function (orbita) {
+      orbita.classList.remove("em-orbita");
+      orbita.setAttribute("aria-current", "false");
+      orbita.setAttribute("aria-expanded", "false");
+    });
+    setTimeout(function () {
+      modal.hidden = true;
+      modal.innerHTML = "";
+      if (ultimoPlaneta) ultimoPlaneta.focus();
+      ultimoPlaneta = null;
+    }, 260);
+  }
+
+  function abrirPlaneta(botao) {
+    const id = botao.getAttribute("data-ir");
+    const p = MENU.find(item => item.id === id);
+    if (!p) return;
+    focarPlaneta(id, true);
+    $$(".orbita").forEach(function (orbita) {
+      const ativa = orbita === botao;
+      orbita.setAttribute("aria-current", String(ativa));
+      orbita.setAttribute("aria-expanded", String(ativa));
+      orbita.classList.toggle("em-orbita", ativa);
+    });
+    ultimoPlaneta = botao;
+    const modal = $("#modal-planeta");
+    modal.innerHTML = modalPlanetaHTML(p);
+    modal.hidden = false;
+    document.body.classList.add("modal-planeta-aberto");
+    requestAnimationFrame(function () {
+      modal.classList.add("aberto");
+      modal.querySelector("[data-fechar-planeta]").focus();
+    });
+  }
+
+  function irAoLanche(id) {
+    const alvo = document.getElementById("card-" + id);
+    if (!alvo) return;
+    alvo.scrollIntoView({ behavior: reduzido() ? "auto" : "smooth", block: "center" });
+    alvo.classList.add("alvo");
+    setTimeout(() => alvo.classList.remove("alvo"), 1600);
+  }
+
+  function revelar() {
+    const alvos = $$(".revela");
+    if (reduzido() || document.body.classList.contains("leve") || !("IntersectionObserver" in window)) {
+      alvos.forEach(el => el.classList.add("dentro"));
+      return;
+    }
+    const obs = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e, i) {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        setTimeout(() => el.classList.add("dentro"), Math.min(i, 3) * 60);
+        obs.unobserve(el);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    alvos.forEach(el => obs.observe(el));
+  }
+
+  /* ---------- 6. CARRINHO ---------- */
+  const CHAVE_CARRINHO = "cosmos:carrinho";
+  const CHAVE_CASHBACK = "cosmos:cashback";
+  let carrinho = guardar.ler(CHAVE_CARRINHO, []);       // [{id, qtd}]
+  let cashbackAtivo = guardar.ler(CHAVE_CASHBACK, null); // {id, codigo, percentual, status, telefone}
+
+  function subtotal() {
+    return carrinho.reduce(function (s, it) {
+      const p = acharProduto(it.id);
+      return p && Number.isFinite(p.preco) ? s + p.preco * it.qtd : s;
+    }, 0);
+  }
+  function temPrecoPendente() {
+    return carrinho.some(function (it) {
+      const p = acharProduto(it.id);
+      return p && !Number.isFinite(p.preco);
+    });
+  }
+  function valorCashback(sub) {
+    return cashbackAtivo ? Math.round(sub * cashbackAtivo.percentual / 100) : 0;
+  }
+
+  function ativarCashback() {
+    if (!cashbackAtivo) {
+      cashbackAtivo = {
+        id: "CB-" + Date.now().toString(36).toUpperCase().slice(-8),
+        codigo: CASHBACK.codigo,
+        percentual: CASHBACK.percentual,
+        status: "pendente",
+        telefone: "",
+        criadoEm: new Date().toISOString()
+      };
+    }
+    guardar.escrever(CHAVE_CASHBACK, cashbackAtivo);
+    pintarCarrinho();
+  }
+
+  function telefoneWhatsApp(valor) {
+    let numero = String(valor || "").replace(/\D/g, "");
+    if (numero.indexOf("55") === 0 && numero.length >= 12) numero = numero.slice(2);
+    return (numero.length === 10 || numero.length === 11) ? "55" + numero : "";
+  }
+  function totalItens() { return carrinho.reduce((s, it) => s + it.qtd, 0); }
+
+  function adicionar(id) {
+    const existente = carrinho.filter(it => it.id === id)[0];
+    if (existente) existente.qtd += 1; else carrinho.push({ id: id, qtd: 1 });
+    salvarEAtualizar();
+    toast(acharProduto(id).nome + " no pedido");
+  }
+  function mudarQtd(id, delta) {
+    const it = carrinho.filter(x => x.id === id)[0];
+    if (!it) return;
+    it.qtd += delta;
+    if (it.qtd <= 0) carrinho = carrinho.filter(x => x.id !== id);
+    salvarEAtualizar();
+  }
+  function remover(id) {
+    carrinho = carrinho.filter(x => x.id !== id);
+    salvarEAtualizar();
+  }
+  function salvarEAtualizar() {
+    guardar.escrever(CHAVE_CARRINHO, carrinho);
+    pintarCarrinho();
+  }
+
+  function pintarCarrinho() {
+    const n = totalItens(), sub = subtotal(), cash = valorCashback(sub), tot = sub, pendente = temPrecoPendente();
+
+    // barra fixa
+    const barra = $("#barra-carrinho");
+    barra.classList.toggle("visivel", n > 0);
+    document.body.classList.toggle("tem-itens", n > 0);
+    $("#barra-qtd").textContent = n + (n === 1 ? " item" : " itens");
+    $("#barra-total").textContent = pendente ? "A confirmar" : preco(tot);
+    $("#limpar-carrinho").hidden = !n;
+
+    // lista
+    const lista = $("#itens-carrinho");
+    if (!n) {
+      lista.innerHTML = '<p class="vazio">Seu pedido está vazio. Comece pelo <a href="#burgers" data-fecha="1" style="color:var(--ouro)">Terra</a> se estiver em dúvida.</p>';
+      $("#area-cashback").hidden = true;
+      $("#pe-carrinho").hidden = true;
+      return;
+    }
+    $("#area-cashback").hidden = false;
+    $("#pe-carrinho").hidden = false;
+
+    lista.innerHTML = carrinho.map(function (it) {
+      const p = acharProduto(it.id);
+      if (!p) return "";
+      return '' +
+        '<div class="item">' +
+          '<div class="info">' +
+            '<p class="nome">' + p.nome + '</p>' +
+            '<p class="sub">' + (Number.isFinite(p.preco) ? preco(p.preco) + ' cada' : 'Preço a confirmar') + '</p>' +
+          '</div>' +
+          '<div class="passo">' +
+            '<button data-menos="' + p.id + '" aria-label="Menos um ' + p.nome + '">−</button>' +
+            '<span class="n">' + it.qtd + '</span>' +
+            '<button data-mais="' + p.id + '" aria-label="Mais um ' + p.nome + '">+</button>' +
+          '</div>' +
+          '<span class="preco">' + (Number.isFinite(p.preco) ? preco(p.preco * it.qtd) : 'A confirmar') + '</span>' +
+        '</div>';
+    }).join("");
+
+    // contas
+    $("#cashback-valor").textContent = cashbackAtivo ? preco(cash) : "Ative na missão";
+    $("#cashback-status").textContent = cashbackAtivo
+      ? (cashbackAtivo.status === "solicitado"
+        ? "Solicitação enviada. Aguarde a confirmação da loja pelo WhatsApp; este valor não reduz o pedido atual."
+        : "Este valor será reservado para sua próxima compra após a confirmação da loja; ele não reduz o pedido atual.")
+      : "Resgate o sinal da missão para ativar 10% de cashback. O valor não reduz este pedido e fica reservado para a próxima compra.";
+    if (cashbackAtivo && cashbackAtivo.telefone) {
+      $("#campo-celular").value = cashbackAtivo.telefone.replace(/^55/, "");
+    }
+    $("#contas").innerHTML =
+      '<div><span>Subtotal</span><span>' + preco(sub) + '</span></div>' +
+      (cash ? '<div class="cashback-linha"><span>Cashback próximo pedido · 10%</span><span>+ ' + preco(cash) + '</span></div>' : "") +
+      '<div class="total"><span>Total de hoje</span><span class="preco">' + (pendente ? "A confirmar" : preco(tot)) + '</span></div>' +
+      (pendente ? '<p class="aviso">Há um combo com preço pendente. A loja confirmará o valor pelo WhatsApp.</p>' : '');
+
+    atualizarLinkWhatsApp(sub, tot);
+  }
+
+  /* ---------- 7. RESERVA DE CASHBACK ---------- */
+  function solicitarCashback() {
+    const aviso = $("#aviso-cashback");
+    if (!cashbackAtivo) {
+      aviso.textContent = "Primeiro ative o cashback no sinal da missão.";
+      aviso.className = "aviso erro";
+      return;
+    }
+    const telefone = telefoneWhatsApp($("#campo-celular").value);
+    if (!telefone) {
+      aviso.textContent = "Informe um WhatsApp válido com DDD.";
+      aviso.className = "aviso erro";
+      $("#campo-celular").focus();
+      return;
+    }
+    const sub = subtotal(), cash = valorCashback(sub);
+    cashbackAtivo.telefone = telefone;
+    cashbackAtivo.valorCentavos = cash;
+    cashbackAtivo.status = "solicitado";
+    cashbackAtivo.solicitadoEm = new Date().toISOString();
+    guardar.escrever(CHAVE_CASHBACK, cashbackAtivo);
+
+    const texto = [
+      CONFIG.saudacao,
+      "",
+      "Quero reservar meu cashback para a próxima compra.",
+      "Código de reserva: " + cashbackAtivo.id,
+      "Meu WhatsApp: +" + telefone,
+      "Pedido de referência: " + preco(sub),
+      "Cashback a reservar (10%): " + preco(cash),
+      "",
+      "Por favor, confirme esta reserva por aqui."
+    ].join("\n");
+    window.open("https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
+    $("#aviso-cashback").textContent = "Solicitação pronta no WhatsApp. Envie a mensagem para a loja confirmar seu cashback.";
+    $("#aviso-cashback").className = "aviso ok";
+    pintarCarrinho();
+  }
+
+  /* ---------- 8. WHATSAPP ---------- */
+  function textoPedido(sub, tot) {
+    const linhas = [CONFIG.saudacao, "", "Meu pedido:"];
+    carrinho.forEach(function (it) {
+      const p = acharProduto(it.id);
+      if (p) linhas.push(it.qtd + "x " + p.nome + " — " + (Number.isFinite(p.preco) ? preco(p.preco * it.qtd) : "valor a confirmar"));
+    });
+    linhas.push("", "Subtotal: " + preco(sub));
+    if (cashbackAtivo) linhas.push("Cashback para a próxima compra (10%): " + preco(valorCashback(sub)), "Código de reserva: " + cashbackAtivo.id + " (aguarda confirmação)");
+    linhas.push("Total: " + (temPrecoPendente() ? "valor a confirmar" : preco(tot)));
+    linhas.push("", "Nome:", "Endereço / retirada:", "Pagamento:");
+    return linhas.join("\n");
+  }
+  function atualizarLinkWhatsApp(sub, tot) {
+    const texto = textoPedido(sub, tot);
+    $("#enviar-pedido").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto);
+    $("#enviar-pedido").dataset.texto = texto;
+  }
+
+  /* ---------- 9. MISSÃO COSMOS ---------- */
+  const CHAVE_MISSAO = "cosmos:missao";
+  function iniciarMissao() {
+    const estado = guardar.ler(CHAVE_MISSAO, null);
+    if (estado === "resgatado" || estado === "dispensado") return;
+
+    const gatilho = $(CONFIG.missaoGatilho);
+    if (!gatilho || !("IntersectionObserver" in window)) return;
+
+    const obs = new IntersectionObserver(function (ents) {
+      if (ents[0].isIntersecting) {
+        $("#missao-chamada").hidden = false;
+        requestAnimationFrame(() => $("#missao-chamada").classList.add("visivel"));
+        obs.disconnect();
+      }
+    }, { threshold: 0.25 });
+    obs.observe(gatilho);
+  }
+  function fecharChamada() {
+    $("#missao-chamada").classList.remove("visivel");
+    setTimeout(() => { $("#missao-chamada").hidden = true; }, 420);
+  }
+  function abrirMissao() {
+    fecharChamada();
+    const modal = $("#missao-modal"), corpo = $("#missao-conteudo");
+    modal.hidden = false; $("#veu").hidden = false;
+    requestAnimationFrame(function () { modal.classList.add("aberto"); $("#veu").classList.add("aberto"); });
+
+    corpo.innerHTML =
+      '<div class="radar"></div>' +
+      '<h2 id="t-missao">Interceptando</h2>' +
+      '<p>Decodificando transmissão…</p>';
+
+    setTimeout(revelarRecompensa, reduzido() || document.body.classList.contains("leve") ? 150 : 1500);
+  }
+  function revelarRecompensa() {
+    $("#missao-conteudo").innerHTML =
+      '<h2 id="t-missao">🛰️ Sinal interceptado</h2>' +
+      '<p>Você ganhou 10% de cashback para a próxima compra.</p>' +
+      '<span class="codigo">10% CASHBACK</span>' +
+      '<p>O valor será calculado sobre o pedido de hoje, mas não reduz o total atual. A loja confirma a reserva pelo WhatsApp.</p>' +
+      '<button class="btn btn-primario" id="ativar-cashback">Reservar meu cashback</button>' +
+      '<button class="depois" id="missao-depois">Depois</button>';
+    guardar.escrever(CHAVE_MISSAO, "resgatado");
+    const ativar = $("#ativar-cashback");
+    if (ativar) ativar.focus();
+  }
+  function fecharMissao() {
+    $("#missao-modal").classList.remove("aberto");
+    $("#veu").classList.remove("aberto");
+    setTimeout(function () { $("#missao-modal").hidden = true; $("#veu").hidden = true; }, 260);
+  }
+
+  /* ---------- PAINEL DO CARRINHO ---------- */
+  let focoAnterior = null;
+  function abrirCarrinho() {
+    focoAnterior = document.activeElement;
+    $("#painel-carrinho").hidden = false; $("#veu").hidden = false;
+    requestAnimationFrame(function () {
+      $("#painel-carrinho").classList.add("aberto");
+      $("#veu").classList.add("aberto");
+      $("#fechar-carrinho").focus();
+    });
+  }
+  function fecharCarrinho() {
+    $("#painel-carrinho").classList.remove("aberto");
+    $("#veu").classList.remove("aberto");
+    setTimeout(function () { $("#painel-carrinho").hidden = true; $("#veu").hidden = true; }, 260);
+    if (focoAnterior && focoAnterior.focus) focoAnterior.focus();
+  }
+
+  /* ---------- 10. BOOT ---------- */
+  function detectarAparelhoModesto() {
+    const mem = navigator.deviceMemory || 4;
+    const nucleos = navigator.hardwareConcurrency || 4;
+    const con = navigator.connection && navigator.connection.effectiveType;
+    if (mem <= 2 || nucleos <= 2 || con === "2g" || con === "slow-2g") {
+      document.body.classList.add("leve");
+    }
+  }
+
+  function abertura() {
+    const tela = $("#abertura");
+    const fim = function () {
+      tela.classList.add("saindo");
+      document.body.classList.remove("abrindo");
+      setTimeout(function () { if (tela.parentNode) tela.parentNode.removeChild(tela); }, 400);
+    };
+    const previa = new URLSearchParams(window.location.search).has("preview");
+    const espera = previa ? 0 : ((reduzido() || document.body.classList.contains("leve")) ? 260 : CONFIG.aberturaMs);
+    setTimeout(fim, espera);
+  }
+
+  function ligarEventos() {
+    // adicionar produto (delegação: serve para cards e linhas)
+    document.addEventListener("click", function (ev) {
+      const btnAdd = ev.target.closest("[data-add]");
+      if (btnAdd) {
+        adicionar(btnAdd.getAttribute("data-add"));
+        btnAdd.classList.add("ok");
+        const rotulo = btnAdd.classList.contains("btn-add") ? btnAdd.textContent : null;
+        if (rotulo) btnAdd.textContent = "Adicionado";
+        setTimeout(function () {
+          btnAdd.classList.remove("ok");
+          if (rotulo) btnAdd.textContent = rotulo;
+        }, 900);
+        return;
+      }
+      const limpar = ev.target.closest("#limpar-carrinho");
+      if (limpar) {
+        carrinho = [];
+        salvarEAtualizar();
+        toast("Pedido esvaziado");
+        return;
+      }
+      const moverCombo = ev.target.closest("[data-combo-mover]");
+      if (moverCombo) {
+        const pista = $("#grade-combos");
+        pista.scrollBy({ left: Number(moverCombo.getAttribute("data-combo-mover")) * pista.clientWidth, behavior: reduzido() ? "auto" : "smooth" });
+        return;
+      }
+      const fecharCombo = ev.target.closest("[data-combo-fechar]");
+      if (fecharCombo) {
+        const combo = fecharCombo.closest("[data-combo-card]");
+        if (combo) combo.classList.remove("aberto");
+        return;
+      }
+      const combo = ev.target.closest("[data-combo-card]");
+      if (combo && !ev.target.closest("button")) {
+        combo.classList.toggle("aberto");
+        return;
+      }
+      const botaoFecharPlaneta = ev.target.closest("[data-fechar-planeta]");
+      if (botaoFecharPlaneta) {
+        fecharPlaneta();
+        return;
+      }
+      const irLanche = ev.target.closest("[data-ir-lanche]");
+      if (irLanche) {
+        const id = irLanche.getAttribute("data-ir-lanche");
+        fecharPlaneta();
+        setTimeout(function () { irAoLanche(id); }, 270);
+        return;
+      }
+      const irPara = ev.target.closest("[data-ir]");
+      if (irPara) {
+        abrirPlaneta(irPara);
+        return;
+      }
+      const menos = ev.target.closest("[data-menos]");
+      if (menos) { mudarQtd(menos.getAttribute("data-menos"), -1); return; }
+      const mais = ev.target.closest("[data-mais]");
+      if (mais) { mudarQtd(mais.getAttribute("data-mais"), 1); return; }
+      if (ev.target.closest("[data-fecha]")) { fecharCarrinho(); return; }
+    });
+
+    $("#abrir-carrinho").addEventListener("click", abrirCarrinho);
+    $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
+    $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { fecharCarrinho(); fecharMissao(); fecharPlaneta(); }
+      const combo = e.target.closest && e.target.closest("[data-combo-card]");
+      if (combo && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        combo.classList.toggle("aberto");
+      }
+    });
+
+    $("#reservar-cashback").addEventListener("click", solicitarCashback);
+
+    $("#copiar-pedido").addEventListener("click", function () {
+      const texto = $("#enviar-pedido").dataset.texto || "";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(() => toast("Pedido copiado"), () => toast("Não deu para copiar"));
+      } else { toast("Não deu para copiar"); }
+    });
+    $("#enviar-pedido").addEventListener("click", function () {
+      if (CONFIG.whatsapp.indexOf("999999999") > -1) {
+        toast("Configure o número do WhatsApp em CONFIG");
+      }
+    });
+
+    $("#missao-abrir").addEventListener("click", abrirMissao);
+    $("#missao-dispensar").addEventListener("click", function () {
+      guardar.escrever(CHAVE_MISSAO, "dispensado");
+      fecharChamada();
+    });
+    $("#missao-modal").addEventListener("click", function (ev) {
+      if (ev.target.id === "ativar-cashback") {
+        ativarCashback();
+        fecharMissao();
+        if (totalItens() > 0) { abrirCarrinho(); } else { toast("Cashback ativado. Monte seu pedido."); }
+      }
+      if (ev.target.id === "missao-depois") fecharMissao();
+    });
+
+    // destaque do planeta conforme o card visível
+    if ("IntersectionObserver" in window) {
+      const cards = MENU.filter(p => p.categoria === "burger")
+        .map(p => document.getElementById("card-" + p.id)).filter(Boolean);
+      const obs = new IntersectionObserver(function (ents) {
+        ents.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          const id = e.target.id.replace("card-", "");
+          focarPlaneta(id, false);
+        });
+      }, { threshold: 0.55 });
+      cards.forEach(c => obs.observe(c));
+    }
+  }
+
+  // arranque
+  detectarAparelhoModesto();
+  montarCardapio();
+  ligarEventos();
+  pintarCarrinho();
+  revelar();
+  abertura();
+  iniciarMissao();
+  const alvoPrevia = new URLSearchParams(window.location.search).get("preview");
+  if (alvoPrevia && alvoPrevia !== "1") {
+    const secaoPrevia = document.getElementById(alvoPrevia);
+    if (secaoPrevia) secaoPrevia.scrollIntoView({ block:"start" });
+  }
+})();
+</script>
+</body>
+</html>
