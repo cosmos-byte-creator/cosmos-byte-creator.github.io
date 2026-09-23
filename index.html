@@ -9,22 +9,47 @@
 <title>Cosmos Burguer — cardápio</title>
 <meta name="description" content="Sete hambúrgueres artesanais inspirados no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
 <meta name="theme-color" content="#07060A">
+<link rel="canonical" href="https://cosmos-byte-creator.github.io/">
 <script>(function(){var p=new URLSearchParams(location.search).get("preview");if(p){document.documentElement.classList.add("preview");document.documentElement.dataset.preview=p}})()</script>
 <script>
-/* Atualização do GitHub Pages: o service worker força HTML novo a cada refresh. */
+/* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260923.1";
+  var VERSAO_SITE = "20260923.2";
   window.COSMOS_VERSAO = VERSAO_SITE;
+
+  /* Remove links versionados antigos, preservando parâmetros de preview. */
+  var endereco = new URL(location.href);
+  if (endereco.searchParams.has("v")) {
+    endereco.searchParams.delete("v");
+    history.replaceState(null, "", endereco.pathname + endereco.search + endereco.hash);
+  }
+
   if (!("serviceWorker" in navigator) || location.protocol !== "https:") return;
-  navigator.serviceWorker.register("/sw.js?v=" + VERSAO_SITE, { updateViaCache:"none" }).catch(function () {});
-  fetch("/version.json?t=" + Date.now(), { cache:"no-store" })
+
+  navigator.serviceWorker.register("/sw.js", { updateViaCache:"none" }).catch(function () {});
+  fetch("/version.json?__cosmos=" + Date.now(), { cache:"no-store" })
     .then(function (resposta) { return resposta.ok ? resposta.json() : null; })
     .then(function (dados) {
       if (!dados || dados.version === VERSAO_SITE) return;
-      var url = new URL(location.href);
-      if (url.searchParams.get("v") === dados.version) return;
-      url.searchParams.set("v", dados.version);
-      location.replace(url.href);
+      var chave = "cosmos-atualizacao-" + dados.version;
+      if (sessionStorage.getItem(chave)) return;
+      sessionStorage.setItem(chave, "1");
+
+      /* Obtém o HTML novo por uma URL interna única e mantém a URL visível limpa. */
+      return fetch("/?__cosmos=" + encodeURIComponent(dados.version) + "-" + Date.now(), {
+        cache:"no-store",
+        credentials:"same-origin"
+      })
+        .then(function (resposta) {
+          if (!resposta.ok) throw new Error("Falha ao atualizar o site");
+          return resposta.text();
+        })
+        .then(function (html) {
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(function () { sessionStorage.removeItem(chave); });
     })
     .catch(function () {});
 })();
