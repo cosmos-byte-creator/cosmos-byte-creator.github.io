@@ -756,11 +756,90 @@ footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,1
   #lista-acomp .linha{flex-basis:84vw}
   #lista-acomp .miniatura{height:240px}
 }
+
+/* =========================================================================
+   RESPONSIVIDADE E USABILIDADE MOBILE
+   Ajustes finais para toque, telas estreitas e barras móveis do navegador.
+   ========================================================================= */
+.menu-mobile{display:none}
+button,a,input{touch-action:manipulation}
+.card,.combo-card,.linha,.item{min-width:0}
+.card h3,.linha .nome,.item .nome{overflow-wrap:anywhere}
+.painel-inf{max-height:88vh;max-height:88dvh}
+
+@media (max-width:900px){
+  .header-in{position:relative}
+  .menu-mobile{
+    display:grid;place-content:center;gap:5px;width:44px;height:44px;margin-left:auto;
+    border:1px solid rgba(255,196,95,.38);border-radius:50%;color:var(--ouro)
+  }
+  .menu-mobile span{display:block;width:18px;height:1px;background:currentColor;transition:transform .2s var(--ease),opacity .2s var(--ease)}
+  .menu-mobile[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .menu-mobile[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .menu-mobile[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .atalhos{display:none}
+  .atalhos.aberto{
+    position:absolute;top:100%;left:0;right:0;display:grid;gap:2px;margin:0;
+    padding:12px max(20px,var(--borda-pag)) 18px;background:rgba(5,5,6,.98);
+    border-bottom:1px solid rgba(255,196,95,.22);box-shadow:0 18px 30px rgba(0,0,0,.38)
+  }
+  .atalhos.aberto a,.atalhos.aberto a:not(.nav-pedir){display:flex;align-items:center;min-height:46px;padding:0 4px;font-size:12px}
+  .atalhos.aberto .nav-pedir{justify-content:center;margin:8px 0 0;padding-inline:16px}
+}
+
+@media (max-width:640px){
+  :root{--borda-pag:clamp(16px,5vw,20px)}
+  html{scroll-padding-top:72px}
+  body{font-size:16px}
+  .hero{min-height:calc(100svh - 64px);min-height:calc(100dvh - 64px)}
+  .hero .env.hero-grid{padding-top:min(43vh,410px);padding-top:min(43svh,410px)}
+  section{padding-block:clamp(60px,18vw,76px)}
+  .btn,.btn-add,.btn-mini,.combo-fechar,.limpar-carrinho{min-height:44px}
+  .combo-card:hover,.card:hover{transform:none}
+  .modal-planeta{padding:12px max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+  .modal-planeta .janela{min-height:auto;align-content:start}
+  .modal-planeta .foto{min-height:min(36svh,330px)}
+  .painel-inf{border-radius:18px 18px 0 0}
+  .painel-topo,.painel-corpo,.painel-pe{padding-inline:var(--borda-pag)}
+  .cashback-form input{font-size:16px}
+  .toast{max-width:calc(100vw - 32px);width:max-content;text-align:center}
+}
+
+@media (max-width:420px){
+  .hero-title{font-size:clamp(44px,15.5vw,62px)}
+  .card-corpo,.card:first-child .card-corpo{padding:20px}
+  .card:first-child h3{font-size:clamp(34px,11vw,42px)}
+  .item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 10px}
+  .item .preco{grid-column:1;text-align:left;min-width:0}
+  .item .passo{grid-column:2;grid-row:1/3}
+  .cashback-cabeca{align-items:flex-start;flex-direction:column;gap:4px}
+  .cashback-form{display:grid}
+  .cashback-form button{width:100%}
+  .missao-chamada .d{display:none}
+}
+
+@media (max-width:360px){
+  .header-marca .marca-linha{font-size:16px}
+  .hero .ctas{grid-template-columns:1fr}
+  .hero .btn{font-size:10px}
+  .hero-meta{align-items:flex-start;flex-direction:column;gap:7px}
+  .hero-meta i{display:none}
+  .barra-in{gap:7px;padding-left:12px}
+  .barra-in .qtd{font-size:12px}
+  .barra-in .tot{font-size:14px}
+  .barra-in .abrir{padding-inline:12px;font-size:10px}
+}
+
+@media (max-height:520px) and (orientation:landscape){
+  .hero{min-height:620px}
+  .modal-planeta .janela{grid-template-columns:minmax(220px,.85fr) 1fr;align-content:start}
+  .modal-planeta .foto{min-height:72dvh}
+}
 </style>
 </head>
 <body class="abrindo">
 
-<!-- ================= ABERTURA (5s) ================= -->
+<!-- ================= ABERTURA CURTA (somente na primeira visita) ================= -->
 <div id="abertura" aria-hidden="true">
   <div class="estrelas"></div>
   <div>
@@ -780,7 +859,12 @@ footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,1
         <span class="marca-linha"><span>C</span><span class="marca-o"></span><span>SMOS</span></span>
       </span>
     </a>
-    <nav class="atalhos" aria-label="Categorias">
+    <button class="menu-mobile" id="menu-mobile" type="button" aria-expanded="false" aria-controls="atalhos" aria-label="Abrir menu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+    <nav class="atalhos" id="atalhos" aria-label="Categorias">
       <a href="#burgers">Hambúrgueres</a>
       <a href="#combos">Combos</a>
       <a href="#acompanhamentos">Acompanhamentos</a>
@@ -964,7 +1048,7 @@ footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,1
     // Texto que abre a mensagem enviada ao WhatsApp
     saudacao: "COSMOS BURGUER 🚀",
     // Abertura animada (ms). 0 desliga.
-    aberturaMs: 5000,
+    aberturaMs: 650,
     // A "Missão Cosmos" só aparece depois que a pessoa passa desta seção
     missaoGatilho: "#bebidas"
   };
@@ -1567,13 +1651,37 @@ footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,1
       setTimeout(function () { if (tela.parentNode) tela.parentNode.removeChild(tela); }, 400);
     };
     const previa = new URLSearchParams(window.location.search).has("preview");
-    const espera = previa ? 0 : ((reduzido() || document.body.classList.contains("leve")) ? 260 : CONFIG.aberturaMs);
+    const aberturaVista = guardar.ler("cosmos:abertura-vista", false);
+    const espera = previa || aberturaVista ? 0 : ((reduzido() || document.body.classList.contains("leve")) ? 120 : CONFIG.aberturaMs);
+    guardar.escrever("cosmos:abertura-vista", true);
     setTimeout(fim, espera);
   }
 
+  function fecharMenuMobile() {
+    const menu = $("#atalhos");
+    const botao = $("#menu-mobile");
+    if (!menu || !botao) return;
+    menu.classList.remove("aberto");
+    botao.setAttribute("aria-expanded", "false");
+    botao.setAttribute("aria-label", "Abrir menu");
+  }
+
   function ligarEventos() {
+    const botaoMenu = $("#menu-mobile");
+    if (botaoMenu) {
+      botaoMenu.addEventListener("click", function () {
+        const aberto = $("#atalhos").classList.toggle("aberto");
+        botaoMenu.setAttribute("aria-expanded", String(aberto));
+        botaoMenu.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
+      });
+      $("#atalhos").addEventListener("click", function (ev) {
+        if (ev.target.closest("a")) fecharMenuMobile();
+      });
+    }
+
     // adicionar produto (delegação: serve para cards e linhas)
     document.addEventListener("click", function (ev) {
+      if ($("#atalhos").classList.contains("aberto") && !ev.target.closest("header")) fecharMenuMobile();
       const btnAdd = ev.target.closest("[data-add]");
       if (btnAdd) {
         adicionar(btnAdd.getAttribute("data-add"));
@@ -1638,7 +1746,7 @@ footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,1
     $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
     $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { fecharCarrinho(); fecharMissao(); fecharPlaneta(); }
+      if (e.key === "Escape") { fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); }
       const combo = e.target.closest && e.target.closest("[data-combo-card]");
       if (combo && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
