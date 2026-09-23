@@ -3,10 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Cosmos Burguer — cardápio</title>
 <meta name="description" content="Sete hambúrgueres artesanais inspirados no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
 <meta name="theme-color" content="#07060A">
 <script>(function(){var p=new URLSearchParams(location.search).get("preview");if(p){document.documentElement.classList.add("preview");document.documentElement.dataset.preview=p}})()</script>
+<script>
+/* Atualização do GitHub Pages: o service worker força HTML novo a cada refresh. */
+(function () {
+  var VERSAO_SITE = "20260923.1";
+  window.COSMOS_VERSAO = VERSAO_SITE;
+  if (!("serviceWorker" in navigator) || location.protocol !== "https:") return;
+  navigator.serviceWorker.register("/sw.js?v=" + VERSAO_SITE, { updateViaCache:"none" }).catch(function () {});
+  fetch("/version.json?t=" + Date.now(), { cache:"no-store" })
+    .then(function (resposta) { return resposta.ok ? resposta.json() : null; })
+    .then(function (dados) {
+      if (!dados || dados.version === VERSAO_SITE) return;
+      var url = new URL(location.href);
+      if (url.searchParams.get("v") === dados.version) return;
+      url.searchParams.set("v", dados.version);
+      location.replace(url.href);
+    })
+    .catch(function () {});
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@85..125,400..900&amp;display=swap" rel="stylesheet">
