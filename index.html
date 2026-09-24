@@ -7,14 +7,14 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Cosmos Burguer — cardápio</title>
-<meta name="description" content="Sete hambúrgueres artesanais inspirados no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
+<meta name="description" content="Oito receitas artesanais inspiradas no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
 <meta name="theme-color" content="#07060A">
 <link rel="canonical" href="https://cosmos-byte-creator.github.io/">
 <script>(function(){var p=new URLSearchParams(location.search).get("preview");if(p){document.documentElement.classList.add("preview");document.documentElement.dataset.preview=p}})()</script>
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.6";
+  var VERSAO_SITE = "20260924.7";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -283,6 +283,7 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 [data-p="marte"]   {--c1:#FFB58A;--c2:#C4562A;--c3:#5E2110;--brilho:rgba(255,110,50,.3)}
 [data-p="jupiter"] {--c1:#F6DEC0;--c2:#C89A6A;--c3:#6B4326}
 [data-p="saturno"] {--c1:#FBE9C4;--c2:#D8B074;--c3:#7A5A2C}
+[data-p="plutao"]  {--c1:#E9D9C9;--c2:#A9856F;--c3:#49362F;--brilho:rgba(205,160,130,.25)}
 [data-p="cometa"]  {--c1:#E8F4FF;--c2:#A9C3D8;--c3:#3E5468}
 [data-p="meteoro"] {--c1:#FFE39C;--c2:#D69A3A;--c3:#5C3A12}
 
@@ -444,6 +445,9 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .btn-mini:hover{background:rgba(255,194,75,.22)}
 .btn-mini:active{transform:scale(.9)}
 .btn-mini.ok{background:var(--ouro); color:#1A0F00}
+.linha.em-breve{filter:grayscale(1);opacity:.58}
+.linha.em-breve .miniatura img{filter:grayscale(1)}
+.selo-breve{grid-area:botao;margin-right:16px;padding:8px 10px;border:1px solid rgba(255,255,255,.2);border-radius:999px;color:#C8C4C1;font-size:10px;font-weight:800;letter-spacing:.08em;white-space:nowrap}
 
 /* ---------- 9. CARRINHO ---------- */
 .barra-carrinho{
@@ -557,6 +561,8 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .config-radio strong{font-size:13px}.config-radio small{color:var(--fosco);font-size:11px;line-height:1.35}
 .config-slot{margin-bottom:12px;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:#0E0D10}
 .config-slot-topo{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px}.config-slot-num{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,106,19,.16);color:var(--brasa);font-size:12px;font-weight:800}
+.config-slot-topo:has(.btn-ingredientes:not([hidden])){grid-template-columns:auto minmax(0,1fr) auto}
+.btn-ingredientes{min-height:40px;padding:0 10px;border:1px solid #FF624D;border-radius:9px;background:rgba(196,46,31,.2);color:#FF8B7C;font-size:9px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.btn-ingredientes:hover{background:rgba(220,55,38,.34)}
 .config-select{width:100%;min-height:48px;padding:0 40px 0 12px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:#151317;color:var(--creme);font:inherit;font-size:14px}
 .config-addons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}.config-addons[hidden]{display:none}
 .config-addon{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 9px;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#D8CEC5;font-size:11px;line-height:1.25;cursor:pointer}.config-addon:has(input:checked){border-color:rgba(255,196,95,.45);background:rgba(255,196,95,.06)}.config-addon input{flex:0 0 auto;width:17px;height:17px;accent-color:var(--ouro)}
@@ -564,6 +570,9 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .config-total{position:sticky;bottom:0;z-index:2;display:flex;align-items:center;gap:12px;margin:20px -20px -20px;padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,196,95,.22);background:rgba(9,9,11,.97);backdrop-filter:blur(12px)}
 .config-total div{flex:1}.config-total small{display:block;color:var(--fosco);font-size:10px;text-transform:uppercase}.config-total strong{font-size:22px;color:var(--ouro)}.config-total .btn{min-width:190px}
 .item-config{margin-top:5px;color:#CDBEB2;font-size:11.5px;line-height:1.45}.editar-combo{margin-top:8px;min-height:32px;padding:0 11px;border:1px solid rgba(255,196,95,.38);border-radius:var(--r-pill);color:var(--ouro);font-size:10px;font-variation-settings:"wdth" 108,"wght" 800;letter-spacing:.07em;text-transform:uppercase}
+.editar-produto{margin-top:8px;min-height:32px;padding:0 11px;border:1px solid rgba(255,196,95,.38);border-radius:var(--r-pill);color:var(--ouro);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.popup-ingredientes{position:fixed;z-index:140;inset:0;display:grid;place-items:center;padding:18px;background:rgba(2,2,3,.72);backdrop-filter:blur(6px)}
+.popup-ingredientes-caixa{width:min(390px,100%);padding:20px;border:1px solid rgba(255,98,77,.55);border-radius:16px;background:#100D10;box-shadow:0 24px 70px #000}.popup-ingredientes-topo{display:flex;align-items:center;gap:12px}.popup-ingredientes-topo h3{font-size:24px}.popup-ingredientes-caixa p{margin-top:14px;color:#D6C8BE;font-size:14px;line-height:1.55}.popup-ingredientes-caixa .fechar{flex:0 0 auto}
 @media(max-width:520px){.config-opcoes.duas,.config-addons{grid-template-columns:1fr}.config-total{margin-inline:-16px;padding-inline:16px}.config-total .btn{min-width:0;padding-inline:14px}}
 .modal-acoes{display:grid;grid-template-columns:.72fr 1.28fr;gap:10px;margin-top:20px}
 .modal-acoes .btn{width:100%;padding-inline:12px}
@@ -752,6 +761,7 @@ section{padding:clamp(82px,10vw,136px) 0}
 .astro-real[data-p="marte"]{--brilho-planeta:rgba(237,91,38,.38);background-position:0% 100%}
 .astro-real[data-p="jupiter"]{--brilho-planeta:rgba(229,170,118,.34);background-position:33.333% 100%}
 .astro-real[data-p="saturno"]{--brilho-planeta:rgba(255,211,128,.34);background-position:66.666% 100%}
+.astro-real[data-p="plutao"]{--brilho-planeta:rgba(205,160,135,.28);width:calc(var(--diametro,168px) * .62);border-radius:50%;background-image:radial-gradient(circle at 36% 30%,#F3E6D7 0 8%,#C7A58D 9% 24%,#8B6655 48%,#3E2B28 100%);background-size:auto;box-shadow:inset -16px -18px 28px rgba(0,0,0,.55)}
 .orbita .rotulo{display:grid;gap:4px;color:#837B74;font-size:10px;letter-spacing:.12em;text-align:center;transition:color .3s var(--ease),transform .3s var(--ease)}
 .orbita .rotulo strong{font-size:clamp(16px,1.7vw,22px);font-variation-settings:"wdth" 112,"wght" 800;letter-spacing:-.025em}
 .orbita[aria-current="true"] .rotulo{color:var(--ouro);transform:translateY(-3px)}
@@ -1013,7 +1023,7 @@ button,a,input{touch-action:manipulation}
         <a class="btn btn-primario" href="#sistema">Explorar o sistema solar</a>
         <a class="btn btn-fantasma" href="#burgers">Ver cardápio</a>
       </div>
-      <p class="hero-meta"><span>7 receitas planetárias</span><i></i><span>Pedido pelo WhatsApp</span></p>
+      <p class="hero-meta"><span>8 receitas planetárias</span><i></i><span>Pedido pelo WhatsApp</span></p>
       </div>
     </div>
     <p class="hero-caption">Duplo burger · bacon · cheddar</p>
@@ -1025,7 +1035,7 @@ button,a,input{touch-action:manipulation}
       <div>
         <span class="section-index">01 · Sistema solar</span>
         <div class="cabeca"><h2 id="t-sistema">Escolha seu planeta</h2></div>
-        <p class="secao-nota">Sete mundos, sete receitas. Centralize um planeta e abra a transmissão para conhecer o hambúrguer correspondente.</p>
+        <p class="secao-nota">Oito mundos, oito receitas. Centralize um planeta e abra a transmissão para conhecer o lanche correspondente.</p>
       </div>
       <p class="system-instruction">Arraste para navegar · toque para descobrir · o planeta em foco revela sua missão.</p>
     </div>
@@ -1083,7 +1093,6 @@ button,a,input{touch-action:manipulation}
         <span class="marca-sub">Burguer</span>
       </span>
       <p>Hambúrgueres artesanais e batatas. Pedidos pelo WhatsApp <strong>(16) 99212-5648</strong>, todos os dias das 18h à meia-noite.</p>
-      <p class="provisorio" id="nota-provisoria">Versão inicial: preços, ingredientes e fotos são provisórios. Confirme tudo antes de divulgar o link.</p>
     </div>
   </footer>
 </main>
@@ -1158,6 +1167,25 @@ button,a,input{touch-action:manipulation}
       <button class="fechar" id="fechar-configurador" type="button" aria-label="Fechar configurador">✕</button>
     </div>
     <div class="modal-fluxo-corpo" id="configurador-conteudo"></div>
+  </div>
+</div>
+
+<!-- ================= PERSONALIZAÇÃO DE PRODUTOS ================= -->
+<div class="modal-fluxo" id="modal-produto" role="dialog" aria-modal="true" aria-labelledby="t-produto-config" hidden>
+  <div class="modal-caixa">
+    <div class="modal-fluxo-topo">
+      <div><span class="modal-etapa">Última escolha</span><h2 id="t-produto-config">Personalizar item</h2></div>
+      <button class="fechar" id="fechar-produto-config" type="button" aria-label="Fechar personalização">✕</button>
+    </div>
+    <div class="modal-fluxo-corpo" id="produto-config-conteudo"></div>
+  </div>
+</div>
+
+<!-- ================= INGREDIENTES DO LANCHE ================= -->
+<div class="popup-ingredientes" id="popup-ingredientes" role="dialog" aria-modal="true" aria-labelledby="t-popup-ingredientes" hidden>
+  <div class="popup-ingredientes-caixa">
+    <div class="popup-ingredientes-topo"><h3 id="t-popup-ingredientes">Ingredientes</h3><button class="fechar" id="fechar-popup-ingredientes" type="button" aria-label="Fechar ingredientes">✕</button></div>
+    <p id="texto-popup-ingredientes"></p>
   </div>
 </div>
 
@@ -1242,9 +1270,12 @@ button,a,input{touch-action:manipulation}
   /* ---------- 2. MENU — todos os produtos ----------
      preco em CENTAVOS (inteiro) para nunca errar arredondamento.
      imagem: null  -> mostra o planeta em CSS + selo "foto em breve"
-     imagem: "..." -> caminho do arquivo, URL ou data URI
-     ⚠️ preços e ingredientes desta versão são PLACEHOLDER.            */
+     imagem: "..." -> caminho do arquivo, URL ou data URI              */
   const MENU = [
+    { id:"plutao", categoria:"burger", nome:"Plutão", planeta:"plutao", simbolo:"♇", tamanho:25,
+      quantidade:"Lanche doce",
+      descricao:"Pão brioche, chocolate cremoso, leite condensado, creme de leite, Leite Ninho e morangos frescos",
+      ingredientes:"", preco:2190, imagem:null, doce:true, curiosidade:"Plutão possui uma enorme região de gelo em formato de coração, conhecida como Tombaugh Regio." },
     { id:"mercurio", categoria:"burger", nome:"Mercúrio", planeta:"mercurio", simbolo:"☿", tamanho:34,
       quantidade:"1 hambúrguer",
       descricao:"Hambúrguer, queijo mussarela, cebola roxa, molho cheddar e salada",
@@ -1275,9 +1306,9 @@ button,a,input{touch-action:manipulation}
       ingredientes:"", preco:2490, imagem:IMAGENS.netuno, curiosidade:"Os ventos de Netuno podem passar de 2.000 km/h — entre os mais rápidos do Sistema Solar." },
 
     { id:"combo-viajante", erpId:"OF001", categoria:"combo", nome:"Viajante Espacial", planeta:"mercurio",
-      quantidade:"1 lanche à escolha + batata individual + Coca-Cola lata",
+      quantidade:"1 lanche à escolha + batata individual + refrigerante em lata",
       descricao:"Escolha o lanche. Receitas duplas acrescentam R$ 6,00; adicionais são escolhidos dentro do configurador.",
-      condicoes:"A partir de R$ 36,90. Entrega grátis.", preco:3690, slots:1, batataIndividual:true, bebidas:["Coca-Cola lata 350ml"], imagem:IMAGENS.mercurio },
+      condicoes:"A partir de R$ 36,90. Entrega grátis.", preco:3690, slots:1, batataIndividual:true, bebidas:["Coca-Cola lata 350ml","Guaraná lata 350ml"], imagem:IMAGENS.mercurio },
     { id:"combo-vortice", erpId:"OF004", categoria:"combo", nome:"Vórtice", planeta:"jupiter",
       quantidade:"2 lanches à escolha + refrigerante de 1L",
       descricao:"Escolha cada lanche e decida entre Vórtice comum ou Marciano com batata média preparada.",
@@ -1299,21 +1330,21 @@ button,a,input{touch-action:manipulation}
       descricao:"Escolha os cinco lanches e o preparo de cada uma das duas batatas separadamente.",
       condicoes:"A partir de R$ 134,90. Duplo + R$ 6,00 por lanche.", preco:13490, slots:5, batatas:2, bebidas:["Coca-Cola 2L"], imagem:IMAGENS.comboAbducao },
 
-    { id:"lascas", categoria:"acompanhamento", nome:"Lascas de Cometa Fritas", planeta:"cometa",
-      descricao:"Batata rústica com casca, sal grosso e alecrim.", ingredientes:"", preco:2490, imagem:IMAGENS.lascas },
+    { id:"lascas", categoria:"acompanhamento", nome:"Lascas de Cometa Fritas", planeta:"cometa", personalizavel:true,
+      descricao:"300g com Catupiry e bacon ou Cheddar e bacon. Upgrade para 500g por + R$ 12,00.", ingredientes:"", preco:2490, imagem:IMAGENS.lascas },
     { id:"aneis", categoria:"acompanhamento", nome:"Anéis de Saturno", planeta:"saturno", anel:true,
-      descricao:"Cebola empanada na hora, com molho defumado.", ingredientes:"", preco:2490, imagem:IMAGENS.aneis },
+      descricao:"Cebola empanada na hora, com molho defumado.", ingredientes:"", preco:2490, imagem:IMAGENS.aneis, emBreve:true },
     { id:"meteoritos", categoria:"acompanhamento", nome:"Meteoritos de Queijo", planeta:"meteoro",
-      descricao:"Bolinhas de muçarela crocantes por fora, derretidas por dentro.", ingredientes:"", preco:2490, imagem:IMAGENS.meteoritos },
+      descricao:"Bolinhas de muçarela crocantes por fora, derretidas por dentro.", ingredientes:"", preco:2490, imagem:IMAGENS.meteoritos, emBreve:true },
 
     { id:"coca", categoria:"bebida", nome:"Coca-Cola", planeta:"marte",
       descricao:"Lata 350ml", ingredientes:"", preco:700, imagem:IMAGENS.cocaLata },
     { id:"guarana", categoria:"bebida", nome:"Guaraná", planeta:"jupiter",
       descricao:"Lata 350ml", ingredientes:"", preco:650, imagem:IMAGENS.guarana },
     { id:"coca-1l", categoria:"bebida", nome:"Coca-Cola 1L", planeta:"marte",
-      descricao:"Garrafa 1 litro", ingredientes:"", preco:1200, imagem:IMAGENS.coca1l },
+      descricao:"Garrafa 1 litro. Leve outra igual por + R$ 7,00.", ingredientes:"", preco:1200, imagem:IMAGENS.coca1l, litro:true, personalizavel:true },
     { id:"guarana-1l", categoria:"bebida", nome:"Guaraná 1L", planeta:"jupiter",
-      descricao:"Garrafa 1 litro", ingredientes:"", preco:1000, imagem:IMAGENS.guarana1l }
+      descricao:"Garrafa 1 litro. Leve outra igual por + R$ 7,00.", ingredientes:"", preco:1000, imagem:IMAGENS.guarana1l, litro:true, personalizavel:true }
   ];
 
   /* ---------- 3. CASHBACK ---------- */
@@ -1348,6 +1379,8 @@ button,a,input{touch-action:manipulation}
   ];
   const PRECO_DUPLO_COMBO = 600;
   const PRECO_MARCIANO = 1500;
+  const PRECO_LITRO_EXTRA = 700;
+  const PRECO_PORCAO_500G = 1200;
   const SABORES_BATATA = ["Catupiry e bacon", "Cheddar e bacon"];
 
   /* ---------- 4. UTILITÁRIOS ---------- */
@@ -1470,14 +1503,16 @@ button,a,input{touch-action:manipulation}
       ? '<img src="' + p.imagem + '" alt="' + p.nome + '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="124" height="124">'
       : esferaHTML(p, 38);
     return '' +
-      '<div class="linha" id="card-' + p.id + '">' +
+      '<div class="linha' + (p.emBreve ? ' em-breve' : '') + '" id="card-' + p.id + '">' +
         '<div class="miniatura">' + mini + '</div>' +
         '<div class="txt">' +
           '<p class="nome">' + p.nome + '</p>' +
           '<p class="desc">' + p.descricao + '</p>' +
         '</div>' +
-        '<span class="preco">' + preco(p.preco) + '</span>' +
-        '<button class="btn-mini" data-add="' + p.id + '" aria-label="Adicionar ' + p.nome + ' ao pedido">+</button>' +
+        '<span class="preco">' + (p.emBreve ? '—' : preco(p.preco)) + '</span>' +
+        (p.emBreve
+          ? '<span class="selo-breve">EM BREVE…</span>'
+          : '<button class="btn-mini" ' + (p.personalizavel ? 'data-personalizar' : 'data-add') + '="' + p.id + '" aria-label="Adicionar ' + p.nome + ' ao pedido">+</button>') +
       '</div>';
   }
 
@@ -1524,13 +1559,14 @@ button,a,input{touch-action:manipulation}
   }
 
   function montarCardapio() {
-    $("#grade-burgers").innerHTML  = MENU.filter(p => p.categoria === "burger").map(cardHTML).join("");
+    const lanches = MENU.filter(p => p.categoria === "burger");
+    $("#grade-burgers").innerHTML  = lanches.slice().sort(function (a,b) { return a.id === "plutao" ? -1 : b.id === "plutao" ? 1 : 0; }).map(cardHTML).join("");
     $("#lista-acomp").innerHTML    = MENU.filter(p => p.categoria === "acompanhamento").map(linhaHTML).join("");
     $("#lista-bebidas").innerHTML  = MENU.filter(p => p.categoria === "bebida").map(linhaHTML).join("");
     montarCombos();
 
     // trilha de planetas
-    $("#trilha").innerHTML = MENU.filter(p => p.categoria === "burger").map(function (p) {
+    $("#trilha").innerHTML = lanches.slice().sort(function (a,b) { return a.id === "plutao" ? 1 : b.id === "plutao" ? -1 : 0; }).map(function (p) {
       return '<button class="orbita" type="button" aria-current="false" aria-expanded="false" data-ir="' + p.id + '">' +
                planetaRealHTML(p) +
                '<span class="rotulo"><span>' + p.simbolo + '</span><strong>' + p.nome + '</strong></span>' +
@@ -1542,7 +1578,10 @@ button,a,input{touch-action:manipulation}
   let ultimoPlaneta = null;
 
   function modalPlanetaHTML(p) {
-    return '<div class="janela"><div class="foto"><img src="' + p.imagem + '" alt="Hambúrguer ' + p.nome + '" width="800" height="600" decoding="async"><span class="preco-popup">' + preco(p.preco) + '</span></div>' +
+    const visual = p.imagem
+      ? '<img src="' + p.imagem + '" alt="Lanche ' + p.nome + '" width="800" height="600" decoding="async">'
+      : '<div class="palco" style="height:100%"><span class="estrelas"></span>' + esferaHTML(p) + '</div>';
+    return '<div class="janela"><div class="foto">' + visual + '<span class="preco-popup">' + preco(p.preco) + '</span></div>' +
       '<div class="conteudo"><span class="sobretitulo">Sinal do planeta</span><h2 id="t-planeta">' + p.simbolo + ' ' + p.nome + '</h2>' +
       '<p>' + p.curiosidade + '</p><button class="btn btn-primario ir-lanche" type="button" data-ir-lanche="' + p.id + '">Ver hambúrguer ' + p.nome + '</button></div>' +
       '<button class="fechar-planeta" type="button" data-fechar-planeta>← Voltar à órbita</button></div>';
@@ -1620,7 +1659,7 @@ button,a,input{touch-action:manipulation}
   if (!Array.isArray(carrinho)) carrinho = [];
   carrinho = carrinho.filter(function (item) { return !!acharProduto(item.id); }).map(function (item) {
     const normalizado = { id:item.id, key:item.key || item.id, qtd:Number(item.qtd) || 1, adicionais:Array.isArray(item.adicionais) ? item.adicionais : [] };
-    if (item.config && acharProduto(item.id).categoria === "combo") normalizado.config = item.config;
+    if (item.config) normalizado.config = item.config;
     return normalizado;
   });
   let cashbackAtivo = guardar.ler(CHAVE_CASHBACK, null); // {id, codigo, percentual, status, telefone}
@@ -1650,15 +1689,17 @@ button,a,input{touch-action:manipulation}
       }
     });
     if (produto.marciano && config.variante === "marciano") total += PRECO_MARCIANO;
+    if (config.extraLitro === true) total += PRECO_LITRO_EXTRA;
     return total;
   }
 
   function valorUnitarioItem(item) {
     const produto = acharProduto(item.id);
     if (!produto || !Number.isFinite(produto.preco)) return null;
-    return produto.categoria === "combo" && item.config
-      ? valorConfigCombo(produto, item.config)
-      : produto.preco + valorAdicionais(item);
+    if (produto.categoria === "combo" && item.config) return valorConfigCombo(produto, item.config);
+    if (produto.id === "lascas" && item.config) return produto.preco + (item.config.peso === 500 ? PRECO_PORCAO_500G : 0);
+    if (produto.litro && item.config) return produto.preco + (item.config.extraLitro === true ? PRECO_LITRO_EXTRA : 0);
+    return produto.preco + valorAdicionais(item);
   }
 
   function subtotal() {
@@ -1736,6 +1777,7 @@ button,a,input{touch-action:manipulation}
     (config.batatas || []).forEach(function (sabor, indice) { partes.push("Batata " + (indice + 1) + ": " + sabor); });
     if (produto.fixos) partes.push(produto.fixos.join(" + "));
     if (config.bebida) partes.push(config.bebida);
+    if (config.extraLitro === true) partes.push("+ 1L do mesmo refrigerante");
     return formatoTexto ? partes.join(" | ") : partes.join("<br>");
   }
 
@@ -1772,18 +1814,24 @@ button,a,input{touch-action:manipulation}
       const resumoCombo = p.categoria === "combo" && it.config
         ? '<p class="item-config">' + resumoConfigCombo(p, it.config, false) + '</p>'
         : '';
-      const botaoExtras = p.categoria === "burger"
+      const resumoProduto = p.categoria !== "combo" && it.config
+        ? '<p class="item-config">' + resumoConfigProduto(p, it.config, false) + '</p>'
+        : '';
+      const botaoExtras = p.categoria === "burger" && !p.doce
         ? '<button class="editar-adicionais" type="button" data-adicionais="' + p.id + '">Adicionais' + (adicionais.length ? ' · ' + adicionais.length : '') + '</button>'
         : '';
       const botaoCombo = p.categoria === "combo" && it.config
         ? '<button class="editar-combo" type="button" data-editar-combo="' + it.key + '">Editar combo</button>'
+        : '';
+      const botaoProduto = p.categoria !== "combo" && p.personalizavel && it.config
+        ? '<button class="editar-produto" type="button" data-editar-produto="' + it.key + '">Editar escolhas</button>'
         : '';
       return '' +
         '<div class="item">' +
           '<div class="info">' +
             '<p class="nome">' + p.nome + '</p>' +
             '<p class="sub">' + (Number.isFinite(valorUnitario) ? preco(valorUnitario) + ' cada' : 'Preço a confirmar') + '</p>' +
-            resumoExtras + resumoCombo + botaoExtras + botaoCombo +
+            resumoExtras + resumoCombo + resumoProduto + botaoExtras + botaoCombo + botaoProduto +
           '</div>' +
           '<div class="passo">' +
             '<button data-menos="' + it.key + '" aria-label="Menos um ' + p.nome + '">−</button>' +
@@ -1816,6 +1864,7 @@ button,a,input{touch-action:manipulation}
   /* ---------- 6B. CONFIGURADOR DE COMBOS ---------- */
   let comboConfigurando = null;
   let comboKeyEditando = null;
+  function bebidaTemUmLitro(bebida) { return /(^|\s)1L($|\s)/i.test(String(bebida || "")); }
 
   function opcoesLanchesHTML(valor) {
     const grupos = ["simples", "duplo"];
@@ -1859,7 +1908,9 @@ button,a,input{touch-action:manipulation}
       batatas.push(campo ? campo.value : "");
     }
     const bebidaCampo = $('#form-configurador input[name="bebida"]:checked');
-    return { burgers:burgers, variante:variante, batatas:batatas, bebida:bebidaCampo ? bebidaCampo.value : (produto.bebidas[0] || "") };
+    const bebida = bebidaCampo ? bebidaCampo.value : (produto.bebidas.length === 1 ? produto.bebidas[0] : "");
+    const litroExtraCampo = $('#form-configurador input[name="extra-litro"]:checked');
+    return { burgers:burgers, variante:variante, batatas:batatas, bebida:bebida, extraLitro:bebidaTemUmLitro(bebida) && litroExtraCampo ? litroExtraCampo.value === "sim" : false };
   }
 
   function atualizarConfigurador() {
@@ -1869,8 +1920,10 @@ button,a,input{touch-action:manipulation}
       const doce = !!(lanche && lanche.doce);
       const lista = $('#form-configurador [data-addons-slot="' + indice + '"]');
       const aviso = $('#form-configurador [data-doce-slot="' + indice + '"]');
+      const botaoIngredientes = $('#form-configurador [data-ingredientes-slot="' + indice + '"]');
       if (lista) lista.hidden = doce;
       if (aviso) aviso.hidden = !doce;
+      if (botaoIngredientes) { botaoIngredientes.hidden = !lanche; botaoIngredientes.dataset.lanche = lanche ? lanche.id : ""; }
       if (doce && lista) $$('input', lista).forEach(function (campo) { campo.checked = false; });
     });
     const config = configAtualDoFormulario();
@@ -1879,6 +1932,12 @@ button,a,input{touch-action:manipulation}
     if (blocoMarciano) {
       blocoMarciano.hidden = !marcianoAtivo;
       $$('input', blocoMarciano).forEach(function (campo) { campo.disabled = !marcianoAtivo; });
+    }
+    const blocoLitroExtra = $('#litro-extra-combo');
+    if (blocoLitroExtra) {
+      const temLitro = bebidaTemUmLitro(config.bebida);
+      blocoLitroExtra.hidden = !temLitro;
+      $$('input', blocoLitroExtra).forEach(function (campo) { campo.disabled = !temLitro; });
     }
     $('#config-total').textContent = preco(valorConfigCombo(comboConfigurando, config));
   }
@@ -1895,7 +1954,7 @@ button,a,input{touch-action:manipulation}
     const slots = Array.from({ length:produto.slots }, function (_, indice) {
       const escolha = config.burgers[indice] || { id:"", adicionais:[] };
       const lanche = lancheCombo(escolha.id);
-      return '<div class="config-slot"><div class="config-slot-topo"><span class="config-slot-num">' + (indice + 1) + '</span><select class="config-select" data-slot="' + indice + '" required aria-label="Escolha do lanche ' + (indice + 1) + '">' + opcoesLanchesHTML(escolha.id) + '</select></div>' + adicionaisSlotHTML(indice, escolha.adicionais || [], !!(lanche && lanche.doce)) + '</div>';
+      return '<div class="config-slot"><div class="config-slot-topo"><span class="config-slot-num">' + (indice + 1) + '</span><select class="config-select" data-slot="' + indice + '" required aria-label="Escolha do lanche ' + (indice + 1) + '">' + opcoesLanchesHTML(escolha.id) + '</select><button class="btn-ingredientes" type="button" data-ingredientes-slot="' + indice + '" data-lanche="' + (lanche ? lanche.id : '') + '"' + (lanche ? '' : ' hidden') + '>Ingredientes</button></div>' + adicionaisSlotHTML(indice, escolha.adicionais || [], !!(lanche && lanche.doce)) + '</div>';
     }).join("");
 
     const variante = produto.marciano ? '<fieldset class="config-grupo"><legend>2 · Escolha a versão</legend><div class="config-opcoes duas"><label class="config-radio"><input type="radio" name="variante" value="comum"' + (config.variante !== "marciano" ? ' checked' : '') + '><strong>Comum</strong><small>Mantém o preço-base</small></label><label class="config-radio"><input type="radio" name="variante" value="marciano"' + (config.variante === "marciano" ? ' checked' : '') + '><strong>Marciana · + R$ 15,00</strong><small>Inclui uma batata média preparada</small></label></div></fieldset>' : '';
@@ -1904,9 +1963,11 @@ button,a,input{touch-action:manipulation}
     const bebidas = produto.bebidas.length > 1
       ? '<fieldset class="config-grupo"><legend>Bebida</legend><div class="config-opcoes duas">' + produto.bebidas.map(function (bebida) { return '<label class="config-radio"><input type="radio" name="bebida" value="' + bebida + '"' + (config.bebida === bebida ? ' checked' : '') + ' required><strong>' + bebida + '</strong></label>'; }).join("") + '</div></fieldset>'
       : '<div class="config-resumo"><span>Bebida incluída</span><strong>' + produto.bebidas[0] + '</strong><input type="radio" name="bebida" value="' + produto.bebidas[0] + '" checked hidden></div>';
+    const ofereceLitroExtra = produto.bebidas.some(bebidaTemUmLitro);
+    const litroExtra = ofereceLitroExtra ? '<fieldset class="config-grupo" id="litro-extra-combo"><legend>Última escolha · mais refrigerante?</legend><div class="config-opcoes duas"><label class="config-radio"><input type="radio" name="extra-litro" value="nao"' + (config.extraLitro === false ? ' checked' : '') + ' required><strong>Não, obrigado</strong><small>Levar somente o refrigerante incluído</small></label><label class="config-radio"><input type="radio" name="extra-litro" value="sim"' + (config.extraLitro === true ? ' checked' : '') + ' required><strong>Sim · + R$ 7,00</strong><small>Mais 1L do mesmo refrigerante escolhido</small></label></div></fieldset>' : '';
 
     $('#t-configurador').textContent = produto.nome;
-    $('#configurador-conteudo').innerHTML = '<form id="form-configurador"><div class="config-resumo"><strong>A partir de ' + preco(produto.preco) + '</strong><span>Receitas simples e Plutão estão inclusos. Cada receita dupla acrescenta R$ 6,00. Os adicionais são cobrados por lanche.</span></div><fieldset class="config-grupo"><legend>1 · Escolha ' + (produto.slots === 1 ? 'o lanche' : 'os ' + produto.slots + ' lanches') + '</legend>' + slots + '</fieldset>' + variante + batataMarciana + batatasFixas + (produto.batataIndividual ? '<div class="config-resumo"><span>Acompanhamento incluído</span><strong>Batata individual</strong><span>Sem cobertura.</span></div>' : '') + (produto.fixos ? '<div class="config-resumo"><span>Itens fixos</span><strong>' + produto.fixos.join(' + ') + '</strong></div>' : '') + bebidas + '<div class="config-total"><div><small>Total do combo</small><strong id="config-total">' + preco(produto.preco) + '</strong></div><button class="btn btn-primario" type="submit">' + (itemExistente ? 'Salvar alterações' : 'Adicionar ao pedido') + '</button></div></form>';
+    $('#configurador-conteudo').innerHTML = '<form id="form-configurador"><div class="config-resumo"><strong>A partir de ' + preco(produto.preco) + '</strong><span>Receitas simples e Plutão estão inclusos. Cada receita dupla acrescenta R$ 6,00. Os adicionais são cobrados por lanche.</span></div><fieldset class="config-grupo"><legend>1 · Escolha ' + (produto.slots === 1 ? 'o lanche' : 'os ' + produto.slots + ' lanches') + '</legend>' + slots + '</fieldset>' + variante + batataMarciana + batatasFixas + (produto.batataIndividual ? '<div class="config-resumo"><span>Acompanhamento incluído</span><strong>Batata individual</strong><span>Sem cobertura.</span></div>' : '') + (produto.fixos ? '<div class="config-resumo"><span>Itens fixos</span><strong>' + produto.fixos.join(' + ') + '</strong></div>' : '') + bebidas + litroExtra + '<div class="config-total"><div><small>Total do combo</small><strong id="config-total">' + preco(produto.preco) + '</strong></div><button class="btn btn-primario" type="submit">' + (itemExistente ? 'Salvar alterações' : 'Adicionar ao pedido') + '</button></div></form>';
     $('#modal-configurador').hidden = false;
     atualizarBloqueioFluxo();
     atualizarConfigurador();
@@ -1941,19 +2002,108 @@ button,a,input{touch-action:manipulation}
     toast(produto.nome + " no pedido");
   }
 
+  function abrirPopupIngredientes(id) {
+    const produto = acharProduto(id);
+    if (!produto) return;
+    $('#t-popup-ingredientes').textContent = produto.nome;
+    $('#texto-popup-ingredientes').textContent = produto.descricao;
+    $('#popup-ingredientes').hidden = false;
+    requestAnimationFrame(function () { $('#fechar-popup-ingredientes').focus(); });
+  }
+
+  function fecharPopupIngredientes() { $('#popup-ingredientes').hidden = true; }
+
+  let produtoConfigurando = null;
+  let produtoKeyEditando = null;
+
+  function resumoConfigProduto(produto, config, formatoTexto) {
+    if (!config) return "";
+    const partes = [];
+    if (produto.id === "lascas") partes.push(config.peso + "g", config.cobertura);
+    if (produto.litro) partes.push(config.extraLitro ? "2 garrafas de 1L do mesmo sabor" : "1 garrafa de 1L");
+    return formatoTexto ? partes.join(" | ") : partes.join("<br>");
+  }
+
+  function configProdutoDoFormulario() {
+    if (!produtoConfigurando) return null;
+    if (produtoConfigurando.id === "lascas") {
+      const cobertura = $('#form-produto-config input[name="cobertura"]:checked');
+      const peso = $('#form-produto-config input[name="peso"]:checked');
+      return { tipo:"lascas", cobertura:cobertura ? cobertura.value : "", peso:peso ? Number(peso.value) : 0 };
+    }
+    const extra = $('#form-produto-config input[name="extra-litro-produto"]:checked');
+    return { tipo:"bebida-1l", extraLitro:extra ? extra.value === "sim" : false };
+  }
+
+  function atualizarProdutoConfig() {
+    if (!produtoConfigurando || !$('#produto-config-total')) return;
+    const config = configProdutoDoFormulario();
+    let total = produtoConfigurando.preco;
+    if (produtoConfigurando.id === "lascas" && config.peso === 500) total += PRECO_PORCAO_500G;
+    if (produtoConfigurando.litro && config.extraLitro) total += PRECO_LITRO_EXTRA;
+    $('#produto-config-total').textContent = preco(total);
+  }
+
+  function abrirProdutoConfig(id, keyEditar) {
+    const produto = acharProduto(id);
+    if (!produto || !produto.personalizavel) return;
+    const item = keyEditar ? carrinho.find(function (registro) { return registro.key === keyEditar; }) : null;
+    const config = item && item.config ? item.config : {};
+    produtoConfigurando = produto;
+    produtoKeyEditando = item ? item.key : null;
+    focoFluxoAnterior = document.activeElement;
+    let campos = "";
+    if (produto.id === "lascas") {
+      campos = '<fieldset class="config-grupo"><legend>Escolha a cobertura · sem acréscimo</legend><div class="config-opcoes duas">' + SABORES_BATATA.map(function (sabor) { return '<label class="config-radio"><input type="radio" name="cobertura" value="' + sabor + '"' + (config.cobertura === sabor ? ' checked' : '') + ' required><strong>' + sabor + '</strong></label>'; }).join('') + '</div></fieldset><fieldset class="config-grupo"><legend>Escolha o tamanho</legend><div class="config-opcoes duas"><label class="config-radio"><input type="radio" name="peso" value="300"' + (config.peso === 300 ? ' checked' : '') + ' required><strong>300g · ' + preco(produto.preco) + '</strong><small>Porção tradicional</small></label><label class="config-radio"><input type="radio" name="peso" value="500"' + (config.peso === 500 ? ' checked' : '') + ' required><strong>500g · + R$ 12,00</strong><small>Porção maior</small></label></div></fieldset>';
+    } else {
+      campos = '<div class="config-resumo"><span>Refrigerante escolhido</span><strong>' + produto.nome + '</strong></div><fieldset class="config-grupo"><legend>Levar mais 1L do mesmo refrigerante?</legend><div class="config-opcoes duas"><label class="config-radio"><input type="radio" name="extra-litro-produto" value="nao"' + (config.extraLitro === false ? ' checked' : '') + ' required><strong>Não, obrigado</strong><small>Levar 1 garrafa</small></label><label class="config-radio"><input type="radio" name="extra-litro-produto" value="sim"' + (config.extraLitro === true ? ' checked' : '') + ' required><strong>Sim · + R$ 7,00</strong><small>Levar 2 garrafas do mesmo sabor</small></label></div></fieldset>';
+    }
+    $('#t-produto-config').textContent = produto.nome;
+    $('#produto-config-conteudo').innerHTML = '<form id="form-produto-config">' + campos + '<div class="config-total"><div><small>Total do item</small><strong id="produto-config-total">' + preco(produto.preco) + '</strong></div><button class="btn btn-primario" type="submit">' + (item ? 'Salvar alterações' : 'Adicionar ao pedido') + '</button></div></form>';
+    $('#modal-produto').hidden = false;
+    atualizarBloqueioFluxo();
+    atualizarProdutoConfig();
+  }
+
+  function fecharProdutoConfig() {
+    if ($('#modal-produto').hidden) return;
+    $('#modal-produto').hidden = true;
+    produtoConfigurando = null;
+    produtoKeyEditando = null;
+    atualizarBloqueioFluxo();
+    if (focoFluxoAnterior && focoFluxoAnterior.focus) focoFluxoAnterior.focus();
+  }
+
+  function salvarProdutoConfigurado() {
+    const formulario = $('#form-produto-config');
+    if (!formulario || !formulario.reportValidity()) return;
+    const produto = produtoConfigurando;
+    const config = configProdutoDoFormulario();
+    const novaKey = produto.id + "::" + encodeURIComponent(JSON.stringify(config));
+    const anterior = produtoKeyEditando ? carrinho.find(function (item) { return item.key === produtoKeyEditando; }) : null;
+    const quantidade = anterior ? anterior.qtd : 1;
+    if (anterior) carrinho = carrinho.filter(function (item) { return item.key !== anterior.key; });
+    const igual = carrinho.find(function (item) { return item.key === novaKey; });
+    if (igual) igual.qtd += quantidade;
+    else carrinho.push({ id:produto.id, key:novaKey, qtd:quantidade, adicionais:[], config:config });
+    salvarEAtualizar();
+    fecharProdutoConfig();
+    toast(produto.nome + " no pedido");
+  }
+
   /* ---------- 6C. ADICIONAIS ---------- */
   let produtoAdicionaisAtivo = null;
   let focoFluxoAnterior = null;
 
   function atualizarBloqueioFluxo() {
-    const algumAberto = !$("#modal-configurador").hidden || !$("#modal-adicionais").hidden || !$("#modal-checkout").hidden;
+    const algumAberto = !$("#modal-configurador").hidden || !$("#modal-produto").hidden || !$("#modal-adicionais").hidden || !$("#modal-checkout").hidden;
     document.body.classList.toggle("modal-fluxo-aberto", algumAberto);
   }
 
   function abrirAdicionais(id) {
     const produto = acharProduto(id);
     const item = carrinho.find(function (it) { return it.id === id; });
-    if (!produto || produto.categoria !== "burger" || !item) return;
+    if (!produto || produto.categoria !== "burger" || produto.doce || !item) return;
     produtoAdicionaisAtivo = id;
     focoFluxoAnterior = document.activeElement;
     const escolhidos = Array.isArray(item.adicionais) ? item.adicionais : [];
@@ -2050,7 +2200,12 @@ button,a,input{touch-action:manipulation}
         (it.config.batatas || []).forEach(function (sabor, indice) { linhas.push("  Batata " + (indice + 1) + ": " + sabor); });
         if (p.fixos) linhas.push("  Itens fixos: " + p.fixos.join(" + "));
         if (it.config.bebida) linhas.push("  Bebida: " + it.config.bebida);
+        if (it.config.extraLitro === true) linhas.push("  Refrigerante extra: + 1L do mesmo sabor (+ R$ 7,00)");
         linhas.push("  Valor unitário: " + preco(unitario));
+      }
+      if (p.categoria !== "combo" && it.config) {
+        if (p.id === "lascas") linhas.push("  Porção: " + it.config.peso + "g", "  Cobertura: " + it.config.cobertura + (it.config.peso === 500 ? " (+ R$ 12,00)" : ""));
+        if (p.litro) linhas.push("  Quantidade: " + (it.config.extraLitro ? "2 garrafas de 1L do mesmo sabor (+ R$ 7,00)" : "1 garrafa de 1L"));
       }
       if (extras.length) linhas.push("  Adicionais em cada unidade: " + extras.map(function (a) { return a.nome + " (" + preco(a.preco) + ")"; }).join(", "));
     });
@@ -2250,6 +2405,16 @@ button,a,input{touch-action:manipulation}
     // adicionar produto (delegação: serve para cards e linhas)
     document.addEventListener("click", function (ev) {
       if ($("#atalhos").classList.contains("aberto") && !ev.target.closest("header")) fecharMenuMobile();
+      const btnIngredientes = ev.target.closest("[data-lanche]");
+      if (btnIngredientes && btnIngredientes.getAttribute("data-lanche")) {
+        abrirPopupIngredientes(btnIngredientes.getAttribute("data-lanche"));
+        return;
+      }
+      const btnPersonalizar = ev.target.closest("[data-personalizar]");
+      if (btnPersonalizar) {
+        abrirProdutoConfig(btnPersonalizar.getAttribute("data-personalizar"));
+        return;
+      }
       const btnConfigurar = ev.target.closest("[data-configurar]");
       if (btnConfigurar) {
         abrirConfigurador(btnConfigurar.getAttribute("data-configurar"));
@@ -2321,6 +2486,13 @@ button,a,input{touch-action:manipulation}
         if (item) { fecharCarrinho(); abrirConfigurador(item.id, item.key); }
         return;
       }
+      const editarProduto = ev.target.closest("[data-editar-produto]");
+      if (editarProduto) {
+        const key = editarProduto.getAttribute("data-editar-produto");
+        const item = carrinho.find(function (registro) { return registro.key === key; });
+        if (item) { fecharCarrinho(); abrirProdutoConfig(item.id, item.key); }
+        return;
+      }
       if (ev.target.closest("[data-fecha]")) { fecharCarrinho(); return; }
     });
 
@@ -2328,7 +2500,7 @@ button,a,input{touch-action:manipulation}
     $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
     $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharAdicionais(); fecharCheckout(); }
+      if (e.key === "Escape") { fecharPopupIngredientes(); fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
       const combo = e.target.closest && e.target.closest("[data-combo-card]");
       if (combo && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
@@ -2344,6 +2516,15 @@ button,a,input{touch-action:manipulation}
       ev.preventDefault();
       salvarComboConfigurado();
     });
+
+    $("#fechar-produto-config").addEventListener("click", fecharProdutoConfig);
+    $("#produto-config-conteudo").addEventListener("change", atualizarProdutoConfig);
+    $("#produto-config-conteudo").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      salvarProdutoConfigurado();
+    });
+    $("#fechar-popup-ingredientes").addEventListener("click", fecharPopupIngredientes);
+    $("#popup-ingredientes").addEventListener("click", function (ev) { if (ev.target.id === "popup-ingredientes") fecharPopupIngredientes(); });
 
     $("#fechar-adicionais").addEventListener("click", fecharAdicionais);
     $("#adicionais-conteudo").addEventListener("click", function (ev) {
