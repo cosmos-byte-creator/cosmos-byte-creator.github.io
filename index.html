@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.8";
+  var VERSAO_SITE = "20260924.9";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -369,7 +369,7 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 }
 .combos-track::-webkit-scrollbar{display:none}
 .combo-card{
-  position:relative; min-width:0; min-height:390px; overflow:hidden; scroll-snap-align:start;
+  position:relative; min-width:0; overflow:hidden; scroll-snap-align:start;
   border:1px solid rgba(255,194,75,.2); border-radius:20px;
   background:linear-gradient(155deg,rgba(38,24,28,.98),rgba(20,17,27,.98));
   box-shadow:0 18px 40px -28px #000; cursor:pointer;
@@ -377,14 +377,17 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 }
 .combo-card:hover{transform:translateY(-4px); border-color:rgba(255,194,75,.52); box-shadow:0 24px 48px -28px #000}
 .combo-card:focus-visible{outline:3px solid var(--ouro); outline-offset:3px}
-.combo-imagem{position:relative; aspect-ratio:16/10; overflow:hidden; background:#08070A}
+.combo-imagem{position:relative; aspect-ratio:1; overflow:hidden; background:#08070A}
 .combo-imagem img{width:100%; height:100%; object-fit:cover; transition:transform .45s var(--ease), filter .3s var(--ease)}
 .combo-card:hover .combo-imagem img{transform:scale(1.035)}
-.combo-imagem::after{content:""; position:absolute; inset:50% 0 0; background:linear-gradient(transparent,rgba(5,4,7,.9)); pointer-events:none}
-.combo-convite{position:absolute; z-index:1; left:14px; right:14px; bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; color:#FFE4B0; font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
+.combo-imagem::after{display:none}
+.combo-resumo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px 18px;border-top:1px solid rgba(255,255,255,.08);background:#0C0B0D}
+.combo-convite{display:flex;align-items:center;gap:8px;color:#FFE4B0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-variation-settings:"wdth" 104,"wght" 800}
 .combo-convite span:last-child{color:var(--ouro); font-size:18px; line-height:1}
+.combo-preco-base{display:grid;gap:2px;flex:0 0 auto;text-align:right}.combo-preco-base small{color:var(--fosco);font-size:9px;letter-spacing:.08em;text-transform:uppercase}.combo-preco-base strong{color:var(--ouro);font-size:19px}
 .combo-detalhe{display:none; padding:20px; min-height:100%; flex-direction:column; gap:10px}
 .combo-card.aberto .combo-imagem{display:none}
+.combo-card.aberto .combo-resumo{display:none}
 .combo-card.aberto .combo-detalhe{display:flex}
 .combo-card.aberto{cursor:default; border-color:rgba(255,194,75,.58); background:radial-gradient(100% 90% at 0 0,rgba(255,106,19,.18),transparent 66%),var(--painel)}
 .combo-selo{color:var(--ouro); font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
@@ -401,8 +404,11 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .combo-nav.prev{left:2px}.combo-nav.next{right:2px}
 .combos-ajuda{text-align:center; color:var(--fosco); font-size:12px; margin-top:2px}
 @media (max-width:699px){
-  .combos-track{grid-auto-columns:min(86vw,360px); padding-inline:4px}
-  .combo-card{min-height:410px}
+  .combos-viewport{padding-inline:8px}
+  .combos-track{grid-auto-columns:min(calc(100vw - 16px),430px);gap:12px;padding-inline:0}
+  .combo-resumo{padding:15px 16px 17px}
+  .combo-convite{font-size:10px}
+  .combo-preco-base strong{font-size:18px}
   .combo-nav{display:none}
 }
 @media (prefers-reduced-motion: reduce){.combo-imagem img{transition:none}}
@@ -773,10 +779,8 @@ section{padding:clamp(82px,10vw,136px) 0}
 #combos .secao-nota{margin:0 0 9px auto}
 .combos-viewport{max-width:1320px;margin-top:34px}
 .combos-track{gap:22px;grid-auto-columns:calc((100% - 22px)/2);padding:12px 2px 28px}
-.combo-card{min-height:430px;border-color:rgba(255,255,255,.11);border-radius:18px;background:#0C0B0D;box-shadow:0 32px 70px -48px #000}
-.combo-imagem{aspect-ratio:16/9}
-.combo-imagem::after{inset:42% 0 0;background:linear-gradient(transparent,rgba(5,5,6,.94))}
-.combo-convite{bottom:18px;left:20px;right:20px}
+.combo-card{border-color:rgba(255,255,255,.11);border-radius:18px;background:#0C0B0D;box-shadow:0 32px 70px -48px #000}
+.combo-imagem{aspect-ratio:1}
 .combo-nav{width:48px;height:48px;background:rgba(9,8,9,.9);border:1px solid rgba(255,196,95,.55);color:var(--ouro)}
 
 /* cardápio */
@@ -869,8 +873,7 @@ footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,1
   .astro-real{width:150px}
   #combos .env:first-child{grid-template-columns:1fr}
   #combos .secao-nota{margin:0}
-  .combos-track{grid-auto-columns:min(88vw,370px)}
-  .combo-card{min-height:390px}
+  .combos-track{grid-auto-columns:min(calc(100vw - 16px),430px)}
   .grade{grid-template-columns:1fr;gap:18px}
   .card,.card:first-child{grid-column:auto;display:flex;min-height:0}
   .card:first-child .palco{min-height:0;aspect-ratio:1/.82}
@@ -960,11 +963,11 @@ button,a,input{touch-action:manipulation}
   .modal-planeta .foto{min-height:72dvh}
 }
 
-/* A arte ocupa o card fechado sem deformar; o recorte permanece central. */
-.combo-card:not(.aberto) .combo-imagem{position:absolute;inset:0;aspect-ratio:auto}
+/* A arte quadrada permanece inteira e o resumo fica fora da imagem. */
+.combo-card:not(.aberto) .combo-imagem{position:relative;inset:auto;aspect-ratio:1}
 @media (max-width:699px){
-  .combo-card:not(.aberto){min-height:0;aspect-ratio:4/3}
-  .combo-card.aberto{min-height:390px;aspect-ratio:auto}
+  .combo-card:not(.aberto){min-height:0;aspect-ratio:auto}
+  .combo-card.aberto{min-height:460px;aspect-ratio:auto}
 }
 </style>
 </head>
@@ -1523,9 +1526,9 @@ button,a,input{touch-action:manipulation}
     return '' +
       '<article class="combo-card revela" data-combo-card="' + p.id + '" tabindex="0" aria-label="' + p.nome + '. Toque para ver os detalhes.">' +
         '<div class="combo-imagem">' +
-          '<img src="' + p.imagem + '" alt="' + p.nome + '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="1536" height="1024">' +
-          '<div class="combo-convite"><span>Toque para ver detalhes</span><span>↗</span></div>' +
+          '<img src="' + p.imagem + '" alt="' + p.nome + '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="1254" height="1254">' +
         '</div>' +
+        '<div class="combo-resumo"><div class="combo-convite"><span>Toque para ver detalhes</span><span>↗</span></div><span class="combo-preco-base"><small>A partir de</small><strong>' + preco(p.preco) + '</strong></span></div>' +
         '<div class="combo-detalhe">' +
           '<span class="combo-selo">Combo Cosmos</span>' +
           '<h3>' + p.nome + '</h3>' +
