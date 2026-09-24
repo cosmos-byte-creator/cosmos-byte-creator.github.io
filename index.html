@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.3";
+  var VERSAO_SITE = "20260924.4";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -107,7 +107,7 @@ body{
   font-variation-settings:"wdth" 100,"wght" 400;
   overflow-x:hidden;
 }
-body.modal-planeta-aberto{overflow:hidden}
+body.modal-planeta-aberto,body.modal-fluxo-aberto{overflow:hidden}
 img{max-width:100%; display:block}
 [hidden]{display:none!important}
 button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
@@ -491,6 +491,9 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .item .info{flex:1; min-width:0}
 .item .nome{font-variation-settings:"wdth" 106,"wght" 700; font-size:15px; text-transform:uppercase}
 .item .sub{color:var(--fosco); font-size:12.5px; font-variant-numeric:tabular-nums}
+.item .item-extras{margin-top:5px;color:#D8B778;font-size:11.5px;line-height:1.35}
+.editar-adicionais{margin-top:8px;min-height:32px;padding:0 11px;border:1px solid rgba(255,196,95,.38);border-radius:var(--r-pill);color:var(--ouro);font-size:10px;font-variation-settings:"wdth" 108,"wght" 800;letter-spacing:.07em;text-transform:uppercase}
+.editar-adicionais:hover{background:rgba(255,196,95,.1)}
 .passo{display:flex; align-items:center; gap:2px; background:rgba(255,255,255,.05); border-radius:var(--r-pill); padding:3px}
 .passo button{width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-size:19px; color:var(--creme)}
 .passo button:hover{background:rgba(255,255,255,.08)}
@@ -528,6 +531,41 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .painel-pe .btn{width:100%}
 .btn-copiar{min-height:44px; border-radius:var(--r-pill); color:var(--fosco); font-size:12.5px; letter-spacing:.05em; text-transform:uppercase}
 .btn-copiar:hover{color:var(--creme)}
+
+/* ---------- 9B. ADICIONAIS E FINALIZAÇÃO ---------- */
+.modal-fluxo{position:fixed;z-index:100;inset:0;display:grid;place-items:center;overflow-y:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:rgba(3,3,5,.86);backdrop-filter:blur(12px)}
+.modal-caixa{width:min(560px,100%);max-height:min(88dvh,780px);overflow-y:auto;border:1px solid rgba(255,196,95,.28);border-radius:22px;background:radial-gradient(100% 58% at 50% 0,rgba(237,106,29,.14),transparent 62%),#09090B;box-shadow:0 32px 90px rgba(0,0,0,.62)}
+.modal-fluxo-topo{position:sticky;z-index:2;top:0;display:flex;align-items:center;gap:14px;padding:20px 20px 16px;border-bottom:1px solid var(--linha);background:rgba(9,9,11,.95);backdrop-filter:blur(12px)}
+.modal-fluxo-topo div{min-width:0;flex:1}
+.modal-etapa{display:block;margin-bottom:5px;color:var(--brasa);font-size:9px;font-variation-settings:"wdth" 110,"wght" 800;letter-spacing:.17em;text-transform:uppercase}
+.modal-fluxo-topo h2{font-size:clamp(24px,7vw,34px)}
+.modal-fluxo-corpo{padding:20px}
+.modal-intro{margin-bottom:18px;color:var(--fosco);font-size:13px;line-height:1.5}
+.adicionais-lista{display:grid;gap:9px}
+.opcao-adicional{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;min-height:58px;padding:10px 13px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:#100E11;cursor:pointer}
+.opcao-adicional:has(input:checked){border-color:rgba(255,196,95,.52);background:rgba(255,196,95,.075)}
+.opcao-adicional input{width:20px;height:20px;accent-color:var(--ouro)}
+.opcao-adicional .nome{font-size:13px;font-variation-settings:"wdth" 104,"wght" 700}
+.opcao-adicional .preco{font-size:13px;white-space:nowrap}
+.modal-acoes{display:grid;grid-template-columns:.72fr 1.28fr;gap:10px;margin-top:20px}
+.modal-acoes .btn{width:100%;padding-inline:12px}
+.btn-neutro{min-height:52px;border:1px solid var(--linha);border-radius:4px;color:var(--fosco);font-size:11px;font-variation-settings:"wdth" 108,"wght" 800;letter-spacing:.08em;text-transform:uppercase}
+.btn-neutro:hover{color:var(--creme);background:rgba(255,255,255,.04)}
+.campo-checkout{display:grid;gap:7px;margin-bottom:16px}
+.campo-checkout>span,.pagamento-legenda{color:#D8CEC5;font-size:12px;font-variation-settings:"wdth" 104,"wght" 700}
+.campo-checkout input,.campo-checkout textarea{width:100%;min-height:50px;padding:12px 13px;border:1px solid rgba(255,255,255,.13);border-radius:11px;background:#111013;color:var(--creme);font:inherit;font-size:16px;resize:vertical}
+.campo-checkout input:focus,.campo-checkout textarea:focus{border-color:rgba(255,196,95,.65);outline:2px solid rgba(255,196,95,.18)}
+.endereco-linha{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.btn-loc{align-self:stretch;min-width:58px;border:1px solid rgba(255,196,95,.45);border-radius:11px;background:rgba(255,196,95,.08);color:var(--ouro);font-size:11px;font-variation-settings:"wdth" 110,"wght" 800;letter-spacing:.06em}
+.btn-loc[aria-busy="true"]{opacity:.58;pointer-events:none}
+.loc-status{min-height:18px;color:var(--fosco);font-size:11.5px}
+.loc-status.ok{color:#7FD99A}.loc-status.erro{color:#FF9A7A}
+.pagamentos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 4px}
+.pagamento{position:relative;display:grid;place-items:center;min-height:54px;padding:8px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:#100E11;color:var(--fosco);cursor:pointer;font-size:12px;font-variation-settings:"wdth" 104,"wght" 700}
+.pagamento input{position:absolute;opacity:0;pointer-events:none}
+.pagamento:has(input:checked){border-color:var(--ouro);background:rgba(255,196,95,.1);color:var(--creme);box-shadow:inset 0 0 0 1px rgba(255,196,95,.18)}
+.checkout-nota{margin-top:14px;color:#81776F;font-size:11px;line-height:1.45}
+@media(max-width:420px){.modal-fluxo{padding:8px}.modal-caixa{max-height:calc(100dvh - 16px);border-radius:17px}.modal-fluxo-topo,.modal-fluxo-corpo{padding-inline:16px}.modal-acoes{grid-template-columns:1fr}.modal-acoes .btn-primario{grid-row:1}.pagamentos{grid-template-columns:1fr}.pagamento{min-height:48px}}
 
 /* ---------- 10. MISSÃO COSMOS ---------- */
 .missao-chamada{
@@ -1071,7 +1109,7 @@ button,a,input{touch-action:manipulation}
     </div>
   </div>
   <div class="painel-pe" id="pe-carrinho" hidden>
-    <a class="btn btn-primario" id="enviar-pedido" href="#" target="_blank" rel="noopener">🚀 Enviar pedido</a>
+    <button class="btn btn-primario" id="enviar-pedido" type="button">🚀 Enviar pedido</button>
     <button class="btn-copiar" id="copiar-pedido">Copiar pedido em texto</button>
   </div>
 </div>
@@ -1093,6 +1131,39 @@ button,a,input{touch-action:manipulation}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <section class="modal-planeta" id="modal-planeta" role="dialog" aria-modal="true" aria-labelledby="t-planeta" hidden></section>
+
+<!-- ================= ADICIONAIS DO LANCHE ================= -->
+<div class="modal-fluxo" id="modal-adicionais" role="dialog" aria-modal="true" aria-labelledby="t-adicionais" hidden>
+  <div class="modal-caixa">
+    <div class="modal-fluxo-topo">
+      <div><span class="modal-etapa">Personalização da missão</span><h2 id="t-adicionais">Adicionar extras?</h2></div>
+      <button class="fechar" id="fechar-adicionais" type="button" aria-label="Fechar adicionais">✕</button>
+    </div>
+    <div class="modal-fluxo-corpo" id="adicionais-conteudo"></div>
+  </div>
+</div>
+
+<!-- ================= IDENTIFICAÇÃO E ENTREGA ================= -->
+<div class="modal-fluxo" id="modal-checkout" role="dialog" aria-modal="true" aria-labelledby="t-checkout" hidden>
+  <div class="modal-caixa">
+    <div class="modal-fluxo-topo">
+      <div><span class="modal-etapa">Última etapa · transmissão</span><h2 id="t-checkout">Dados da missão</h2></div>
+      <button class="fechar" id="fechar-checkout" type="button" aria-label="Fechar finalização">✕</button>
+    </div>
+    <form class="modal-fluxo-corpo" id="form-checkout">
+      <p class="modal-intro">Preencha os dados obrigatórios. O pedido completo será preparado para envio no WhatsApp.</p>
+      <label class="campo-checkout"><span>Nome do cliente *</span><input id="checkout-nome" name="nome" type="text" autocomplete="name" required maxlength="80" placeholder="Como podemos chamar você?"></label>
+      <label class="campo-checkout"><span>Endereço de entrega *</span><span class="endereco-linha"><textarea id="checkout-endereco" name="endereco" required rows="2" maxlength="240" placeholder="Rua, número, bairro e complemento"></textarea><button class="btn-loc" id="usar-localizacao" type="button" aria-label="Usar localização atual">⌖ LOC</button></span><small class="loc-status" id="loc-status" role="status"></small></label>
+      <fieldset style="border:0;padding:0;margin:0"><legend class="pagamento-legenda">Forma de pagamento *</legend><div class="pagamentos">
+        <label class="pagamento"><input type="radio" name="pagamento" value="Dinheiro" required><span>💵 Dinheiro</span></label>
+        <label class="pagamento"><input type="radio" name="pagamento" value="Cartão"><span>💳 Cartão</span></label>
+        <label class="pagamento"><input type="radio" name="pagamento" value="Pix"><span>◆ Pix</span></label>
+      </div></fieldset>
+      <p class="checkout-nota">O WhatsApp exige que o cliente confirme o envio da mensagem. O site não pode enviá-la automaticamente.</p>
+      <div class="modal-acoes"><button class="btn-neutro" id="voltar-checkout" type="button">Voltar</button><button class="btn btn-primario" type="submit">Abrir WhatsApp →</button></div>
+    </form>
+  </div>
+</div>
 
 <script>
 /* =========================================================================
@@ -1210,6 +1281,19 @@ button,a,input{touch-action:manipulation}
     percentual: 10,
     rotulo: "10% de cashback para a próxima compra"
   };
+
+  const ADICIONAIS = [
+    { id:"hamburguer-120g", nome:"Hambúrguer 120g", preco:700 },
+    { id:"cebola-caramelizada", nome:"Cebola caramelizada", preco:300 },
+    { id:"cebola-roxa", nome:"Cebola roxa", preco:300 },
+    { id:"picles", nome:"Picles", preco:300 },
+    { id:"molho-catupiry", nome:"Molho Catupiry", preco:300 },
+    { id:"molho-cheddar", nome:"Molho cheddar", preco:300 },
+    { id:"molho-baconnese", nome:"Molho baconnese", preco:300 },
+    { id:"bacon", nome:"Bacon", preco:400 },
+    { id:"queijo-cheddar", nome:"Fatia de queijo cheddar", preco:300 },
+    { id:"queijo-mussarela", nome:"Fatia de queijo mussarela", preco:300 }
+  ];
 
   /* ---------- 4. UTILITÁRIOS ---------- */
   const $  = (s, e) => (e || document).querySelector(s);
@@ -1477,13 +1561,25 @@ button,a,input{touch-action:manipulation}
   /* ---------- 6. CARRINHO ---------- */
   const CHAVE_CARRINHO = "cosmos:carrinho";
   const CHAVE_CASHBACK = "cosmos:cashback";
-  let carrinho = guardar.ler(CHAVE_CARRINHO, []);       // [{id, qtd}]
+  let carrinho = guardar.ler(CHAVE_CARRINHO, []);       // [{id, qtd, adicionais:[]}]
+  if (!Array.isArray(carrinho)) carrinho = [];
+  carrinho = carrinho.map(function (item) {
+    return { id:item.id, qtd:Number(item.qtd) || 1, adicionais:Array.isArray(item.adicionais) ? item.adicionais : [] };
+  });
   let cashbackAtivo = guardar.ler(CHAVE_CASHBACK, null); // {id, codigo, percentual, status, telefone}
+
+  function adicionaisDoItem(item) {
+    const ids = Array.isArray(item.adicionais) ? item.adicionais : [];
+    return ids.map(function (id) { return ADICIONAIS.find(function (a) { return a.id === id; }); }).filter(Boolean);
+  }
+  function valorAdicionais(item) {
+    return adicionaisDoItem(item).reduce(function (total, adicional) { return total + adicional.preco; }, 0);
+  }
 
   function subtotal() {
     return carrinho.reduce(function (s, it) {
       const p = acharProduto(it.id);
-      return p && Number.isFinite(p.preco) ? s + p.preco * it.qtd : s;
+      return p && Number.isFinite(p.preco) ? s + (p.preco + valorAdicionais(it)) * it.qtd : s;
     }, 0);
   }
   function temPrecoPendente() {
@@ -1520,9 +1616,11 @@ button,a,input{touch-action:manipulation}
 
   function adicionar(id) {
     const existente = carrinho.filter(it => it.id === id)[0];
-    if (existente) existente.qtd += 1; else carrinho.push({ id: id, qtd: 1 });
+    if (existente) existente.qtd += 1; else carrinho.push({ id: id, qtd: 1, adicionais:[] });
     salvarEAtualizar();
-    toast(acharProduto(id).nome + " no pedido");
+    const produto = acharProduto(id);
+    toast(produto.nome + " no pedido");
+    if (produto.categoria === "burger") abrirAdicionais(id);
   }
   function mudarQtd(id, delta) {
     const it = carrinho.filter(x => x.id === id)[0];
@@ -1565,18 +1663,28 @@ button,a,input{touch-action:manipulation}
     lista.innerHTML = carrinho.map(function (it) {
       const p = acharProduto(it.id);
       if (!p) return "";
+      const adicionais = adicionaisDoItem(it);
+      const valorExtra = valorAdicionais(it);
+      const valorUnitario = Number.isFinite(p.preco) ? p.preco + valorExtra : null;
+      const resumoExtras = adicionais.length
+        ? '<p class="item-extras">+ ' + adicionais.map(function (a) { return a.nome; }).join(", ") + '</p>'
+        : '';
+      const botaoExtras = p.categoria === "burger"
+        ? '<button class="editar-adicionais" type="button" data-adicionais="' + p.id + '">Adicionais' + (adicionais.length ? ' · ' + adicionais.length : '') + '</button>'
+        : '';
       return '' +
         '<div class="item">' +
           '<div class="info">' +
             '<p class="nome">' + p.nome + '</p>' +
-            '<p class="sub">' + (Number.isFinite(p.preco) ? preco(p.preco) + ' cada' : 'Preço a confirmar') + '</p>' +
+            '<p class="sub">' + (Number.isFinite(valorUnitario) ? preco(valorUnitario) + ' cada' : 'Preço a confirmar') + '</p>' +
+            resumoExtras + botaoExtras +
           '</div>' +
           '<div class="passo">' +
             '<button data-menos="' + p.id + '" aria-label="Menos um ' + p.nome + '">−</button>' +
             '<span class="n">' + it.qtd + '</span>' +
             '<button data-mais="' + p.id + '" aria-label="Mais um ' + p.nome + '">+</button>' +
           '</div>' +
-          '<span class="preco">' + (Number.isFinite(p.preco) ? preco(p.preco * it.qtd) : 'A confirmar') + '</span>' +
+          '<span class="preco">' + (Number.isFinite(valorUnitario) ? preco(valorUnitario * it.qtd) : 'A confirmar') + '</span>' +
         '</div>';
     }).join("");
 
@@ -1597,6 +1705,55 @@ button,a,input{touch-action:manipulation}
       (pendente ? '<p class="aviso">Há um combo com preço pendente. A loja confirmará o valor pelo WhatsApp.</p>' : '');
 
     atualizarLinkWhatsApp(sub, tot);
+  }
+
+  /* ---------- 6B. ADICIONAIS ---------- */
+  let produtoAdicionaisAtivo = null;
+  let focoFluxoAnterior = null;
+
+  function atualizarBloqueioFluxo() {
+    const algumAberto = !$("#modal-adicionais").hidden || !$("#modal-checkout").hidden;
+    document.body.classList.toggle("modal-fluxo-aberto", algumAberto);
+  }
+
+  function abrirAdicionais(id) {
+    const produto = acharProduto(id);
+    const item = carrinho.find(function (it) { return it.id === id; });
+    if (!produto || produto.categoria !== "burger" || !item) return;
+    produtoAdicionaisAtivo = id;
+    focoFluxoAnterior = document.activeElement;
+    const escolhidos = Array.isArray(item.adicionais) ? item.adicionais : [];
+    const opcoes = ADICIONAIS.map(function (adicional) {
+      const marcado = escolhidos.indexOf(adicional.id) > -1 ? " checked" : "";
+      return '<label class="opcao-adicional"><input type="checkbox" name="adicional" value="' + adicional.id + '"' + marcado + '><span class="nome">' + adicional.nome + '</span><span class="preco">+ ' + preco(adicional.preco) + '</span></label>';
+    }).join("");
+    $("#adicionais-conteudo").innerHTML =
+      '<p class="modal-intro">Quer turbinar o <strong>' + produto.nome + '</strong>? Os adicionais selecionados serão aplicados em cada unidade deste lanche.</p>' +
+      '<form id="form-adicionais"><div class="adicionais-lista">' + opcoes + '</div>' +
+      '<div class="modal-acoes"><button class="btn-neutro" id="sem-adicionais" type="button">Agora não</button><button class="btn btn-primario" type="submit">Salvar adicionais</button></div></form>';
+    $("#modal-adicionais").hidden = false;
+    atualizarBloqueioFluxo();
+    requestAnimationFrame(function () {
+      const primeiro = $("#modal-adicionais input");
+      if (primeiro) primeiro.focus();
+    });
+  }
+
+  function fecharAdicionais() {
+    if ($("#modal-adicionais").hidden) return;
+    $("#modal-adicionais").hidden = true;
+    produtoAdicionaisAtivo = null;
+    atualizarBloqueioFluxo();
+    if (focoFluxoAnterior && focoFluxoAnterior.focus) focoFluxoAnterior.focus();
+  }
+
+  function salvarAdicionais() {
+    const item = carrinho.find(function (it) { return it.id === produtoAdicionaisAtivo; });
+    if (!item) return fecharAdicionais();
+    item.adicionais = $$('#form-adicionais input[name="adicional"]:checked').map(function (campo) { return campo.value; });
+    salvarEAtualizar();
+    toast(item.adicionais.length ? "Adicionais salvos" : "Lanche sem adicionais");
+    fecharAdicionais();
   }
 
   /* ---------- 7. RESERVA DE CASHBACK ---------- */
@@ -1643,18 +1800,82 @@ button,a,input{touch-action:manipulation}
     const linhas = [CONFIG.saudacao, "", "Meu pedido:"];
     carrinho.forEach(function (it) {
       const p = acharProduto(it.id);
-      if (p) linhas.push(it.qtd + "x " + p.nome + " — " + (Number.isFinite(p.preco) ? preco(p.preco * it.qtd) : "valor a confirmar"));
+      if (!p) return;
+      const extras = adicionaisDoItem(it);
+      const unitario = Number.isFinite(p.preco) ? p.preco + valorAdicionais(it) : null;
+      linhas.push(it.qtd + "x " + p.nome + " — " + (Number.isFinite(unitario) ? preco(unitario * it.qtd) : "valor a confirmar"));
+      if (extras.length) linhas.push("  Adicionais em cada unidade: " + extras.map(function (a) { return a.nome + " (" + preco(a.preco) + ")"; }).join(", "));
     });
     linhas.push("", "Subtotal: " + preco(sub));
     if (cashbackAtivo) linhas.push("Cashback para a próxima compra (10%): " + preco(valorCashback(sub)), "Código de reserva: " + cashbackAtivo.id + " (aguarda confirmação)");
     linhas.push("Total: " + (temPrecoPendente() ? "valor a confirmar" : preco(tot)));
-    linhas.push("", "Nome:", "Endereço / retirada:", "Pagamento:");
     return linhas.join("\n");
   }
   function atualizarLinkWhatsApp(sub, tot) {
     const texto = textoPedido(sub, tot);
-    $("#enviar-pedido").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto);
     $("#enviar-pedido").dataset.texto = texto;
+  }
+
+  /* ---------- 8B. IDENTIFICAÇÃO, ENTREGA E PAGAMENTO ---------- */
+  let localizacaoCheckout = null;
+
+  function abrirCheckout() {
+    if (!totalItens()) return toast("Seu pedido está vazio");
+    focoFluxoAnterior = document.activeElement;
+    fecharCarrinho();
+    $("#modal-checkout").hidden = false;
+    $("#loc-status").textContent = localizacaoCheckout ? "Localização atual anexada ao pedido." : "";
+    $("#loc-status").className = localizacaoCheckout ? "loc-status ok" : "loc-status";
+    atualizarBloqueioFluxo();
+    requestAnimationFrame(function () { $("#checkout-nome").focus(); });
+  }
+
+  function fecharCheckout() {
+    if ($("#modal-checkout").hidden) return;
+    $("#modal-checkout").hidden = true;
+    atualizarBloqueioFluxo();
+    if (focoFluxoAnterior && focoFluxoAnterior.focus) focoFluxoAnterior.focus();
+  }
+
+  function obterLocalizacao() {
+    const status = $("#loc-status");
+    const botao = $("#usar-localizacao");
+    if (!navigator.geolocation) {
+      status.textContent = "Este aparelho não oferece localização pelo navegador.";
+      status.className = "loc-status erro";
+      return;
+    }
+    botao.setAttribute("aria-busy", "true");
+    status.textContent = "Obtendo sua localização…";
+    status.className = "loc-status";
+    navigator.geolocation.getCurrentPosition(function (posicao) {
+      localizacaoCheckout = { latitude:posicao.coords.latitude, longitude:posicao.coords.longitude };
+      if (!$("#checkout-endereco").value.trim()) $("#checkout-endereco").value = "Localização atual compartilhada pelo GPS";
+      status.textContent = "Localização anexada. O link será enviado junto com o pedido.";
+      status.className = "loc-status ok";
+      botao.removeAttribute("aria-busy");
+    }, function () {
+      status.textContent = "Não foi possível acessar a localização. Autorize o navegador ou digite o endereço.";
+      status.className = "loc-status erro";
+      botao.removeAttribute("aria-busy");
+    }, { enableHighAccuracy:true, timeout:12000, maximumAge:60000 });
+  }
+
+  function enviarCheckout() {
+    const formulario = $("#form-checkout");
+    if (!formulario.reportValidity()) return;
+    const nome = $("#checkout-nome").value.trim();
+    const endereco = $("#checkout-endereco").value.trim();
+    const pagamento = formulario.querySelector('input[name="pagamento"]:checked').value;
+    const sub = subtotal();
+    const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "Endereço: " + endereco];
+    if (localizacaoCheckout) {
+      linhas.push("Localização: https://maps.google.com/?q=" + localizacaoCheckout.latitude.toFixed(6) + "," + localizacaoCheckout.longitude.toFixed(6));
+    }
+    linhas.push("Pagamento: " + pagamento);
+    const texto = linhas.join("\n");
+    window.open("https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
+    fecharCheckout();
   }
 
   /* ---------- 9. MISSÃO COSMOS ---------- */
@@ -1838,6 +2059,8 @@ button,a,input{touch-action:manipulation}
       if (menos) { mudarQtd(menos.getAttribute("data-menos"), -1); return; }
       const mais = ev.target.closest("[data-mais]");
       if (mais) { mudarQtd(mais.getAttribute("data-mais"), 1); return; }
+      const editarAdicionais = ev.target.closest("[data-adicionais]");
+      if (editarAdicionais) { abrirAdicionais(editarAdicionais.getAttribute("data-adicionais")); return; }
       if (ev.target.closest("[data-fecha]")) { fecharCarrinho(); return; }
     });
 
@@ -1845,7 +2068,7 @@ button,a,input{touch-action:manipulation}
     $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
     $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); }
+      if (e.key === "Escape") { fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharAdicionais(); fecharCheckout(); }
       const combo = e.target.closest && e.target.closest("[data-combo-card]");
       if (combo && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
@@ -1854,6 +2077,23 @@ button,a,input{touch-action:manipulation}
     });
 
     $("#reservar-cashback").addEventListener("click", solicitarCashback);
+
+    $("#fechar-adicionais").addEventListener("click", fecharAdicionais);
+    $("#adicionais-conteudo").addEventListener("click", function (ev) {
+      if (ev.target.closest("#sem-adicionais")) fecharAdicionais();
+    });
+    $("#adicionais-conteudo").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      salvarAdicionais();
+    });
+
+    $("#fechar-checkout").addEventListener("click", fecharCheckout);
+    $("#voltar-checkout").addEventListener("click", function () { fecharCheckout(); abrirCarrinho(); });
+    $("#usar-localizacao").addEventListener("click", obterLocalizacao);
+    $("#form-checkout").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      enviarCheckout();
+    });
 
     $("#copiar-pedido").addEventListener("click", function () {
       const texto = $("#enviar-pedido").dataset.texto || "";
@@ -1864,7 +2104,9 @@ button,a,input{touch-action:manipulation}
     $("#enviar-pedido").addEventListener("click", function () {
       if (CONFIG.whatsapp.indexOf("999999999") > -1) {
         toast("Configure o número do WhatsApp em CONFIG");
+        return;
       }
+      abrirCheckout();
     });
 
     $("#missao-abrir").addEventListener("click", abrirMissao);
