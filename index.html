@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.2";
+  var VERSAO_SITE = "20260924.3";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -682,20 +682,20 @@ section{padding:clamp(82px,10vw,136px) 0}
 #sistema .secao-nota{max-width:43ch;margin-top:16px;padding:0;color:#9D938B}
 .system-top{display:grid;grid-template-columns:1fr minmax(270px,.55fr);gap:34px;align-items:end}
 .system-instruction{justify-self:end;max-width:260px;padding:18px 0 4px;border-top:1px solid rgba(255,196,95,.32);color:#ACA197;font-size:11px;line-height:1.65;letter-spacing:.04em}
-.trilha{position:relative;z-index:2;align-items:end;gap:clamp(0px,1vw,14px);max-width:1500px;margin:34px auto 0;padding:24px max(var(--borda-pag),calc((100vw - 1380px)/2)) 18px;background:none;scroll-snap-type:x mandatory;scroll-padding-inline:42vw}
+.trilha{position:relative;z-index:2;align-items:end;gap:clamp(0px,1vw,14px);max-width:1500px;margin:34px auto 0;padding:24px max(var(--borda-pag),calc(50vw - 113px)) 18px;background:none;scroll-snap-type:x mandatory;scroll-padding-inline:calc(50vw - 113px)}
 .orbita{--escala:.78;--opacidade:.58;min-width:clamp(150px,15.5vw,226px);padding:10px 4px 6px;gap:16px;border:0;background:none;box-shadow:none;opacity:var(--opacidade);transition:opacity .38s var(--ease),filter .38s var(--ease)}
 .orbita:hover,.orbita[aria-current="true"],.orbita.em-orbita{border:0;background:none;box-shadow:none;opacity:1}
-.astro-real{position:relative;display:block;width:var(--diametro,clamp(128px,13vw,196px));aspect-ratio:1;background-image:url("images/generated/planetas-atlas-v1.webp");background-repeat:no-repeat;background-size:400% 200%;filter:drop-shadow(0 26px 22px rgba(0,0,0,.55));transition:width .45s var(--ease),filter .45s var(--ease)}
-.astro-real::before{content:"";position:absolute;inset:8%;z-index:-1;border-radius:50%;background:rgba(237,106,29,.18);filter:blur(24px);opacity:0;transition:opacity .35s var(--ease)}
+.astro-real{--brilho-planeta:rgba(255,170,70,.28);position:relative;display:block;width:var(--diametro,clamp(128px,13vw,196px));aspect-ratio:1;background-image:url("images/generated/planetas-atlas-v1.webp");background-repeat:no-repeat;background-size:400% 200%;filter:drop-shadow(0 26px 22px rgba(0,0,0,.55)) drop-shadow(0 0 14px var(--brilho-planeta));transform:scale(1);transition:width .45s var(--ease),filter .45s var(--ease),transform .45s var(--ease)}
+.astro-real::before{content:"";position:absolute;inset:8%;z-index:-1;border-radius:50%;background:var(--brilho-planeta);filter:blur(24px);opacity:.48;transition:opacity .35s var(--ease)}
 .orbita[aria-current="true"] .astro-real::before,.orbita:hover .astro-real::before{opacity:1}
-.orbita[aria-current="true"] .astro-real{filter:drop-shadow(0 32px 30px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(255,170,70,.16))}
-.astro-real[data-p="mercurio"]{background-position:0% 0%}
-.astro-real[data-p="venus"]{background-position:33.333% 0%}
-.astro-real[data-p="netuno"]{background-position:66.666% 0%}
-.astro-real[data-p="terra"]{background-position:100% 0%}
-.astro-real[data-p="marte"]{background-position:0% 100%}
-.astro-real[data-p="jupiter"]{background-position:33.333% 100%}
-.astro-real[data-p="saturno"]{background-position:66.666% 100%}
+.orbita[aria-current="true"] .astro-real{filter:drop-shadow(0 32px 30px rgba(0,0,0,.62)) drop-shadow(0 0 24px var(--brilho-planeta));transform:scale(1.25)}
+.astro-real[data-p="mercurio"]{--brilho-planeta:rgba(212,205,196,.28);background-position:0% 0%}
+.astro-real[data-p="venus"]{--brilho-planeta:rgba(255,191,100,.34);background-position:33.333% 0%}
+.astro-real[data-p="netuno"]{--brilho-planeta:rgba(72,123,255,.38);background-position:66.666% 0%}
+.astro-real[data-p="terra"]{--brilho-planeta:rgba(65,171,255,.38);background-position:100% 0%}
+.astro-real[data-p="marte"]{--brilho-planeta:rgba(237,91,38,.38);background-position:0% 100%}
+.astro-real[data-p="jupiter"]{--brilho-planeta:rgba(229,170,118,.34);background-position:33.333% 100%}
+.astro-real[data-p="saturno"]{--brilho-planeta:rgba(255,211,128,.34);background-position:66.666% 100%}
 .orbita .rotulo{display:grid;gap:4px;color:#837B74;font-size:10px;letter-spacing:.12em;text-align:center;transition:color .3s var(--ease),transform .3s var(--ease)}
 .orbita .rotulo strong{font-size:clamp(16px,1.7vw,22px);font-variation-settings:"wdth" 112,"wght" 800;letter-spacing:-.025em}
 .orbita[aria-current="true"] .rotulo{color:var(--ouro);transform:translateY(-3px)}
@@ -744,6 +744,12 @@ section{padding:clamp(82px,10vw,136px) 0}
 #bebidas{padding-block:clamp(72px,8vw,105px)}
 #bebidas .linhas{margin-top:28px}
 #bebidas .linha{min-height:92px;border-radius:12px;background:#0E0D0F;border-color:rgba(255,255,255,.08)}
+#bebidas .miniatura{background:#FFF}
+#bebidas .miniatura img{object-fit:contain;padding:4px}
+
+/* O Combo Abdução permanece estável, inclusive em hover e na entrada. */
+.combo-card[data-combo-card="combo-abducao"]{transform:none!important}
+.combo-card[data-combo-card="combo-abducao"] .combo-imagem img{transform:none!important;transition:none!important}
 
 footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,106,29,.10),transparent 65%);border-top:1px solid rgba(255,255,255,.07)}
 .provisorio{border-radius:4px;background:rgba(255,196,95,.045)}
@@ -1107,7 +1113,7 @@ button,a,input{touch-action:manipulation}
     // Texto que abre a mensagem enviada ao WhatsApp
     saudacao: "COSMOS BURGUER 🚀",
     // Abertura animada (ms). 0 desliga.
-    aberturaMs: 650,
+    aberturaMs: 4000,
     // A "Missão Cosmos" só aparece depois que a pessoa passa desta seção
     missaoGatilho: "#bebidas"
   };
@@ -1124,7 +1130,10 @@ button,a,input{touch-action:manipulation}
     lascas: IMG + "Lascas%20de%20cometaIA.webp",
     meteoritos: IMG + "MeteoritodeQueijoIA.webp",
     aneis: IMG + "AneisdeSaturnoIA.webp",
+    cocaLata: IMG + "bebidas/coca-cola-lata-350ml.jpg",
+    coca1l: IMG + "bebidas/coca-cola-1l.jpg",
     guarana: IMG + "guaranalata.webp",
+    guarana1l: IMG + "bebidas/guarana-antarctica-1l.png",
     comboVortice: IMG + "combo/ComboVortice.webp",
     comboVorticeDuplo: IMG + "combo/ComboVorticeDuplo.webp",
     comboAbducao: IMG + "combo/Comboabducao.webp"
@@ -1144,10 +1153,6 @@ button,a,input{touch-action:manipulation}
       quantidade:"1 hambúrguer",
       descricao:"Hambúrguer, queijo cheddar, cebola roxa, molho baconnese e salada",
       ingredientes:"", preco:2490, imagem:IMAGENS.venus, curiosidade:"Vênus gira tão devagar que um dia por lá dura mais que um ano venusiano." },
-    { id:"netuno", categoria:"burger", nome:"Netuno", planeta:"netuno", simbolo:"♆", tamanho:46, luas:1,
-      quantidade:"1 hambúrguer",
-      descricao:"Hambúrguer, queijo mussarela, cebola caramelizada, molho Catupiry e salada",
-      ingredientes:"", preco:2490, imagem:IMAGENS.netuno, curiosidade:"Os ventos de Netuno podem passar de 2.000 km/h — entre os mais rápidos do Sistema Solar." },
     { id:"terra", categoria:"burger", nome:"Terra", planeta:"terra", simbolo:"🌎", tamanho:48, luas:1,
       quantidade:"1 hambúrguer",
       descricao:"Hambúrguer, bacon, picles, queijo cheddar, molho grill e salada",
@@ -1164,6 +1169,10 @@ button,a,input{touch-action:manipulation}
       quantidade:"2 hambúrgueres",
       descricao:"2 hambúrgueres, queijo mussarela, cebola caramelizada, molho Catupiry, bacon e salada",
       ingredientes:"", preco:3490, imagem:IMAGENS.saturno, curiosidade:"Os anéis de Saturno são compostos sobretudo de gelo e pequenos fragmentos rochosos." },
+    { id:"netuno", categoria:"burger", nome:"Netuno", planeta:"netuno", simbolo:"♆", tamanho:46, luas:1,
+      quantidade:"1 hambúrguer",
+      descricao:"Hambúrguer, queijo mussarela, cebola caramelizada, molho Catupiry e salada",
+      ingredientes:"", preco:2490, imagem:IMAGENS.netuno, curiosidade:"Os ventos de Netuno podem passar de 2.000 km/h — entre os mais rápidos do Sistema Solar." },
 
     { id:"combo-vortice", categoria:"combo", nome:"Combo Vórtice", planeta:"jupiter",
       quantidade:"2 lanches artesanais de 1 hambúrguer + 1 refrigerante de sua escolha",
@@ -1186,9 +1195,13 @@ button,a,input{touch-action:manipulation}
       descricao:"Bolinhas de muçarela crocantes por fora, derretidas por dentro.", ingredientes:"", preco:2490, imagem:IMAGENS.meteoritos },
 
     { id:"coca", categoria:"bebida", nome:"Coca-Cola", planeta:"marte",
-      descricao:"Lata 350ml", ingredientes:"", preco:700, imagem:null },
+      descricao:"Lata 350ml", ingredientes:"", preco:700, imagem:IMAGENS.cocaLata },
     { id:"guarana", categoria:"bebida", nome:"Guaraná", planeta:"jupiter",
-      descricao:"Lata 350ml", ingredientes:"", preco:650, imagem:IMAGENS.guarana }
+      descricao:"Lata 350ml", ingredientes:"", preco:650, imagem:IMAGENS.guarana },
+    { id:"coca-1l", categoria:"bebida", nome:"Coca-Cola 1L", planeta:"marte",
+      descricao:"Garrafa 1 litro", ingredientes:"", preco:1200, imagem:IMAGENS.coca1l },
+    { id:"guarana-1l", categoria:"bebida", nome:"Guaraná 1L", planeta:"jupiter",
+      descricao:"Garrafa 1 litro", ingredientes:"", preco:1000, imagem:IMAGENS.guarana1l }
   ];
 
   /* ---------- 3. CASHBACK ---------- */
@@ -1248,7 +1261,8 @@ button,a,input{touch-action:manipulation}
     const botoes = $$("#trilha .orbita");
     const ativo = botoes.findIndex(function (botao) { return botao.getAttribute("data-ir") === id; });
     if (ativo < 0) return;
-    const medidas = window.innerWidth <= 640 ? [182,128,108,92] : [230,168,138,116];
+    /* O planeta central mantém a mesma base do vizinho e cresce 25% via CSS. */
+    const medidas = window.innerWidth <= 640 ? [128,128,108,92] : [168,168,138,116];
     botoes.forEach(function (botao, indice) {
       const distancia = Math.abs(indice - ativo);
       const opacidade = distancia === 0 ? 1 : Math.max(.26, .76 - distancia * .18);
@@ -1262,6 +1276,28 @@ button,a,input{touch-action:manipulation}
       const comportamento = mover === "instant" || reduzido() ? "auto" : "smooth";
       trilha.scrollTo({ left:destino, behavior:comportamento });
     }
+  }
+
+  let quadroPlanetaCentral = 0;
+  function atualizarPlanetaCentral() {
+    const trilha = $("#trilha");
+    const botoes = $$(".orbita", trilha);
+    if (!botoes.length) return;
+    const caixaTrilha = trilha.getBoundingClientRect();
+    const centro = caixaTrilha.left + caixaTrilha.width / 2;
+    let melhor = botoes[0];
+    let menorDistancia = Infinity;
+    botoes.forEach(function (botao) {
+      const caixa = botao.getBoundingClientRect();
+      const distancia = Math.abs(caixa.left + caixa.width / 2 - centro);
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia;
+        melhor = botao;
+      }
+    });
+    const id = melhor.getAttribute("data-ir");
+    const atual = trilha.querySelector('[aria-current="true"]');
+    if (!atual || atual.getAttribute("data-ir") !== id) focarPlaneta(id, false);
   }
 
   /* ---------- 5. RENDER ---------- */
@@ -1710,9 +1746,7 @@ button,a,input{touch-action:manipulation}
       setTimeout(function () { if (tela.parentNode) tela.parentNode.removeChild(tela); }, 400);
     };
     const previa = new URLSearchParams(window.location.search).has("preview");
-    const aberturaVista = guardar.ler("cosmos:abertura-vista", false);
-    const espera = previa || aberturaVista ? 0 : ((reduzido() || document.body.classList.contains("leve")) ? 120 : CONFIG.aberturaMs);
-    guardar.escrever("cosmos:abertura-vista", true);
+    const espera = previa ? 0 : (reduzido() ? 120 : CONFIG.aberturaMs);
     setTimeout(fim, espera);
   }
 
@@ -1726,6 +1760,12 @@ button,a,input{touch-action:manipulation}
   }
 
   function ligarEventos() {
+    const trilhaPlanetas = $("#trilha");
+    trilhaPlanetas.addEventListener("scroll", function () {
+      cancelAnimationFrame(quadroPlanetaCentral);
+      quadroPlanetaCentral = requestAnimationFrame(atualizarPlanetaCentral);
+    }, { passive:true });
+
     const botaoMenu = $("#menu-mobile");
     if (botaoMenu) {
       botaoMenu.addEventListener("click", function () {
