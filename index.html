@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.1";
+  var VERSAO_SITE = "20260924.2";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -886,6 +886,13 @@ button,a,input{touch-action:manipulation}
   .hero{min-height:620px}
   .modal-planeta .janela{grid-template-columns:minmax(220px,.85fr) 1fr;align-content:start}
   .modal-planeta .foto{min-height:72dvh}
+}
+
+/* A arte ocupa o card fechado sem deformar; o recorte permanece central. */
+.combo-card:not(.aberto) .combo-imagem{position:absolute;inset:0;aspect-ratio:auto}
+@media (max-width:699px){
+  .combo-card:not(.aberto){min-height:0;aspect-ratio:4/3}
+  .combo-card.aberto{min-height:390px;aspect-ratio:auto}
 }
 </style>
 </head>
