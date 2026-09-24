@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.7";
+  var VERSAO_SITE = "20260924.8";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -1262,9 +1262,12 @@ button,a,input{touch-action:manipulation}
     coca1l: IMG + "bebidas/coca-cola-1l.jpg",
     guarana: IMG + "guaranalata.webp",
     guarana1l: IMG + "bebidas/guarana-antarctica-1l.png",
-    comboVortice: IMG + "combo/ComboVortice.webp",
-    comboVorticeDuplo: IMG + "combo/ComboVorticeDuplo.webp",
-    comboAbducao: IMG + "combo/Comboabducao.webp"
+    comboViajante: IMG + "combo/combo-viajante.webp",
+    comboVortice: IMG + "combo/combo-vortice.webp",
+    comboAbducao: IMG + "combo/combo-abducao.webp",
+    comboNaveMae: IMG + "combo/combo-nave-mae.webp",
+    comboJornada: IMG + "combo/combo-jornada.webp",
+    comboFrotaSuprema: IMG + "combo/combo-frota-suprema.webp"
   };
 
   /* ---------- 2. MENU — todos os produtos ----------
@@ -1308,7 +1311,7 @@ button,a,input{touch-action:manipulation}
     { id:"combo-viajante", erpId:"OF001", categoria:"combo", nome:"Viajante Espacial", planeta:"mercurio",
       quantidade:"1 lanche à escolha + batata individual + refrigerante em lata",
       descricao:"Escolha o lanche. Receitas duplas acrescentam R$ 6,00; adicionais são escolhidos dentro do configurador.",
-      condicoes:"A partir de R$ 36,90. Entrega grátis.", preco:3690, slots:1, batataIndividual:true, bebidas:["Coca-Cola lata 350ml","Guaraná lata 350ml"], imagem:IMAGENS.mercurio },
+      condicoes:"A partir de R$ 36,90. Entrega grátis.", preco:3690, slots:1, batataIndividual:true, bebidas:["Coca-Cola lata 350ml","Guaraná lata 350ml"], imagem:IMAGENS.comboViajante },
     { id:"combo-vortice", erpId:"OF004", categoria:"combo", nome:"Vórtice", planeta:"jupiter",
       quantidade:"2 lanches à escolha + refrigerante de 1L",
       descricao:"Escolha cada lanche e decida entre Vórtice comum ou Marciano com batata média preparada.",
@@ -1320,15 +1323,15 @@ button,a,input{touch-action:manipulation}
     { id:"combo-nave-mae", erpId:"OF009", categoria:"combo", nome:"Nave Mãe", planeta:"saturno",
       quantidade:"4 lanches à escolha + refrigerante de 1L",
       descricao:"Monte os quatro lanches livremente e escolha a versão comum ou Marciana com batata média preparada.",
-      condicoes:"A partir de R$ 80,90. Duplo + R$ 6,00 por lanche; Marciano + R$ 15,00.", preco:8090, slots:4, marciano:true, bebidas:["Coca-Cola 1L","Guaraná Antarctica 1L"], imagem:IMAGENS.comboVorticeDuplo },
+      condicoes:"A partir de R$ 80,90. Duplo + R$ 6,00 por lanche; Marciano + R$ 15,00.", preco:8090, slots:4, marciano:true, bebidas:["Coca-Cola 1L","Guaraná Antarctica 1L"], imagem:IMAGENS.comboNaveMae },
     { id:"combo-jornada", erpId:"OF011", categoria:"combo", nome:"Jornada Cósmica", planeta:"jupiter",
       quantidade:"1 lanche à escolha + 1 Plutão + Monster Energy lata",
       descricao:"Escolha o lanche principal; o Plutão doce e o Monster já fazem parte da jornada.",
-      condicoes:"A partir de R$ 51,90. Receita dupla + R$ 6,00.", preco:5190, slots:1, fixos:["1 Plutão","1 Monster Energy lata"], bebidas:["Monster Energy lata"], imagem:IMAGENS.jupiter },
+      condicoes:"A partir de R$ 51,90. Receita dupla + R$ 6,00.", preco:5190, slots:1, fixos:["1 Plutão","1 Monster Energy lata"], bebidas:["Monster Energy lata"], imagem:IMAGENS.comboJornada },
     { id:"combo-frota", erpId:"OF012", categoria:"combo", nome:"Frota Suprema", planeta:"saturno",
       quantidade:"5 lanches à escolha + 2 batatas médias + Coca-Cola 2L",
       descricao:"Escolha os cinco lanches e o preparo de cada uma das duas batatas separadamente.",
-      condicoes:"A partir de R$ 134,90. Duplo + R$ 6,00 por lanche.", preco:13490, slots:5, batatas:2, bebidas:["Coca-Cola 2L"], imagem:IMAGENS.comboAbducao },
+      condicoes:"A partir de R$ 134,90. Duplo + R$ 6,00 por lanche.", preco:13490, slots:5, batatas:2, bebidas:["Coca-Cola 2L"], imagem:IMAGENS.comboFrotaSuprema },
 
     { id:"lascas", categoria:"acompanhamento", nome:"Lascas de Cometa Fritas", planeta:"cometa", personalizavel:true,
       descricao:"300g com Catupiry e bacon ou Cheddar e bacon. Upgrade para 500g por + R$ 12,00.", ingredientes:"", preco:2490, imagem:IMAGENS.lascas },
