@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260924.9";
+  var VERSAO_SITE = "20260926.1";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -767,7 +767,30 @@ section{padding:clamp(82px,10vw,136px) 0}
 .astro-real[data-p="marte"]{--brilho-planeta:rgba(237,91,38,.38);background-position:0% 100%}
 .astro-real[data-p="jupiter"]{--brilho-planeta:rgba(229,170,118,.34);background-position:33.333% 100%}
 .astro-real[data-p="saturno"]{--brilho-planeta:rgba(255,211,128,.34);background-position:66.666% 100%}
-.astro-real[data-p="plutao"]{--brilho-planeta:rgba(205,160,135,.28);width:calc(var(--diametro,168px) * .62);border-radius:50%;background-image:radial-gradient(circle at 36% 30%,#F3E6D7 0 8%,#C7A58D 9% 24%,#8B6655 48%,#3E2B28 100%);background-size:auto;box-shadow:inset -16px -18px 28px rgba(0,0,0,.55)}
+.astro-real[data-p="plutao"]{
+  --brilho-planeta:rgba(220,174,145,.36);
+  width:calc(var(--diametro,168px) * .66);
+  border-radius:50%;
+  background-image:
+    radial-gradient(ellipse 20% 27% at 43% 43%,rgba(247,235,218,.96) 0 54%,transparent 58%),
+    radial-gradient(ellipse 16% 24% at 51% 48%,rgba(232,214,192,.88) 0 52%,transparent 57%),
+    radial-gradient(circle at 29% 25%,rgba(250,240,226,.96) 0 3%,transparent 3.5%),
+    radial-gradient(circle at 71% 28%,rgba(82,54,46,.72) 0 4%,transparent 4.5%),
+    radial-gradient(circle at 67% 65%,rgba(73,47,43,.76) 0 5%,transparent 5.5%),
+    radial-gradient(circle at 27% 69%,rgba(239,217,193,.55) 0 4%,transparent 4.5%),
+    radial-gradient(circle at 38% 31%,#F5E6D5 0 9%,#D7BDA4 22%,#A77D68 48%,#704D43 72%,#332326 100%);
+  background-size:auto;
+  box-shadow:inset 11px 9px 19px rgba(255,242,220,.2),inset -18px -20px 30px rgba(0,0,0,.68),0 0 0 1px rgba(255,225,196,.12)
+}
+.astro-real[data-p="plutao"]::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(circle at 22% 46%,transparent 0 4%,rgba(67,43,40,.28) 4.5% 6%,transparent 6.5%),
+    radial-gradient(circle at 76% 47%,rgba(245,220,194,.2) 0 3%,transparent 3.5%),
+    radial-gradient(circle at 45% 76%,rgba(52,34,34,.35) 0 4%,transparent 4.5%),
+    linear-gradient(122deg,rgba(255,255,255,.16),transparent 38%,rgba(28,16,19,.22) 68%);
+  mix-blend-mode:soft-light
+}
 .orbita .rotulo{display:grid;gap:4px;color:#837B74;font-size:10px;letter-spacing:.12em;text-align:center;transition:color .3s var(--ease),transform .3s var(--ease)}
 .orbita .rotulo strong{font-size:clamp(16px,1.7vw,22px);font-variation-settings:"wdth" 112,"wght" 800;letter-spacing:-.025em}
 .orbita[aria-current="true"] .rotulo{color:var(--ouro);transform:translateY(-3px)}
@@ -1258,6 +1281,7 @@ button,a,input{touch-action:manipulation}
     marte: IMG + "Marte.webp",
     jupiter: IMG + "JupiterIA.webp",
     saturno: IMG + "SaturnoIA.webp",
+    plutao: IMG + "PlutaoNew.webp",
     lascas: IMG + "Lascas%20de%20cometaIA.webp",
     meteoritos: IMG + "MeteoritodeQueijoIA.webp",
     aneis: IMG + "AneisdeSaturnoIA.webp",
@@ -1281,7 +1305,7 @@ button,a,input{touch-action:manipulation}
     { id:"plutao", categoria:"burger", nome:"Plutão", planeta:"plutao", simbolo:"♇", tamanho:25,
       quantidade:"Lanche doce",
       descricao:"Pão brioche, chocolate cremoso, leite condensado, creme de leite, Leite Ninho e morangos frescos",
-      ingredientes:"", preco:2190, imagem:null, doce:true, curiosidade:"Plutão possui uma enorme região de gelo em formato de coração, conhecida como Tombaugh Regio." },
+      ingredientes:"", preco:2190, imagem:IMAGENS.plutao, doce:true, curiosidade:"Plutão possui uma enorme região de gelo em formato de coração, conhecida como Tombaugh Regio." },
     { id:"mercurio", categoria:"burger", nome:"Mercúrio", planeta:"mercurio", simbolo:"☿", tamanho:34,
       quantidade:"1 hambúrguer",
       descricao:"Hambúrguer, queijo mussarela, cebola roxa, molho cheddar e salada",
