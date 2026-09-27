@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#120a08">
+  <meta name="description" content="Guia de montagem da chapa — Cosmos Burguer.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>Montagem · Cosmos Burguer</title>
+  <style>
+    :root{color-scheme:dark;--fundo:#100a09;--painel:#211310;--linha:rgba(255,221,182,.15);--texto:#fff5e9;--suave:#d5b8a5;--ouro:#ffc15b;--brasa:#fb691e;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+    *{box-sizing:border-box} html{background:var(--fundo);-webkit-text-size-adjust:100%} body{margin:0;min-width:320px;background:radial-gradient(ellipse at 50% -18%,#633019 0,transparent 42%),var(--fundo);color:var(--texto);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:calc(22px + var(--safe-bottom))} button{font:inherit;color:inherit} button:focus-visible{outline:3px solid var(--ouro);outline-offset:3px}
+    header{padding:calc(18px + var(--safe-top)) 20px 18px;border-bottom:1px solid var(--linha);background:rgba(16,10,9,.93);position:sticky;top:0;z-index:2;backdrop-filter:blur(12px)} .marca{display:flex;align-items:center;gap:11px;max-width:760px;margin:auto}.orbita{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff0bd,#ffc15b 42%,#e64b14 74%,#5c160b);box-shadow:0 0 20px #f56d273d;position:relative;flex:none}.orbita:after{content:"";position:absolute;inset:8px -7px;border:2px solid #ffd27c;border-radius:50%;transform:rotate(-25deg)} h1{font-size:18px;line-height:1.05;letter-spacing:.04em;text-transform:uppercase;margin:0;font-weight:850}.sub{display:block;color:var(--suave);font-size:12px;letter-spacing:.04em;margin-top:2px}
+    main{max-width:760px;margin:auto;padding:24px 16px 0}.intro{margin:0 4px 22px}.intro h2{font-size:clamp(26px,7vw,38px);line-height:1;text-transform:uppercase;letter-spacing:-.035em;margin:0 0 8px}.intro p{color:var(--suave);margin:0;max-width:48ch}.grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lanche{appearance:none;border:1px solid var(--linha);padding:0;border-radius:16px;overflow:hidden;background:var(--painel);text-align:left;box-shadow:0 8px 20px #0003;cursor:pointer;min-height:170px;transition:transform .14s ease,border-color .14s ease}.lanche:active{transform:scale(.98)}.lanche:hover{border-color:#ffc15b99}.lanche img{display:block;width:100%;aspect-ratio:1/1.07;object-fit:cover;object-position:top;background:#130d0b}.nome{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:11px 12px 12px;font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.025em}.ver{color:var(--ouro);font-size:12px;font-weight:700;text-transform:none;white-space:nowrap}.ajuda{margin:22px 4px 0;color:var(--suave);font-size:13px;text-align:center}.instalar{border:1px solid #ffc15b66;background:#ffc15b14;color:#ffdc9b;border-radius:999px;padding:9px 14px;font-weight:750;cursor:pointer;margin:10px auto 0;display:none}.instalar.visivel{display:block}
+    dialog{width:min(100%,760px);height:100%;max-height:none;margin:0 auto;padding:0;border:0;background:#090605;color:var(--texto)}dialog::backdrop{background:#000b}.modal-topo{height:64px;padding:calc(10px + var(--safe-top)) 14px 10px;display:flex;align-items:center;justify-content:space-between;background:#120a08;border-bottom:1px solid var(--linha);position:sticky;top:0;z-index:1}.modal-titulo{font-size:18px;font-weight:850;text-transform:uppercase}.fechar{border:1px solid var(--linha);border-radius:999px;background:#ffffff0c;padding:8px 13px;cursor:pointer;font-weight:700}.imagem-grande{width:100%;min-height:calc(100vh - 64px - var(--safe-top));object-fit:contain;object-position:top;background:#090605}
+    @media (min-width:560px){.grade{grid-template-columns:repeat(3,minmax(0,1fr))}.lanche{min-height:200px}} @media (min-width:720px){.grade{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  </style>
+</head>
+<body>
+  <header><div class="marca"><span class="orbita" aria-hidden="true"></span><div><h1>Cosmos Burguer</h1><span class="sub">Guia de montagem · chapa</span></div></div></header>
+  <main>
+    <section class="intro" aria-labelledby="titulo"><h2 id="titulo">Qual lanche vai montar?</h2><p>Toque no planeta para abrir a ficha em tela cheia. As imagens ficam disponíveis mesmo sem internet, depois do primeiro acesso.</p></section>
+    <section class="grade" aria-label="Fichas de montagem">
+      <button class="lanche" data-nome="Mercúrio" data-imagem="../images/MercurioMontagem.png"><img src="../images/MercurioMontagem.png" alt="Abrir montagem do Mercúrio" loading="eager"><span class="nome">Mercúrio <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Vênus" data-imagem="../images/VenusMontagem.png"><img src="../images/VenusMontagem.png" alt="Abrir montagem do Vênus" loading="eager"><span class="nome">Vênus <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Terra" data-imagem="../images/TerraMontagem.png"><img src="../images/TerraMontagem.png" alt="Abrir montagem da Terra" loading="lazy"><span class="nome">Terra <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Marte" data-imagem="../images/MarteMontagem.png"><img src="../images/MarteMontagem.png" alt="Abrir montagem do Marte" loading="lazy"><span class="nome">Marte <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Júpiter" data-imagem="../images/JupiterMontagem.png"><img src="../images/JupiterMontagem.png" alt="Abrir montagem do Júpiter" loading="lazy"><span class="nome">Júpiter <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Saturno" data-imagem="../images/SaturnoMontagem.png"><img src="../images/SaturnoMontagem.png" alt="Abrir montagem do Saturno" loading="lazy"><span class="nome">Saturno <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Netuno" data-imagem="../images/NetunoMontagem.png"><img src="../images/NetunoMontagem.png" alt="Abrir montagem do Netuno" loading="lazy"><span class="nome">Netuno <span class="ver">Ver ficha</span></span></button>
+      <button class="lanche" data-nome="Plutão" data-imagem="../images/PlutãoMontagem.png"><img src="../images/PlutãoMontagem.png" alt="Abrir montagem do Plutão" loading="lazy"><span class="nome">Plutão <span class="ver">Ver ficha</span></span></button>
+    </section>
+    <p class="ajuda">No Android, abra o menu do navegador e escolha <strong>“Instalar app”</strong> ou <strong>“Adicionar à tela inicial”</strong>.</p><button class="instalar" id="instalar" type="button">Instalar guia no celular</button>
+  </main>
+  <dialog id="ficha" aria-labelledby="titulo-ficha"><div class="modal-topo"><span class="modal-titulo" id="titulo-ficha"></span><button class="fechar" type="button" aria-label="Fechar ficha">Fechar</button></div><img class="imagem-grande" id="imagem-ficha" alt=""></dialog>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
+    var ficha=document.getElementById('ficha'), titulo=document.getElementById('titulo-ficha'), imagem=document.getElementById('imagem-ficha');
+    document.querySelectorAll('.lanche').forEach(function(botao){botao.addEventListener('click',function(){titulo.textContent='Montagem · '+botao.dataset.nome;imagem.src=botao.dataset.imagem;imagem.alt='Ficha de montagem do '+botao.dataset.nome;ficha.showModal();});});
+    document.querySelector('.fechar').addEventListener('click',function(){ficha.close();}); ficha.addEventListener('click',function(e){if(e.target===ficha)ficha.close();});
+    var eventoInstalacao;var instalar=document.getElementById('instalar');window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();eventoInstalacao=e;instalar.classList.add('visivel');});instalar.addEventListener('click',async function(){if(!eventoInstalacao)return;eventoInstalacao.prompt();await eventoInstalacao.userChoice;eventoInstalacao=null;instalar.classList.remove('visivel');});
+  </script>
+</body>
+</html>
