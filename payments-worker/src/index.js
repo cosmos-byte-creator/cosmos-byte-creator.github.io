@@ -17,7 +17,8 @@ const PRODUCTS = {
   "combo-abducao": { title: "Combo Abdução", price: 6490, type: "combo", slots: 3, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
   "combo-nave-mae": { title: "Combo Nave Mãe", price: 8090, type: "combo", slots: 4, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
   "combo-jornada": { title: "Combo Jornada Cósmica", price: 5190, type: "combo", slots: 1, fries: 0, marciano: false, drinks: ["Monster Energy lata"] },
-  "combo-frota": { title: "Combo Frota Suprema", price: 13490, type: "combo", slots: 5, fries: 2, marciano: false, drinks: ["Coca-Cola 2L"] }
+  "combo-frota": { title: "Combo Frota Suprema", price: 13490, type: "combo", slots: 5, fries: 2, marciano: false, drinks: ["Coca-Cola 2L"] },
+  "produto-teste-1-real": { title: "Produto de teste · R$ 1,00", price: 100, type: "fixed" }
 };
 
 const ADDONS = {
@@ -105,6 +106,9 @@ function lineForItem(item) {
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) fail("Quantidade inválida.");
   let unitPrice = product.price;
   if (product.type === "combo") unitPrice = comboPrice(product, item.config);
+  else if (product.type === "fixed") {
+    if (item.config || (Array.isArray(item.adicionais) && item.adicionais.length)) fail("Este item não aceita personalização.");
+  }
   else if (product.custom === "lascas") {
     if (!isObject(item.config) || ![300, 500].includes(Number(item.config.peso)) || !FRY_FLAVORS.has(item.config.cobertura)) fail("Configuração das Lascas de Cometa inválida.");
     unitPrice += Number(item.config.peso) === 500 ? 1200 : 0;
