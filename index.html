@@ -1218,16 +1218,16 @@ button,a,input{touch-action:manipulation}
       <button class="fechar" id="fechar-checkout" type="button" aria-label="Fechar finalização">✕</button>
     </div>
     <form class="modal-fluxo-corpo" id="form-checkout">
-      <p class="modal-intro">Preencha os dados obrigatórios. O pedido completo será preparado para envio no WhatsApp.</p>
+      <p class="modal-intro">Preencha os dados obrigatórios e escolha como prefere pagar. Para Pix ou cartão, você será levado ao ambiente seguro do Mercado Pago.</p>
       <label class="campo-checkout"><span>Nome do cliente *</span><input id="checkout-nome" name="nome" type="text" autocomplete="name" required maxlength="80" placeholder="Como podemos chamar você?"></label>
+      <label class="campo-checkout"><span>WhatsApp para contato *</span><input id="checkout-whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" placeholder="(16) 99999-9999"></label>
       <label class="campo-checkout"><span>Endereço de entrega *</span><span class="endereco-linha"><textarea id="checkout-endereco" name="endereco" required rows="2" maxlength="240" placeholder="Rua, número, bairro e complemento"></textarea><button class="btn-loc" id="usar-localizacao" type="button" aria-label="Usar localização atual">⌖ LOC</button></span><small class="loc-status" id="loc-status" role="status"></small></label>
       <fieldset style="border:0;padding:0;margin:0"><legend class="pagamento-legenda">Forma de pagamento *</legend><div class="pagamentos">
         <label class="pagamento"><input type="radio" name="pagamento" value="Dinheiro" required><span>💵 Dinheiro</span></label>
-        <label class="pagamento"><input type="radio" name="pagamento" value="Cartão"><span>💳 Cartão</span></label>
-        <label class="pagamento"><input type="radio" name="pagamento" value="Pix"><span>◆ Pix</span></label>
+        <label class="pagamento"><input type="radio" name="pagamento" value="mercado-pago"><span>◆ Pix ou cartão</span></label>
       </div></fieldset>
-      <p class="checkout-nota">O WhatsApp exige que o cliente confirme o envio da mensagem. O site não pode enviá-la automaticamente.</p>
-      <div class="modal-acoes"><button class="btn-neutro" id="voltar-checkout" type="button">Voltar</button><button class="btn btn-primario" type="submit">Abrir WhatsApp →</button></div>
+      <p class="checkout-nota" id="checkout-nota">Pagamentos online são confirmados pelo Mercado Pago. Dinheiro é confirmado com a loja pelo WhatsApp.</p>
+      <div class="modal-acoes"><button class="btn-neutro" id="voltar-checkout" type="button">Voltar</button><button class="btn btn-primario" id="checkout-enviar" type="submit" data-mp-checkout-cta="checkout-pro">Continuar →</button></div>
     </form>
   </div>
 </div>
@@ -1248,6 +1248,8 @@ button,a,input{touch-action:manipulation}
     // Número do WhatsApp da loja: 55 + DDD + número, só dígitos. ⚠️ PLACEHOLDER
     whatsapp: "5516992125648",
     moeda: "BRL",
+    // URL pública do Worker de pagamentos. É configurada no deploy; nunca coloque o Access Token aqui.
+    pagamentosUrl: "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev",
     // Texto que abre a mensagem enviada ao WhatsApp
     saudacao: "COSMOS BURGUER 🚀",
     // Abertura animada (ms). 0 desliga.
@@ -2278,18 +2280,72 @@ button,a,input{touch-action:manipulation}
     }, { enableHighAccuracy:true, timeout:12000, maximumAge:60000 });
   }
 
-  function enviarCheckout() {
+  function pedidoParaPagamento() {
+    return carrinho.map(function (item) {
+      return {
+        id: item.id,
+        quantidade: item.qtd,
+        adicionais: Array.isArray(item.adicionais) ? item.adicionais : [],
+        config: item.config || null
+      };
+    });
+  }
+
+  function definirEnvioCheckout(ocupado) {
+    const botao = $("#checkout-enviar");
+    if (!botao) return;
+    botao.disabled = ocupado;
+    botao.setAttribute("aria-busy", String(ocupado));
+    botao.textContent = ocupado ? "Criando pagamento…" : "Continuar →";
+  }
+
+  async function criarPagamentoMercadoPago(nome, whatsapp, endereco) {
+    if (!CONFIG.pagamentosUrl) {
+      throw new Error("O pagamento online ainda não está configurado.");
+    }
+    const resposta = await fetch(CONFIG.pagamentosUrl.replace(/\/$/, "") + "/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: pedidoParaPagamento(),
+        customer: {
+          name: nome,
+          whatsapp: whatsapp,
+          address: endereco,
+          location: localizacaoCheckout
+        }
+      })
+    });
+    const dados = await resposta.json().catch(function () { return {}; });
+    if (!resposta.ok || !dados.checkoutUrl) {
+      throw new Error(dados.error || "Não foi possível iniciar o pagamento.");
+    }
+    window.location.assign(dados.checkoutUrl);
+  }
+
+  async function enviarCheckout() {
     const formulario = $("#form-checkout");
     if (!formulario.reportValidity()) return;
     const nome = $("#checkout-nome").value.trim();
+    const whatsapp = $("#checkout-whatsapp").value.trim();
     const endereco = $("#checkout-endereco").value.trim();
     const pagamento = formulario.querySelector('input[name="pagamento"]:checked').value;
+    if (pagamento === "mercado-pago") {
+      definirEnvioCheckout(true);
+      try {
+        await criarPagamentoMercadoPago(nome, whatsapp, endereco);
+      } catch (erro) {
+        toast(erro && erro.message ? erro.message : "Não foi possível iniciar o pagamento.");
+        definirEnvioCheckout(false);
+      }
+      return;
+    }
     const sub = subtotal();
-    const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "Endereço: " + endereco];
+    const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "WhatsApp: " + whatsapp, "Endereço: " + endereco];
     if (localizacaoCheckout) {
       linhas.push("Localização: https://maps.google.com/?q=" + localizacaoCheckout.latitude.toFixed(6) + "," + localizacaoCheckout.longitude.toFixed(6));
     }
-    linhas.push("Pagamento: " + pagamento);
+    linhas.push("Pagamento: dinheiro na entrega");
     const texto = linhas.join("\n");
     window.open("https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
     fecharCheckout();
