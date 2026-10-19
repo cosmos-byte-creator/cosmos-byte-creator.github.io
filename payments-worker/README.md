@@ -35,4 +35,12 @@ npm test
 
 Antes de publicar, confirme que a variável `MP_PUBLIC_KEY` está configurada e que o webhook **payment** está ativo para o mesmo ambiente/credenciais do Access Token. Depois faça o deploy do Worker e publique a raiz do repositório no GitHub Pages. Não faça cobranças reais como teste.
 
-O endpoint `/api/brick/session` cria uma sessão de checkout a partir dos itens e dados do cliente, preservando no pedido os adicionais, variantes de combos, bebidas e preparos escolhidos. `/api/brick/payment` recebe o retorno tokenizado do Brick, mas ignora qualquer total enviado pelo navegador. O item temporário de teste foi removido do catálogo público e do catálogo confiável do Worker. O painel privado da loja permanece em `/gestao`.
+O endpoint `/api/brick/session` cria uma sessão de checkout a partir dos itens e dados do cliente, preservando no pedido os adicionais, variantes de combos, bebidas e preparos escolhidos. `/api/brick/payment` recebe o retorno tokenizado do Brick, mas ignora qualquer total enviado pelo navegador. O item de teste de **R$ 0,01** permanece no catálogo público e no catálogo confiável do Worker conforme solicitado; retire-o antes de divulgar o cardápio a clientes. O painel privado da loja permanece em `/gestao`.
+
+## Operação de pedidos e acompanhamento
+
+O painel `/gestao` lista pedidos online e pedidos de dinheiro na entrega. O pagamento e o andamento são estados separados: a equipe pode iniciar o preparo de um pedido online somente depois da confirmação do Mercado Pago. Pedidos em dinheiro entram como **Aguardando confirmação da loja**; após aceitar, a equipe pode avançar por confirmado, em preparo, pronto, saiu para entrega e entregue, ou cancelar. Cada etapa fica registrada no histórico.
+
+Cada compra recebe um link privado de acompanhamento em `/acompanhar/?token=...`. A página consulta o Worker a cada 15 segundos e mostra itens e etapas, sem expor nome, telefone ou endereço. No painel, **WhatsApp pronto** abre uma mensagem preenchida para revisão; uma pessoa da equipe ainda precisa tocar em **Enviar** no WhatsApp. Não há envio automático.
+
+Nesta versão, os pedidos continuam armazenados no KV existente com expiração de 30 dias. Isso evita uma migração de dados para esta entrega, mas não serve como arquivo permanente, relatório histórico ou garantia de retenção além desse prazo. A migração para D1 deve ser uma etapa separada antes de depender do sistema para histórico de longo prazo.

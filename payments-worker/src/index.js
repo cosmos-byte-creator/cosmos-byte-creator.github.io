@@ -34,6 +34,25 @@ const ADDON_NAMES = {
 };
 const COMBO_BURGERS = { mercurio: "simple", venus: "simple", terra: "simple", netuno: "simple", plutao: "simple", marte: "double", jupiter: "double", saturno: "double" };
 const FRY_FLAVORS = new Set(["Catupiry e bacon", "Cheddar e bacon"]);
+const FULFILLMENT_LABELS = {
+  awaiting_payment: "Aguardando pagamento",
+  awaiting_confirmation: "Aguardando confirmação da loja",
+  confirmed: "Pedido confirmado",
+  preparing: "Em preparo",
+  ready: "Pronto para retirada/entrega",
+  out_for_delivery: "Saiu para entrega",
+  delivered: "Entregue",
+  cancelled: "Cancelado"
+};
+const FULFILLMENT_NEXT = {
+  awaiting_confirmation: ["confirmed", "cancelled"],
+  confirmed: ["preparing", "cancelled"],
+  preparing: ["ready", "cancelled"],
+  ready: ["out_for_delivery", "cancelled"],
+  out_for_delivery: ["delivered", "cancelled"],
+  delivered: [],
+  cancelled: []
+};
 
 const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(value), {
   status, headers: { "content-type": "application/json; charset=utf-8", ...headers }
@@ -41,6 +60,31 @@ const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(
 const cents = value => (value / 100).toFixed(2);
 const isObject = value => value && typeof value === "object" && !Array.isArray(value);
 const isUuidV4 = value => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+
+function trackingUrl(env, token) {
+  return `${env.SITE_ORIGIN}/acompanhar/?token=${encodeURIComponent(token)}`;
+}
+
+function ensureFulfillment(order) {
+  if (!order.fulfillmentStatus) {
+    order.fulfillmentStatus = order.status === "approved" || order.status === "processed"
+      ? "confirmed" : order.paymentTypeId === "cash" ? "awaiting_confirmation" : "awaiting_payment";
+  }
+  if (!Array.isArray(order.statusHistory)) {
+    order.statusHistory = [{ status: order.fulfillmentStatus, at: order.updatedAt || order.createdAt, actor: "sistema" }];
+  }
+  return order;
+}
+
+function changeFulfillment(order, status, actor, note = null) {
+  ensureFulfillment(order);
+  if (order.fulfillmentStatus === status) return false;
+  order.fulfillmentStatus = status;
+  order.statusHistory.push({ status, at: new Date().toISOString(), actor, ...(note ? { note } : {}) });
+  order.statusHistory = order.statusHistory.slice(-50);
+  order.updatedAt = new Date().toISOString();
+  return true;
+}
 
 function cors(request, env) {
   const origin = request.headers.get("origin");
@@ -192,25 +236,91 @@ async function createBrickSession(request, env, headers) {
   if (!Number.isFinite(total) || total < 1) fail("Total do pedido inválido.");
   const localId = `CB-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
   const sessionId = crypto.randomUUID();
-  const order = { localId, sessionId, expectedCents: total, currency: "BRL", status: "created", customer, lines, createdAt: new Date().toISOString() };
+  const token = crypto.randomUUID();
+  const createdAt = new Date().toISOString();
+  const order = {
+    localId, sessionId, trackingToken: token, channel: "online", paymentTypeId: null,
+    expectedCents: total, currency: "BRL", status: "created", fulfillmentStatus: "awaiting_payment",
+    statusHistory: [{ status: "awaiting_payment", at: createdAt, actor: "sistema" }],
+    customer, lines, createdAt
+  };
   const ttl = 60 * 60 * 24 * 30;
   await env.ORDERS.put(`brick-session:${sessionId}`, JSON.stringify(order), { expirationTtl: ttl });
   await env.ORDERS.put(`brick-local:${localId}`, sessionId, { expirationTtl: ttl });
+  await env.ORDERS.put(`tracking:${token}`, `brick-session:${sessionId}`, { expirationTtl: ttl });
+  await env.ORDERS.put(`admin-index:${localId}`, `brick-session:${sessionId}`, { expirationTtl: ttl });
   const checkoutUrl = `${env.SITE_ORIGIN}/checkout/pagamento/?session=${encodeURIComponent(sessionId)}`;
-  return json({ checkoutUrl, sessionId, localId, amount: total / 100, currency: "BRL" }, 201, headers);
+  return json({ checkoutUrl, sessionId, localId, trackingUrl: trackingUrl(env, token), amount: total / 100, currency: "BRL" }, 201, headers);
+}
+
+async function createCashOrder(request, env, headers) {
+  const body = await request.json().catch(() => fail("Pedido em formato inválido."));
+  if (!isObject(body) || !Array.isArray(body.items) || body.items.length < 1 || body.items.length > 20) fail("Carrinho inválido.");
+  const customer = validateCustomer(body.customer);
+  const lines = body.items.map(lineForItem);
+  const total = lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
+  if (!Number.isSafeInteger(total) || total < 1) fail("Total do pedido inválido.");
+  const localId = `CB-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+  const token = crypto.randomUUID();
+  const createdAt = new Date().toISOString();
+  const order = {
+    localId, trackingToken: token, channel: "cash_whatsapp", paymentTypeId: "cash",
+    expectedCents: total, currency: "BRL", status: "cash_on_delivery",
+    fulfillmentStatus: "awaiting_confirmation",
+    statusHistory: [{ status: "awaiting_confirmation", at: createdAt, actor: "cliente" }],
+    customer, lines, createdAt, updatedAt: createdAt
+  };
+  const ttl = 60 * 60 * 24 * 30;
+  await env.ORDERS.put(`cash:${localId}`, JSON.stringify(order), { expirationTtl: ttl });
+  await env.ORDERS.put(`tracking:${token}`, `cash:${localId}`, { expirationTtl: ttl });
+  await env.ORDERS.put(`admin-index:${localId}`, `cash:${localId}`, { expirationTtl: ttl });
+  return json({ localId, trackingUrl: trackingUrl(env, token), amount: total / 100, currency: "BRL" }, 201, headers);
 }
 
 async function getBrickSession(env, headers, sessionId) {
   if (!isUuidV4(sessionId)) return json({ error: "Sessão inválida." }, 400, headers);
   const order = await env.ORDERS.get(`brick-session:${sessionId}`, "json");
   if (!order) return json({ error: "Esta sessão expirou. Volte ao cardápio para iniciar novamente." }, 404, headers);
+  ensureFulfillment(order);
+  if (!order.trackingToken) {
+    order.trackingToken = crypto.randomUUID();
+    const ttl = 60 * 60 * 24 * 30;
+    const value = JSON.stringify(order);
+    await env.ORDERS.put(`brick-session:${sessionId}`, value, { expirationTtl: ttl });
+    if (order.paymentId) await env.ORDERS.put(`payment:${order.paymentId}`, value, { expirationTtl: ttl });
+    await env.ORDERS.put(`tracking:${order.trackingToken}`, `brick-session:${sessionId}`, { expirationTtl: ttl });
+    await env.ORDERS.put(`admin-index:${order.localId}`, `brick-session:${sessionId}`, { expirationTtl: ttl });
+  } else {
+    const trackKey = `tracking:${order.trackingToken}`;
+    if (!(await env.ORDERS.get(trackKey))) await env.ORDERS.put(trackKey, `brick-session:${sessionId}`, { expirationTtl: 60 * 60 * 24 * 30 });
+  }
   return json({
     sessionId: order.sessionId, localId: order.localId,
     amount: order.expectedCents / 100, currency: order.currency,
     lines: order.lines.map(line => ({ title: line.title, quantity: line.quantity, details: line.details || [] })),
+    trackingUrl: trackingUrl(env, order.trackingToken),
     status: order.status, statusDetail: order.statusDetail || null,
     paymentId: order.paymentId || null, qrCode: order.qrCode || null,
     qrCodeBase64: order.qrCodeBase64 || null
+  }, 200, { ...headers, "cache-control": "no-store" });
+}
+
+async function getTrackedOrder(env, headers, token) {
+  if (!isUuidV4(token)) return json({ error: "Link de acompanhamento inválido." }, 400, { ...headers, "cache-control": "no-store" });
+  const key = await env.ORDERS.get(`tracking:${token}`);
+  if (!key || (!key.startsWith("cash:") && !key.startsWith("brick-session:"))) {
+    return json({ error: "Este link expirou ou não foi encontrado." }, 404, { ...headers, "cache-control": "no-store" });
+  }
+  const order = await env.ORDERS.get(key, "json");
+  if (!order || order.trackingToken !== token) return json({ error: "Este link expirou ou não foi encontrado." }, 404, { ...headers, "cache-control": "no-store" });
+  ensureFulfillment(order);
+  const label = order.paymentTypeId === "cash" ? "Dinheiro na entrega" : order.status === "approved" ? "Aprovado" : order.status;
+  return json({
+    localId: order.localId, amount: order.expectedCents / 100, currency: order.currency,
+    paymentStatus: label, fulfillmentStatus: order.fulfillmentStatus,
+    statusHistory: order.statusHistory,
+    lines: order.lines.map(line => ({ title: line.title, quantity: line.quantity, details: line.details || [] })),
+    createdAt: order.createdAt, updatedAt: order.updatedAt || order.createdAt
   }, 200, { ...headers, "cache-control": "no-store" });
 }
 
@@ -305,6 +415,8 @@ async function createBrickPayment(request, env, headers) {
   saved.qrCode = result.qrCode;
   saved.qrCodeBase64 = result.qrCodeBase64;
   saved.updatedAt = new Date().toISOString();
+  ensureFulfillment(saved);
+  if (status === "approved" && saved.fulfillmentStatus === "awaiting_payment") changeFulfillment(saved, "confirmed", "mercado_pago");
   const ttl = 60 * 60 * 24 * 30;
   await env.ORDERS.put(key, JSON.stringify(saved), { expirationTtl: ttl });
   await env.ORDERS.put(`payment:${payment.id}`, JSON.stringify(saved), { expirationTtl: ttl });
@@ -331,6 +443,8 @@ async function processWebhookPayment(dataId, env, webhook = {}) {
   saved.qrCode = payment.point_of_interaction?.transaction_data?.qr_code || saved.qrCode || null;
   saved.qrCodeBase64 = payment.point_of_interaction?.transaction_data?.qr_code_base64 || saved.qrCodeBase64 || null;
   saved.updatedAt = new Date().toISOString();
+  ensureFulfillment(saved);
+  if (saved.status === "approved" && saved.fulfillmentStatus === "awaiting_payment") changeFulfillment(saved, "confirmed", "mercado_pago");
   saved.lastPaymentWebhookAt = webhook.receivedAt || new Date().toISOString();
   saved.lastPaymentWebhookAction = webhook.action || null;
   const ttl = 60 * 60 * 24 * 30;
@@ -358,33 +472,99 @@ async function receiveWebhook(request, env, ctx) {
 }
 
 const ADMIN_PAGE = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pedidos · Cosmos Burguer</title><style>
-:root{color-scheme:dark;font:15px system-ui,sans-serif;background:#0b0b10;color:#f5eee5}body{margin:0;padding:24px}main{max-width:1100px;margin:auto}h1{color:#f5c96a}form{display:flex;gap:10px;max-width:520px}input,button{font:inherit;border-radius:10px;padding:12px}input{flex:1;min-width:0;background:#171721;color:#fff;border:1px solid #45455b}button{border:0;background:#f5c96a;color:#17110a;font-weight:700;cursor:pointer}#status{min-height:24px;color:#c7c0b8}.tabela{overflow:auto}table{border-collapse:collapse;width:100%;min-width:800px}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #30303a;white-space:pre-line}th{color:#f5c96a}small{color:#b9b2aa;line-height:1.6}a{color:#f5c96a}
-</style><main><h1>Pedidos Cosmos Burguer</h1><p>Área privada da loja. O acesso fica apenas nesta sessão do navegador.</p><form id="login"><input id="token" type="password" autocomplete="current-password" placeholder="Senha administrativa" required><button>Entrar</button></form><p id="status" role="status"></p><div class="tabela"><table hidden><thead><tr><th>Pedido / data</th><th>Status</th><th>Itens</th><th>Cliente / entrega</th></tr></thead><tbody></tbody></table></div><script>
-let bearer="";const form=document.querySelector("#login"),input=document.querySelector("#token"),status=document.querySelector("#status"),table=document.querySelector("table"),body=document.querySelector("tbody");
-function addCell(row,value){const cell=document.createElement("td");cell.textContent=value;row.append(cell)}
-function statusLabel(value){return ({created:"Aguardando pagamento",pending:"Aguardando pagamento",in_process:"Em análise",approved:"Pago",review_required:"Revisar valor",processed:"Pago",failed:"Recusado",rejected:"Recusado",canceled:"Cancelado",cancelled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[value]||value||"—"}
-async function loadOrders(){status.textContent="Carregando pedidos…";try{const response=await fetch("/api/admin/orders",{headers:{Authorization:"Bearer "+bearer},cache:"no-store"});if(!response.ok)throw new Error(response.status===401?"Senha inválida ou não configurada.":"Não foi possível carregar os pedidos.");const data=await response.json();body.replaceChildren();for(const order of data.orders){const row=document.createElement("tr"),created=new Date(order.createdAt).toLocaleString("pt-BR"),lines=(order.lines||[]).map(line=>[line.quantity+" × "+line.title,...(line.details||[]).map(detail=>"  · "+detail)].join("\n")).join("\n"),customer=order.customer||{},audit=[order.paymentTypeId,order.paymentMethodId].filter(Boolean).join(" / ");addCell(row,order.localId+"\n"+created);addCell(row,statusLabel(order.status)+(order.statusDetail?" · "+order.statusDetail:"")+(audit?"\nMeio: "+audit:"")+(order.lastPaymentWebhookAt?"\nWebhook confirmado: "+new Date(order.lastPaymentWebhookAt).toLocaleString("pt-BR"):""));addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));body.append(row)}table.hidden=false;status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora.":"Nenhum pedido encontrado.")}catch(error){status.textContent=error.message}}
-form.addEventListener("submit",event=>{event.preventDefault();bearer=input.value;input.value="";loadOrders()});
+:root{color-scheme:dark;font:15px system-ui,sans-serif;background:#0b0b10;color:#f5eee5}body{margin:0;padding:clamp(14px,3vw,28px)}main{max-width:1280px;margin:auto}h1{color:#f5c96a;margin:0 0 6px}p{color:#c7c0b8;line-height:1.5}form{display:flex;gap:10px;max-width:520px}input,button{font:inherit;border-radius:10px;padding:11px 13px}input{flex:1;min-width:0;background:#171721;color:#fff;border:1px solid #45455b}button{border:0;background:#f5c96a;color:#17110a;font-weight:750;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.subtle{background:#272431;border:1px solid #484353;color:#f5eee5}.actions{display:flex;flex-wrap:wrap;gap:7px;min-width:190px}.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:9px;padding:9px 10px;font-size:.82rem}.actions .subtle{background:#272431;border:1px solid #484353;color:#f5eee5}#status{min-height:22px}.tabela{overflow:auto;border:1px solid #30303a;border-radius:14px}table{border-collapse:collapse;width:100%;min-width:1000px}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #30303a;white-space:pre-line;line-height:1.45}th{color:#f5c96a;position:sticky;top:0;background:#14131a}td small{display:block;color:#b9b2aa;margin-top:5px}a{color:#f5c96a}#refresh{margin:12px 0}
+</style><main><h1>Pedidos Cosmos Burguer</h1><p>Confirme os pedidos recebidos e atualize o preparo e a entrega. As mensagens do WhatsApp são preparadas para revisão; a equipe precisa tocar em Enviar.</p><form id="login"><input id="token" type="password" autocomplete="current-password" placeholder="Senha administrativa" required><button>Entrar</button></form><button id="refresh" class="subtle" type="button" hidden>Atualizar agora</button><p id="status" role="status" aria-live="polite"></p><div class="tabela"><table hidden><thead><tr><th>Pedido / data</th><th>Andamento / pagamento</th><th>Itens / total</th><th>Cliente / entrega</th><th>Ações</th></tr></thead><tbody></tbody></table></div><script>
+let bearer="",busy=false;const form=document.querySelector("#login"),input=document.querySelector("#token"),status=document.querySelector("#status"),table=document.querySelector("table"),body=document.querySelector("tbody"),refresh=document.querySelector("#refresh");
+const stages={awaiting_payment:"Aguardando pagamento",awaiting_confirmation:"Aguardando confirmação da loja",confirmed:"Pedido confirmado",preparing:"Em preparo",ready:"Pronto para retirada/entrega",out_for_delivery:"Saiu para entrega",delivered:"Entregue",cancelled:"Cancelado"};
+const next={awaiting_confirmation:[["confirmed","Confirmar pedido"],["cancelled","Cancelar"]],confirmed:[["preparing","Iniciar preparo"],["cancelled","Cancelar"]],preparing:[["ready","Marcar como pronto"],["cancelled","Cancelar"]],ready:[["out_for_delivery","Saiu para entrega"],["cancelled","Cancelar"]],out_for_delivery:[["delivered","Marcar como entregue"],["cancelled","Cancelar"]]};
+function addCell(row,value){const cell=document.createElement("td");cell.textContent=value;row.append(cell);return cell}
+function button(label,handler){const el=document.createElement("button");el.type="button";el.textContent=label;el.addEventListener("click",handler);return el}
+function messageLink(order,customer){const digits=String(customer.whatsapp||"").replace(/\\D/g,"");if(digits.length<10)return null;const phone=digits.startsWith("55")?digits:"55"+digits;const text="Olá, "+(customer.name||"")+"! Atualização do pedido "+order.localId+": "+(stages[order.fulfillmentStatus]||order.fulfillmentStatus)+". Acompanhe aqui: "+order.trackingUrl;const link=document.createElement("a");link.href="https://wa.me/"+phone+"?text="+encodeURIComponent(text);link.target="_blank";link.rel="noopener noreferrer";link.className="subtle";link.textContent="WhatsApp pronto";return link}
+async function updateOrder(order,target,control){control.disabled=true;try{const response=await fetch("/api/admin/orders/"+encodeURIComponent(order.localId)+"/status",{method:"POST",headers:{Authorization:"Bearer "+bearer,"content-type":"application/json"},body:JSON.stringify({status:target})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Não foi possível atualizar o pedido.");await loadOrders()}catch(error){status.textContent=error.message;control.disabled=false}}
+async function loadOrders(){if(busy||!bearer)return;busy=true;status.textContent="Atualizando pedidos…";try{const response=await fetch("/api/admin/orders",{headers:{Authorization:"Bearer "+bearer},cache:"no-store"});if(!response.ok)throw new Error(response.status===401?"Senha inválida ou não configurada.":"Não foi possível carregar os pedidos.");const data=await response.json();body.replaceChildren();for(const order of data.orders){const row=document.createElement("tr"),customer=order.customer||{},created=new Date(order.createdAt).toLocaleString("pt-BR"),lines=(order.lines||[]).map(line=>[line.quantity+" × "+line.title,...(line.details||[]).map(detail=>"  · "+detail)].join("\n")).join("\n"),payment=order.paymentTypeId==="cash"?"Dinheiro na entrega":({created:"Aguardando pagamento",pending:"Pix aguardando pagamento",in_process:"Pagamento em análise",approved:"Pago",review_required:"Revisar valor",processed:"Pago",failed:"Recusado",rejected:"Recusado",canceled:"Cancelado",cancelled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[order.status]||order.status||"—",audit=[order.paymentTypeId,order.paymentMethodId].filter(Boolean).join(" / ");addCell(row,order.localId+"\n"+created);addCell(row,(stages[order.fulfillmentStatus]||"Aguardando pagamento")+"\nPagamento: "+payment+(order.statusDetail?" · "+order.statusDetail:"")+(audit?"\nMeio: "+audit:"")+(order.lastPaymentWebhookAt?"\nWebhook: "+new Date(order.lastPaymentWebhookAt).toLocaleString("pt-BR"):""));addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));const actions=document.createElement("td"),wrap=document.createElement("div");wrap.className="actions";for(const [target,label] of next[order.fulfillmentStatus]||[]){const control=button(label,()=>updateOrder(order,target,control));wrap.append(control)}const track=document.createElement("a");track.href=order.trackingUrl;track.target="_blank";track.rel="noopener noreferrer";track.textContent="Ver rastreamento";wrap.append(track);const wa=messageLink(order,customer);if(wa)wrap.append(wa);actions.append(wrap);row.append(actions);body.append(row)}table.hidden=false;refresh.hidden=false;status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora; atualização automática em até 2 min.":"Nenhum pedido encontrado. Atualizado agora.")}catch(error){status.textContent=error.message}finally{busy=false}}
+form.addEventListener("submit",event=>{event.preventDefault();bearer=input.value;input.value="";loadOrders()});refresh.addEventListener("click",loadOrders);window.setInterval(loadOrders,120000);
 </script></main></html>`;
 
 async function adminOrders(request, env) {
   const authorization = request.headers.get("authorization") || "";
   const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
   if (!env.ADMIN_TOKEN || !sameHex(bearer, env.ADMIN_TOKEN)) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
-  const keys = [];
-  for (const prefix of ["payment:", "mp:"]) {
-    let cursor;
-    do {
-      const page = await env.ORDERS.list({ prefix, limit: 1000, ...(cursor ? { cursor } : {}) });
-      keys.push(...page.keys);
-      cursor = page.list_complete ? undefined : page.cursor;
-    } while (cursor && keys.length < 10000);
+  const marker = "admin-index:legacy-backfill-v1";
+  if (!(await env.ORDERS.get(marker))) {
+    for (const prefix of ["payment:", "mp:"]) {
+      let cursor;
+      do {
+        const page = await env.ORDERS.list({ prefix, limit: 1000, ...(cursor ? { cursor } : {}) });
+        for (const key of page.keys) {
+          const order = await env.ORDERS.get(key.name, "json");
+          if (!order?.localId) continue;
+          ensureFulfillment(order);
+          if (!order.trackingToken) order.trackingToken = crypto.randomUUID();
+          const target = order.sessionId ? `brick-session:${order.sessionId}` : key.name;
+          const ttl = 60 * 60 * 24 * 30;
+          await env.ORDERS.put(`admin-index:${order.localId}`, target, { expirationTtl: ttl });
+          await env.ORDERS.put(`tracking:${order.trackingToken}`, target, { expirationTtl: ttl });
+          await env.ORDERS.put(target, JSON.stringify(order), { expirationTtl: ttl });
+        }
+        cursor = page.list_complete ? undefined : page.cursor;
+      } while (cursor);
+    }
+    await env.ORDERS.put(marker, "done", { expirationTtl: 60 * 60 * 24 * 30 });
   }
-  const orders = (await Promise.all(keys.map(key => env.ORDERS.get(key.name, "json"))))
-    .filter(Boolean)
-    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
-    .slice(0, 200);
+  const keys = [];
+  let cursor;
+  do {
+    const page = await env.ORDERS.list({ prefix: "admin-index:", limit: 1000, ...(cursor ? { cursor } : {}) });
+    keys.push(...page.keys.filter(key => key.name !== marker));
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor && keys.length < 10000);
+  const deduped = new Map();
+  for (const key of keys) {
+    const orderKey = await env.ORDERS.get(key.name);
+    const order = orderKey ? await env.ORDERS.get(orderKey, "json") : null;
+    if (!order) continue;
+    ensureFulfillment(order);
+    if (!order.trackingToken) order.trackingToken = crypto.randomUUID();
+    const ttl = 60 * 60 * 24 * 30;
+    await env.ORDERS.put(`tracking:${order.trackingToken}`, orderKey, { expirationTtl: ttl });
+    order.trackingUrl = trackingUrl(env, order.trackingToken);
+    await env.ORDERS.put(orderKey, JSON.stringify(order), { expirationTtl: ttl });
+    const previous = deduped.get(order.localId);
+    if (!previous || String(order.updatedAt || order.createdAt).localeCompare(String(previous.updatedAt || previous.createdAt)) >= 0) deduped.set(order.localId, order);
+  }
+  const orders = [...deduped.values()].sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).slice(0, 200);
   return json({ orders }, 200, { "cache-control": "no-store", "x-content-type-options": "nosniff" });
+}
+
+async function updateAdminOrderStatus(request, env, localId) {
+  const authorization = request.headers.get("authorization") || "";
+  const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+  if (!env.ADMIN_TOKEN || !sameHex(bearer, env.ADMIN_TOKEN)) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
+  if (!/^CB-[A-Z0-9-]{8,64}$/.test(localId)) fail("Número do pedido inválido.", 400);
+  const body = await request.json().catch(() => fail("Atualização inválida."));
+  const target = String(body?.status || "");
+  if (!Object.hasOwn(FULFILLMENT_LABELS, target) || ["awaiting_payment", "awaiting_confirmation"].includes(target)) fail("Etapa inválida.", 400);
+  const sessionId = await env.ORDERS.get(`brick-local:${localId}`);
+  let key = sessionId ? `brick-session:${sessionId}` : `cash:${localId}`;
+  let order = await env.ORDERS.get(key, "json");
+  if (!order && !sessionId) {
+    const indexedKey = await env.ORDERS.get(`admin-index:${localId}`);
+    if (indexedKey && /^(?:payment|mp):/.test(indexedKey)) {
+      key = indexedKey;
+      order = await env.ORDERS.get(key, "json");
+    }
+  }
+  if (!order) fail("Pedido não encontrado.", 404);
+  ensureFulfillment(order);
+  if (order.channel !== "cash_whatsapp" && order.status !== "approved") fail("Só é possível encaminhar para preparo após a confirmação do pagamento.", 409);
+  if (!(FULFILLMENT_NEXT[order.fulfillmentStatus] || []).includes(target)) fail("Esta mudança de etapa não é permitida.", 409);
+  changeFulfillment(order, target, "loja");
+  const ttl = 60 * 60 * 24 * 30;
+  const value = JSON.stringify(order);
+  await env.ORDERS.put(key, value, { expirationTtl: ttl });
+  if (order.paymentId) await env.ORDERS.put(`payment:${order.paymentId}`, value, { expirationTtl: ttl });
+  await env.ORDERS.put(`admin-index:${localId}`, key, { expirationTtl: ttl });
+  return json({ ok: true, localId, fulfillmentStatus: order.fulfillmentStatus }, 200, { "cache-control": "no-store" });
 }
 
 export default {
@@ -403,6 +583,14 @@ export default {
         if (!env.MP_PUBLIC_KEY) return json({ error: "Checkout online temporariamente indisponível." }, 503, headers);
         return await createBrickSession(request, env, headers);
       }
+      if (url.pathname === "/api/orders/cash" && request.method === "POST") {
+        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
+        return await createCashOrder(request, env, headers);
+      }
+      if (url.pathname.startsWith("/api/orders/track/") && request.method === "GET") {
+        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
+        return await getTrackedOrder(env, headers, url.pathname.split("/").pop());
+      }
       if (url.pathname === "/api/brick/payment" && request.method === "POST") {
         if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
         return await createBrickPayment(request, env, headers);
@@ -418,6 +606,8 @@ export default {
         "x-content-type-options": "nosniff", "referrer-policy": "no-referrer"
       } });
       if (url.pathname === "/api/admin/orders" && request.method === "GET") return await adminOrders(request, env);
+      const statusMatch = url.pathname.match(/^\/api\/admin\/orders\/([^/]+)\/status$/);
+      if (statusMatch && request.method === "POST") return await updateAdminOrderStatus(request, env, decodeURIComponent(statusMatch[1]));
       return json({ error: "Rota não encontrada." }, 404, headers);
     } catch (error) {
       console.error(error);

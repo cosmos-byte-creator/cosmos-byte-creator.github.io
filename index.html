@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20261019.3";
+  var VERSAO_SITE = "20261019.4";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -2292,12 +2292,12 @@ button,a,input{touch-action:manipulation}
     });
   }
 
-  function definirEnvioCheckout(ocupado) {
+  function definirEnvioCheckout(ocupado, textoOcupado) {
     const botao = $("#checkout-enviar");
     if (!botao) return;
     botao.disabled = ocupado;
     botao.setAttribute("aria-busy", String(ocupado));
-    botao.textContent = ocupado ? "Preparando checkout…" : "Continuar →";
+    botao.textContent = ocupado ? (textoOcupado || "Preparando checkout…") : "Continuar →";
   }
 
   async function criarPagamentoMercadoPago(nome, whatsapp, endereco) {
@@ -2324,6 +2324,21 @@ button,a,input{touch-action:manipulation}
     window.location.assign(dados.checkoutUrl);
   }
 
+  async function criarPedidoDinheiro(nome, whatsapp, endereco) {
+    if (!CONFIG.pagamentosUrl) throw new Error("O registro de pedidos ainda não está configurado.");
+    const resposta = await fetch(CONFIG.pagamentosUrl.replace(/\/$/, "") + "/api/orders/cash", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: pedidoParaPagamento(),
+        customer: { name:nome, whatsapp:whatsapp, address:endereco, location:localizacaoCheckout }
+      })
+    });
+    const dados = await resposta.json().catch(function () { return {}; });
+    if (!resposta.ok || !dados.localId || !dados.trackingUrl) throw new Error(dados.error || "Não foi possível registrar o pedido.");
+    return dados;
+  }
+
   async function enviarCheckout() {
     const formulario = $("#form-checkout");
     if (!formulario.reportValidity()) return;
@@ -2341,15 +2356,24 @@ button,a,input{touch-action:manipulation}
       }
       return;
     }
-    const sub = subtotal();
-    const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "WhatsApp: " + whatsapp, "Endereço: " + endereco];
-    if (localizacaoCheckout) {
-      linhas.push("Localização: https://maps.google.com/?q=" + localizacaoCheckout.latitude.toFixed(6) + "," + localizacaoCheckout.longitude.toFixed(6));
+    const whatsappWindow = window.open("about:blank", "_blank");
+    definirEnvioCheckout(true, "Registrando pedido…");
+    try {
+      const pedido = await criarPedidoDinheiro(nome, whatsapp, endereco);
+      const sub = subtotal();
+      const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "WhatsApp: " + whatsapp, "Endereço: " + endereco];
+      if (localizacaoCheckout) linhas.push("Localização: https://maps.google.com/?q=" + localizacaoCheckout.latitude.toFixed(6) + "," + localizacaoCheckout.longitude.toFixed(6));
+      linhas.push("Pagamento: dinheiro na entrega", "Número do pedido: " + pedido.localId, "Acompanhe o preparo e a entrega: " + pedido.trackingUrl);
+      const texto = linhas.join("\n");
+      const waUrl = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto);
+      try { sessionStorage.setItem("cosmos:tracking-whatsapp:" + new URL(pedido.trackingUrl).searchParams.get("token"), waUrl); } catch (_) {}
+      if (whatsappWindow && !whatsappWindow.closed) whatsappWindow.location.assign(waUrl);
+      window.location.assign(pedido.trackingUrl);
+    } catch (erro) {
+      if (whatsappWindow && !whatsappWindow.closed) whatsappWindow.close();
+      toast(erro && erro.message ? erro.message : "Não foi possível registrar o pedido.");
+      definirEnvioCheckout(false);
     }
-    linhas.push("Pagamento: dinheiro na entrega");
-    const texto = linhas.join("\n");
-    window.open("https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
-    fecharCheckout();
   }
 
   /* ---------- 9. MISSÃO COSMOS ---------- */

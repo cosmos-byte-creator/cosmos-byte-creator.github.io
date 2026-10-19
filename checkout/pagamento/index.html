@@ -121,6 +121,13 @@
         notice.className = "notice success";
         notice.innerHTML = "<p class=\"status-title\">Pagamento confirmado! ✦</p><p class=\"status-copy\">A Cosmos já recebeu a confirmação. Guarde o número do pedido: <strong></strong></p>";
         notice.querySelector("strong").textContent = orderData.localId;
+        if (orderData.trackingUrl) {
+          const link = document.createElement("a");
+          link.href = orderData.trackingUrl;
+          link.textContent = "Acompanhar preparo e entrega";
+          link.style.cssText = "display:inline-block;margin-top:10px;color:#ffc24b;font-weight:800";
+          notice.append(document.createElement("br"), link);
+        }
       }
       function showPending() {
         loading.hidden = true;

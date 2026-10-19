@@ -62,6 +62,7 @@ test("brick session recalculates the order total and requires the site origin", 
   assert.equal(body.amount, 7);
   assert.equal(body.currency, "BRL");
   assert.match(body.checkoutUrl, /checkout\/pagamento\/\?session=/);
+  assert.match(body.trackingUrl, /acompanhar\/\?token=/);
   const session = await env.ORDERS.get(`brick-session:${body.sessionId}`, "json");
   assert.equal(session.expectedCents, 700);
 
@@ -92,6 +93,63 @@ test("invalid checkout input returns a controlled client error", async () => {
   const { response, body } = await makeSession(env, { items: [] });
   assert.equal(response.status, 400);
   assert.equal(body.error, "Carrinho inválido.");
+});
+
+test("cash orders are saved and public tracking hides customer contact details", async () => {
+  const env = makeEnv();
+  const response = await worker.fetch(new Request(`${BASE}/api/orders/cash`, {
+    method: "POST", headers: { origin: SITE, "content-type": "application/json" },
+    body: JSON.stringify({ items: [{ id: "produto-teste-1-real", quantidade: 1 }], customer: customer() })
+  }), env, {});
+  const created = await response.json();
+  assert.equal(response.status, 201);
+  assert.equal(created.amount, 0.01);
+  assert.match(created.trackingUrl, /acompanhar\/\?token=/);
+  const token = new URL(created.trackingUrl).searchParams.get("token");
+  const trackedResponse = await worker.fetch(new Request(`${BASE}/api/orders/track/${token}`, { headers: { origin: SITE } }), env, {});
+  const tracked = await trackedResponse.json();
+  assert.equal(trackedResponse.status, 200);
+  assert.equal(tracked.fulfillmentStatus, "awaiting_confirmation");
+  assert.equal(tracked.paymentStatus, "Dinheiro na entrega");
+  assert.equal(tracked.amount, 0.01);
+  assert.equal("customer" in tracked, false);
+  assert.equal(JSON.stringify(tracked).includes(customer().whatsapp), false);
+});
+
+test("admin can advance valid order stages and audit the change", async () => {
+  const env = makeEnv();
+  const response = await worker.fetch(new Request(`${BASE}/api/orders/cash`, {
+    method: "POST", headers: { origin: SITE, "content-type": "application/json" },
+    body: JSON.stringify({ items: [{ id: "coca", quantidade: 1 }], customer: customer() })
+  }), env, {});
+  const created = await response.json();
+  const statusUrl = `${BASE}/api/admin/orders/${encodeURIComponent(created.localId)}/status`;
+  const update = async status => worker.fetch(new Request(statusUrl, {
+    method: "POST", headers: { authorization: `Bearer ${env.ADMIN_TOKEN}`, "content-type": "application/json" },
+    body: JSON.stringify({ status })
+  }), env, {});
+  assert.equal((await update("confirmed")).status, 200);
+  assert.equal((await update("preparing")).status, 200);
+  assert.equal((await update("delivered")).status, 409);
+  const token = new URL(created.trackingUrl).searchParams.get("token");
+  const tracked = await (await worker.fetch(new Request(`${BASE}/api/orders/track/${token}`, { headers: { origin: SITE } }), env, {})).json();
+  assert.equal(tracked.fulfillmentStatus, "preparing");
+  assert.deepEqual(tracked.statusHistory.map(event => event.status), ["awaiting_confirmation", "confirmed", "preparing"]);
+  assert.equal(tracked.statusHistory.at(-1).actor, "loja");
+});
+
+test("status updates require the admin token and never advance an unpaid online order", async () => {
+  const env = makeEnv();
+  const { body: session } = await makeSession(env);
+  const url = `${BASE}/api/admin/orders/${encodeURIComponent(session.localId)}/status`;
+  const payload = JSON.stringify({ status: "preparing" });
+  const denied = await worker.fetch(new Request(url, { method: "POST", headers: { "content-type": "application/json" }, body: payload }), env, {});
+  assert.equal(denied.status, 401);
+  const authorized = await worker.fetch(new Request(url, {
+    method: "POST", headers: { authorization: `Bearer ${env.ADMIN_TOKEN}`, "content-type": "application/json" }, body: payload
+  }), env, {});
+  assert.equal(authorized.status, 409);
+  assert.equal((await env.ORDERS.get(`brick-session:${session.sessionId}`, "json")).fulfillmentStatus, "awaiting_payment");
 });
 
 test("Payment Brick charges the trusted session amount, not the browser amount", async () => {
@@ -126,6 +184,7 @@ test("Payment Brick charges the trusted session amount, not the browser amount",
     assert.equal(result.status, "approved");
     const saved = await env.ORDERS.get("payment:901", "json");
     assert.equal(saved.status, "approved");
+    assert.equal(saved.fulfillmentStatus, "confirmed");
     assert.equal(saved.paymentMethodId, "visa");
     assert.equal(saved.paymentTypeId, "credit_card");
   } finally {
