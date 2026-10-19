@@ -72,10 +72,13 @@ test("brick session recalculates the order total and requires the site origin", 
   assert.equal(wrongOrigin.status, 403);
 });
 
-test("test product is retired and personalized order details are preserved", async () => {
+test("test product costs one cent and personalized order details are preserved", async () => {
   const env = makeEnv();
-  const removed = await makeSession(env, { items: [{ id: "produto-teste-1-real", quantidade: 1 }] });
-  assert.equal(removed.response.status, 400);
+  const testProduct = await makeSession(env, { items: [{ id: "produto-teste-1-real", quantidade: 1, unit_price: 999.99 }] });
+  assert.equal(testProduct.response.status, 201);
+  assert.equal(testProduct.body.amount, 0.01);
+  const testOrder = await env.ORDERS.get(`brick-session:${testProduct.body.sessionId}`, "json");
+  assert.equal(testOrder.expectedCents, 1);
   const lascas = await makeSession(env, { items: [{ id: "lascas", quantidade: 1, config: { tipo: "lascas", peso: 500, cobertura: "Cheddar e bacon" } }] });
   assert.equal(lascas.response.status, 201);
   const saved = await env.ORDERS.get(`brick-session:${lascas.body.sessionId}`, "json");

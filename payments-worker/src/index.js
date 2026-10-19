@@ -17,7 +17,8 @@ const PRODUCTS = {
   "combo-abducao": { title: "Combo Abdução", price: 6490, type: "combo", slots: 3, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
   "combo-nave-mae": { title: "Combo Nave Mãe", price: 8090, type: "combo", slots: 4, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
   "combo-jornada": { title: "Combo Jornada Cósmica", price: 5190, type: "combo", slots: 1, fries: 0, marciano: false, drinks: ["Monster Energy lata"], fixedDetails: ["1 Plutão", "1 Monster Energy lata"] },
-  "combo-frota": { title: "Combo Frota Suprema", price: 13490, type: "combo", slots: 5, fries: 2, marciano: false, drinks: ["Coca-Cola 2L"] }
+  "combo-frota": { title: "Combo Frota Suprema", price: 13490, type: "combo", slots: 5, fries: 2, marciano: false, drinks: ["Coca-Cola 2L"] },
+  "produto-teste-1-real": { title: "Produto de teste · R$ 0,01", price: 1, type: "fixed" }
 };
 
 const ADDONS = {
