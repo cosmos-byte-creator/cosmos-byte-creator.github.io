@@ -12,19 +12,24 @@ const PRODUCTS = {
   guarana: { title: "Guaraná lata 350ml", price: 650, type: "drink" },
   "coca-1l": { title: "Coca-Cola 1L", price: 1200, type: "custom", custom: "liter" },
   "guarana-1l": { title: "Guaraná 1L", price: 1000, type: "custom", custom: "liter" },
-  "combo-viajante": { title: "Combo Viajante Espacial", price: 3690, type: "combo", slots: 1, fries: 0, marciano: false, drinks: ["Coca-Cola lata 350ml", "Guaraná lata 350ml"] },
+  "combo-viajante": { title: "Combo Viajante Espacial", price: 3690, type: "combo", slots: 1, fries: 0, batataIndividual: true, marciano: false, drinks: ["Coca-Cola lata 350ml", "Guaraná lata 350ml"] },
   "combo-vortice": { title: "Combo Vórtice", price: 4990, type: "combo", slots: 2, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
   "combo-abducao": { title: "Combo Abdução", price: 6490, type: "combo", slots: 3, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
   "combo-nave-mae": { title: "Combo Nave Mãe", price: 8090, type: "combo", slots: 4, fries: 0, marciano: true, drinks: ["Coca-Cola 1L", "Guaraná Antarctica 1L"] },
-  "combo-jornada": { title: "Combo Jornada Cósmica", price: 5190, type: "combo", slots: 1, fries: 0, marciano: false, drinks: ["Monster Energy lata"] },
-  "combo-frota": { title: "Combo Frota Suprema", price: 13490, type: "combo", slots: 5, fries: 2, marciano: false, drinks: ["Coca-Cola 2L"] },
-  "produto-teste-1-real": { title: "Produto de teste · R$ 1,00", price: 100, type: "fixed" }
+  "combo-jornada": { title: "Combo Jornada Cósmica", price: 5190, type: "combo", slots: 1, fries: 0, marciano: false, drinks: ["Monster Energy lata"], fixedDetails: ["1 Plutão", "1 Monster Energy lata"] },
+  "combo-frota": { title: "Combo Frota Suprema", price: 13490, type: "combo", slots: 5, fries: 2, marciano: false, drinks: ["Coca-Cola 2L"] }
 };
 
 const ADDONS = {
   "hamburguer-120g": 700, "cebola-caramelizada": 300, "cebola-roxa": 300,
   picles: 300, "molho-catupiry": 300, "molho-cheddar": 300,
   "molho-baconnese": 300, bacon: 400, "queijo-cheddar": 300, "queijo-mussarela": 300
+};
+const ADDON_NAMES = {
+  "hamburguer-120g": "Hambúrguer 120g", "cebola-caramelizada": "Cebola caramelizada", "cebola-roxa": "Cebola roxa",
+  picles: "Picles", "molho-catupiry": "Molho Catupiry", "molho-cheddar": "Molho cheddar",
+  "molho-baconnese": "Molho baconnese", bacon: "Bacon", "queijo-cheddar": "Fatia de queijo cheddar",
+  "queijo-mussarela": "Fatia de queijo mussarela"
 };
 const COMBO_BURGERS = { mercurio: "simple", venus: "simple", terra: "simple", netuno: "simple", plutao: "simple", marte: "double", jupiter: "double", saturno: "double" };
 const FRY_FLAVORS = new Set(["Catupiry e bacon", "Cheddar e bacon"]);
@@ -99,6 +104,10 @@ function comboPrice(product, config) {
   return total;
 }
 
+function addonDetails(ids) {
+  return ids.length ? [`Adicionais: ${ids.map(id => ADDON_NAMES[id]).join(", ")}`] : [];
+}
+
 function lineForItem(item) {
   if (!isObject(item) || typeof item.id !== "string") fail("Item inválido.");
   if (!Object.hasOwn(PRODUCTS, item.id)) fail("Um item do cardápio não está disponível.");
@@ -106,20 +115,40 @@ function lineForItem(item) {
   const quantity = Number(item.quantidade);
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) fail("Quantidade inválida.");
   let unitPrice = product.price;
-  if (product.type === "combo") unitPrice = comboPrice(product, item.config);
+  let details = [];
+  if (product.type === "combo") {
+    unitPrice = comboPrice(product, item.config);
+    const config = item.config;
+    details = config.burgers.map((choice, index) => {
+      const burger = PRODUCTS[choice.id];
+      const extras = Array.isArray(choice.adicionais) ? choice.adicionais : [];
+      return [`Lanche ${index + 1}: ${burger.title}${COMBO_BURGERS[choice.id] === "double" ? " (duplo)" : ""}`, ...addonDetails(extras)].join(" — ");
+    });
+    if (config.variante === "marciano") details.push("Versão Marciana");
+    if (Array.isArray(config.batatas)) details.push(...config.batatas.map((flavor, index) => `Batata ${config.batatas.length > 1 ? index + 1 + ": " : ""}${flavor}`));
+    if (product.fixedDetails) details.push(...product.fixedDetails);
+    if (product.batataIndividual) details.push("Batata individual incluída");
+    details.push(`Bebida: ${config.bebida}`);
+    if (config.extraLitro === true) details.push("Bebida extra de 1L");
+  }
   else if (product.type === "fixed") {
     if (item.config || (Array.isArray(item.adicionais) && item.adicionais.length)) fail("Este item não aceita personalização.");
   }
   else if (product.custom === "lascas") {
     if (!isObject(item.config) || ![300, 500].includes(Number(item.config.peso)) || !FRY_FLAVORS.has(item.config.cobertura)) fail("Configuração das Lascas de Cometa inválida.");
     unitPrice += Number(item.config.peso) === 500 ? 1200 : 0;
+    details = [`Porção: ${Number(item.config.peso)}g`, `Cobertura: ${item.config.cobertura}`];
   } else if (product.custom === "liter") {
     if (!isObject(item.config) || typeof item.config.extraLitro !== "boolean") fail("Configuração da bebida inválida.");
     unitPrice += item.config.extraLitro ? 700 : 0;
+    details = [item.config.extraLitro ? "2 garrafas de 1L" : "1 garrafa de 1L"];
   } else {
-    unitPrice += addonTotal(Array.isArray(item.adicionais) ? item.adicionais : []);
+    const extras = Array.isArray(item.adicionais) ? item.adicionais : [];
+    if (product.sweet && extras.length) fail("Plutão não aceita adicionais salgados.");
+    unitPrice += addonTotal(extras);
+    details = addonDetails(extras);
   }
-  return { title: product.title, unitPrice, quantity };
+  return { title: product.title, unitPrice, quantity, details };
 }
 
 async function hmacHex(secret, message) {
@@ -177,7 +206,7 @@ async function getBrickSession(env, headers, sessionId) {
   return json({
     sessionId: order.sessionId, localId: order.localId,
     amount: order.expectedCents / 100, currency: order.currency,
-    lines: order.lines.map(line => ({ title: line.title, quantity: line.quantity })),
+    lines: order.lines.map(line => ({ title: line.title, quantity: line.quantity, details: line.details || [] })),
     status: order.status, statusDetail: order.statusDetail || null,
     paymentId: order.paymentId || null, qrCode: order.qrCode || null,
     qrCodeBase64: order.qrCodeBase64 || null
@@ -235,6 +264,7 @@ function derivePurchase(sessionOrder) {
 function paymentPublicData(payment) {
   const transaction = payment.point_of_interaction?.transaction_data || {};
   return { paymentId: String(payment.id), status: payment.status || "unknown", statusDetail: payment.status_detail || null,
+    paymentMethodId: payment.payment_method_id || null, paymentTypeId: payment.payment_type_id || null,
     qrCode: transaction.qr_code || null, qrCodeBase64: transaction.qr_code_base64 || null };
 }
 
@@ -268,6 +298,8 @@ async function createBrickPayment(request, env, headers) {
   saved.paymentId = String(payment.id);
   saved.status = status;
   saved.statusDetail = payment.status_detail || null;
+  saved.paymentMethodId = payment.payment_method_id || null;
+  saved.paymentTypeId = payment.payment_type_id || null;
   saved.paidAmount = payment.transaction_amount ?? null;
   saved.qrCode = result.qrCode;
   saved.qrCodeBase64 = result.qrCodeBase64;
@@ -278,7 +310,7 @@ async function createBrickPayment(request, env, headers) {
   return json(result, 201, headers);
 }
 
-async function processWebhookPayment(dataId, env) {
+async function processWebhookPayment(dataId, env, webhook = {}) {
   const remote = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(dataId)}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
   const payment = await remote.json().catch(() => ({}));
   if (!remote.ok) throw new Error(`Mercado Pago payment lookup failed: ${remote.status}`);
@@ -291,11 +323,15 @@ async function processWebhookPayment(dataId, env) {
   const amountMatches = Math.round(Number(payment.transaction_amount) * 100) === saved.expectedCents && payment.currency_id === "BRL";
   saved.status = amountMatches ? payment.status : "review_required";
   saved.statusDetail = payment.status_detail || null;
+  saved.paymentMethodId = payment.payment_method_id || saved.paymentMethodId || null;
+  saved.paymentTypeId = payment.payment_type_id || saved.paymentTypeId || null;
   saved.paidAmount = payment.transaction_amount ?? null;
   saved.paymentId = String(payment.id);
   saved.qrCode = payment.point_of_interaction?.transaction_data?.qr_code || saved.qrCode || null;
   saved.qrCodeBase64 = payment.point_of_interaction?.transaction_data?.qr_code_base64 || saved.qrCodeBase64 || null;
   saved.updatedAt = new Date().toISOString();
+  saved.lastPaymentWebhookAt = webhook.receivedAt || new Date().toISOString();
+  saved.lastPaymentWebhookAction = webhook.action || null;
   const ttl = 60 * 60 * 24 * 30;
   const value = JSON.stringify(saved);
   await env.ORDERS.put(`brick-session:${saved.sessionId}`, value, { expirationTtl: ttl });
@@ -308,7 +344,14 @@ async function receiveWebhook(request, env, ctx) {
   const dataId = url.searchParams.get("data.id") || body?.data?.id;
   if (!(await validWebhook(request, env, dataId))) return json({ error: "Assinatura inválida." }, 401);
   if (body.type === "payment" || (typeof body.action === "string" && body.action.startsWith("payment."))) {
-    ctx.waitUntil(processWebhookPayment(String(dataId), env).catch(error => console.error("Mercado Pago webhook processing failed", error)));
+    const notificationId = String(body.id || `${dataId}:${request.headers.get("x-request-id") || ""}`);
+    const dedupeKey = `webhook:payment:${notificationId}`;
+    const job = (async () => {
+      if (await env.ORDERS.get(dedupeKey)) return;
+      await processWebhookPayment(String(dataId), env, { action: body.action || null, receivedAt: new Date().toISOString() });
+      await env.ORDERS.put(dedupeKey, "processed", { expirationTtl: 60 * 60 * 24 * 30 });
+    })().catch(error => console.error("Mercado Pago webhook processing failed", error));
+    ctx.waitUntil(job);
   }
   return json({ received: true });
 }
@@ -319,7 +362,7 @@ const ADMIN_PAGE = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><met
 let bearer="";const form=document.querySelector("#login"),input=document.querySelector("#token"),status=document.querySelector("#status"),table=document.querySelector("table"),body=document.querySelector("tbody");
 function addCell(row,value){const cell=document.createElement("td");cell.textContent=value;row.append(cell)}
 function statusLabel(value){return ({created:"Aguardando pagamento",pending:"Aguardando pagamento",in_process:"Em análise",approved:"Pago",review_required:"Revisar valor",processed:"Pago",failed:"Recusado",rejected:"Recusado",canceled:"Cancelado",cancelled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[value]||value||"—"}
-async function loadOrders(){status.textContent="Carregando pedidos…";try{const response=await fetch("/api/admin/orders",{headers:{Authorization:"Bearer "+bearer},cache:"no-store"});if(!response.ok)throw new Error(response.status===401?"Senha inválida ou não configurada.":"Não foi possível carregar os pedidos.");const data=await response.json();body.replaceChildren();for(const order of data.orders){const row=document.createElement("tr"),created=new Date(order.createdAt).toLocaleString("pt-BR"),lines=(order.lines||[]).map(line=>line.quantity+" × "+line.title).join("\n"),customer=order.customer||{};addCell(row,order.localId+"\n"+created);addCell(row,statusLabel(order.status)+(order.statusDetail?" · "+order.statusDetail:""));addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));body.append(row)}table.hidden=false;status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora.":"Nenhum pedido encontrado.")}catch(error){status.textContent=error.message}}
+async function loadOrders(){status.textContent="Carregando pedidos…";try{const response=await fetch("/api/admin/orders",{headers:{Authorization:"Bearer "+bearer},cache:"no-store"});if(!response.ok)throw new Error(response.status===401?"Senha inválida ou não configurada.":"Não foi possível carregar os pedidos.");const data=await response.json();body.replaceChildren();for(const order of data.orders){const row=document.createElement("tr"),created=new Date(order.createdAt).toLocaleString("pt-BR"),lines=(order.lines||[]).map(line=>[line.quantity+" × "+line.title,...(line.details||[]).map(detail=>"  · "+detail)].join("\n")).join("\n"),customer=order.customer||{},audit=[order.paymentTypeId,order.paymentMethodId].filter(Boolean).join(" / ");addCell(row,order.localId+"\n"+created);addCell(row,statusLabel(order.status)+(order.statusDetail?" · "+order.statusDetail:"")+(audit?"\nMeio: "+audit:"")+(order.lastPaymentWebhookAt?"\nWebhook confirmado: "+new Date(order.lastPaymentWebhookAt).toLocaleString("pt-BR"):""));addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));body.append(row)}table.hidden=false;status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora.":"Nenhum pedido encontrado.")}catch(error){status.textContent=error.message}}
 form.addEventListener("submit",event=>{event.preventDefault();bearer=input.value;input.value="";loadOrders()});
 </script></main></html>`;
 

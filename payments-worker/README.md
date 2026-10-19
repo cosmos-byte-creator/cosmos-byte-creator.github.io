@@ -4,13 +4,12 @@ O checkout online usa o Payment Brick do Mercado Pago dentro do site Cosmos. O W
 
 ## Configuração do Worker
 
-O Worker precisa dos segredos `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`, `ADMIN_TOKEN` e `MP_PUBLIC_KEY`. A chave pública é segura para expor ao navegador, mas o endpoint `/api/mp-config` só a entrega em JSON sem cache. Nunca coloque o Access Token ou o segredo do webhook no site ou no Git.
+O Worker precisa dos segredos `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET` e `ADMIN_TOKEN`, além da variável não secreta `MP_PUBLIC_KEY`. A chave pública é segura para expor ao navegador, mas o endpoint `/api/mp-config` só a entrega em JSON sem cache. Nunca coloque o Access Token ou o segredo do webhook no site ou no Git.
 
 Configure os segredos no Cloudflare ou com Wrangler:
 
 ```sh
 npx wrangler secret put MP_ACCESS_TOKEN
-npx wrangler secret put MP_PUBLIC_KEY
 npx wrangler secret put MP_WEBHOOK_SECRET
 npx wrangler secret put ADMIN_TOKEN
 ```
@@ -23,7 +22,7 @@ No painel da aplicação Mercado Pago, configure o endpoint:
 
 `https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev/api/webhook/mercado-pago`
 
-Selecione o evento **Pagamentos (payment)** e copie a assinatura secreta gerada para `MP_WEBHOOK_SECRET`. O Worker valida `x-signature` com HMAC-SHA256, responde rapidamente e consulta o pagamento diretamente à API antes de atualizar o pedido. Pagamento pendente nunca é marcado como pago.
+Selecione o evento **Pagamentos (payment)** e copie a assinatura secreta gerada para `MP_WEBHOOK_SECRET`. O Worker valida `x-signature` com HMAC-SHA256, responde rapidamente e consulta o pagamento diretamente à API antes de atualizar o pedido. Notificações repetidas são deduplicadas pelo ID do evento; cada pedido registra o horário e a ação do webhook validado e os campos do método de pagamento retornados pela API. Pagamento pendente nunca é marcado como pago.
 
 ## Testes e publicação
 
@@ -34,6 +33,6 @@ cd payments-worker
 npm test
 ```
 
-Antes de publicar, confirme que o segredo `MP_PUBLIC_KEY` está configurado e que o webhook **payment** está ativo para o mesmo ambiente/credenciais do Access Token. Depois faça o deploy do Worker e publique a raiz do repositório no GitHub Pages. Não faça cobranças reais como teste.
+Antes de publicar, confirme que a variável `MP_PUBLIC_KEY` está configurada e que o webhook **payment** está ativo para o mesmo ambiente/credenciais do Access Token. Depois faça o deploy do Worker e publique a raiz do repositório no GitHub Pages. Não faça cobranças reais como teste.
 
-O endpoint `/api/brick/session` cria uma sessão de checkout a partir dos itens e dados do cliente. `/api/brick/payment` recebe o retorno tokenizado do Brick, mas ignora qualquer total enviado pelo navegador. O painel privado da loja permanece em `/gestao`.
+O endpoint `/api/brick/session` cria uma sessão de checkout a partir dos itens e dados do cliente, preservando no pedido os adicionais, variantes de combos, bebidas e preparos escolhidos. `/api/brick/payment` recebe o retorno tokenizado do Brick, mas ignora qualquer total enviado pelo navegador. O item temporário de teste foi removido do catálogo público e do catálogo confiável do Worker. O painel privado da loja permanece em `/gestao`.

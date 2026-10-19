@@ -84,6 +84,12 @@
           quantity.textContent = item.quantity + " un.";
           li.append(name, quantity);
           list.append(li);
+          for (const detail of item.details || []) {
+            const option = document.createElement("li");
+            option.textContent = "· " + detail;
+            option.style.cssText = "margin:-5px 0 2px 10px;color:#bdb2a9;font-size:.82rem;line-height:1.4";
+            list.append(option);
+          }
         }
         $("#order-total").textContent = money(order.amount);
       }
