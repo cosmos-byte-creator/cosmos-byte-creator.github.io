@@ -15,6 +15,7 @@ function makeEnv() {
     MP_PUBLIC_KEY: "PUBLIC_TEST_KEY",
     MP_WEBHOOK_SECRET: "webhook-secret-for-tests",
     ADMIN_TOKEN: "admin-test-token",
+    PANEL_PASSWORD: "Cometa-Cosmos-Password-2040!",
     SITE_ORIGIN: SITE,
     ORDERS: {
       async get(key, type) {
@@ -23,6 +24,7 @@ function makeEnv() {
         return type === "json" ? JSON.parse(value) : value;
       },
       async put(key, value) { data.set(key, value); },
+      async delete(key) { data.delete(key); },
       async list({ prefix }) {
         return { keys: [...data.keys()].filter(key => key.startsWith(prefix)).map(name => ({ name })), list_complete: true };
       }
@@ -150,6 +152,38 @@ test("status updates require the admin token and never advance an unpaid online 
   }), env, {});
   assert.equal(authorized.status, 409);
   assert.equal((await env.ORDERS.get(`brick-session:${session.sessionId}`, "json")).fulfillmentStatus, "awaiting_payment");
+});
+
+test("panel password creates an HttpOnly session cookie and logout revokes it", async () => {
+  const env = makeEnv();
+  const login = await worker.fetch(new Request(`${BASE}/api/admin/login`, {
+    method: "POST", headers: { origin: BASE, "content-type": "application/json" },
+    body: JSON.stringify({ password: env.PANEL_PASSWORD })
+  }), env, {});
+  assert.equal(login.status, 200);
+  const cookie = login.headers.get("set-cookie");
+  assert.match(cookie, /HttpOnly/);
+  assert.match(cookie, /Secure/);
+  assert.match(cookie, /SameSite=Strict/);
+  assert.match(cookie, /Max-Age=43200/);
+  const cookiePair = cookie.split(";")[0];
+  const orders = await worker.fetch(new Request(`${BASE}/api/admin/orders`, { headers: { cookie: cookiePair } }), env, {});
+  assert.equal(orders.status, 200);
+  const logout = await worker.fetch(new Request(`${BASE}/api/admin/logout`, { method: "POST", headers: { origin: BASE, cookie: cookiePair } }), env, {});
+  assert.equal(logout.status, 200);
+  const denied = await worker.fetch(new Request(`${BASE}/api/admin/orders`, { headers: { cookie: cookiePair } }), env, {});
+  assert.equal(denied.status, 401);
+});
+
+test("panel login rejects invalid origins and rate-limits repeated bad passwords", async () => {
+  const env = makeEnv();
+  const makeLogin = (origin, password) => worker.fetch(new Request(`${BASE}/api/admin/login`, {
+    method: "POST", headers: { origin, "cf-connecting-ip": "192.0.2.10", "content-type": "application/json" },
+    body: JSON.stringify({ password })
+  }), env, {});
+  assert.equal((await makeLogin("https://attacker.example", env.PANEL_PASSWORD)).status, 403);
+  for (let i = 0; i < 8; i += 1) assert.equal((await makeLogin(BASE, "wrong-password")).status, 401);
+  assert.equal((await makeLogin(BASE, env.PANEL_PASSWORD)).status, 429);
 });
 
 test("Payment Brick charges the trusted session amount, not the browser amount", async () => {

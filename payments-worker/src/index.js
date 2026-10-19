@@ -209,6 +209,62 @@ function sameHex(a, b) {
   return difference === 0;
 }
 
+function sameSecret(a, b) {
+  const left = new TextEncoder().encode(String(a || ""));
+  const right = new TextEncoder().encode(String(b || ""));
+  let difference = left.length ^ right.length;
+  for (let i = 0; i < Math.max(left.length, right.length); i += 1) difference |= (left[i] || 0) ^ (right[i] || 0);
+  return difference === 0;
+}
+
+const ADMIN_COOKIE = "cosmos_admin_session";
+const ADMIN_SESSION_TTL = 60 * 60 * 12;
+
+function adminSessionId(request) {
+  const cookie = request.headers.get("cookie") || "";
+  const part = cookie.split(";").map(value => value.trim()).find(value => value.startsWith(`${ADMIN_COOKIE}=`));
+  const value = part ? part.slice(ADMIN_COOKIE.length + 1) : "";
+  return /^[0-9a-f-]{36}$/i.test(value) ? value : "";
+}
+
+async function isAdminAuthorized(request, env) {
+  const authorization = request.headers.get("authorization") || "";
+  const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
+  if (env.ADMIN_TOKEN && sameHex(bearer, env.ADMIN_TOKEN)) return true;
+  const sessionId = adminSessionId(request);
+  return !!(sessionId && await env.ORDERS.get(`admin-session:${sessionId}`));
+}
+
+function setAdminCookie(sessionId, maxAge = ADMIN_SESSION_TTL) {
+  return `${ADMIN_COOKIE}=${sessionId}; Path=/api/admin/; Max-Age=${maxAge}; Secure; HttpOnly; SameSite=Strict`;
+}
+
+async function adminLogin(request, env) {
+  if (request.headers.get("origin") !== new URL(request.url).origin) return json({ error: "Origem não autorizada." }, 403, { "cache-control": "no-store" });
+  const body = await request.json().catch(() => fail("Dados de acesso inválidos."));
+  const expected = env.PANEL_PASSWORD || env.ADMIN_TOKEN;
+  if (!expected) return json({ error: "A senha do painel ainda não foi configurada." }, 503, { "cache-control": "no-store" });
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const attemptsKey = `admin-login-attempts:${ip}`;
+  const attempts = Number(await env.ORDERS.get(attemptsKey) || 0);
+  if (attempts >= 8) return json({ error: "Muitas tentativas. Aguarde 15 minutos e tente novamente." }, 429, { "cache-control": "no-store" });
+  const password = typeof body?.password === "string" ? body.password : "";
+  if (!sameSecret(password, expected)) {
+    await env.ORDERS.put(attemptsKey, String(attempts + 1), { expirationTtl: 60 * 15 });
+    return json({ error: "Senha incorreta." }, 401, { "cache-control": "no-store" });
+  }
+  await env.ORDERS.delete(attemptsKey);
+  const sessionId = crypto.randomUUID();
+  await env.ORDERS.put(`admin-session:${sessionId}`, "active", { expirationTtl: ADMIN_SESSION_TTL });
+  return json({ ok: true }, 200, { "cache-control": "no-store", "set-cookie": setAdminCookie(sessionId) });
+}
+
+async function adminLogout(request, env) {
+  const sessionId = adminSessionId(request);
+  if (sessionId) await env.ORDERS.delete(`admin-session:${sessionId}`);
+  return json({ ok: true }, 200, { "cache-control": "no-store", "set-cookie": setAdminCookie("", 0) });
+}
+
 async function validWebhook(request, env, dataId) {
   if (!env.MP_WEBHOOK_SECRET) return false;
   const signature = request.headers.get("x-signature") || "";
@@ -471,24 +527,47 @@ async function receiveWebhook(request, env, ctx) {
   return json({ received: true });
 }
 
-const ADMIN_PAGE = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pedidos · Cosmos Burguer</title><style>
+const ADMIN_PAGE = String.raw`<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pedidos · Cosmos Burguer</title><style>
 :root{color-scheme:dark;font:15px system-ui,sans-serif;background:#0b0b10;color:#f5eee5}body{margin:0;padding:clamp(14px,3vw,28px)}main{max-width:1280px;margin:auto}h1{color:#f5c96a;margin:0 0 6px}p{color:#c7c0b8;line-height:1.5}form{display:flex;gap:10px;max-width:520px}input,button{font:inherit;border-radius:10px;padding:11px 13px}input{flex:1;min-width:0;background:#171721;color:#fff;border:1px solid #45455b}button{border:0;background:#f5c96a;color:#17110a;font-weight:750;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.subtle{background:#272431;border:1px solid #484353;color:#f5eee5}.actions{display:flex;flex-wrap:wrap;gap:7px;min-width:190px}.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:9px;padding:9px 10px;font-size:.82rem}.actions .subtle{background:#272431;border:1px solid #484353;color:#f5eee5}#status{min-height:22px}.tabela{overflow:auto;border:1px solid #30303a;border-radius:14px}table{border-collapse:collapse;width:100%;min-width:1000px}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #30303a;white-space:pre-line;line-height:1.45}th{color:#f5c96a;position:sticky;top:0;background:#14131a}td small{display:block;color:#b9b2aa;margin-top:5px}a{color:#f5c96a}#refresh{margin:12px 0}
-</style><main><h1>Pedidos Cosmos Burguer</h1><p>Confirme os pedidos recebidos e atualize o preparo e a entrega. As mensagens do WhatsApp são preparadas para revisão; a equipe precisa tocar em Enviar.</p><form id="login"><input id="token" type="password" autocomplete="current-password" placeholder="Senha administrativa" required><button>Entrar</button></form><button id="refresh" class="subtle" type="button" hidden>Atualizar agora</button><p id="status" role="status" aria-live="polite"></p><div class="tabela"><table hidden><thead><tr><th>Pedido / data</th><th>Andamento / pagamento</th><th>Itens / total</th><th>Cliente / entrega</th><th>Ações</th></tr></thead><tbody></tbody></table></div><script>
-let bearer="",busy=false;const form=document.querySelector("#login"),input=document.querySelector("#token"),status=document.querySelector("#status"),table=document.querySelector("table"),body=document.querySelector("tbody"),refresh=document.querySelector("#refresh");
+</style><main><h1>Pedidos Cosmos Burguer</h1><p>Entre com a senha do painel. A sessão permanece ativa por até 12 horas. Confirme pedidos e atualize o preparo e a entrega; mensagens do WhatsApp são preparadas para revisão e envio pela equipe.</p><form id="login"><input id="password" type="password" autocomplete="current-password" placeholder="Senha do painel" required><button id="login-button">Entrar</button></form><button id="refresh" class="subtle" type="button" hidden>Atualizar agora</button> <button id="logout" class="subtle" type="button" hidden>Sair</button><p id="status" role="status" aria-live="polite"></p><div class="tabela"><table hidden><thead><tr><th>Pedido / data</th><th>Andamento / pagamento</th><th>Itens / total</th><th>Cliente / entrega</th><th>Ações</th></tr></thead><tbody></tbody></table></div><script>
+let busy=false,authenticated=false;const form=document.querySelector("#login"),input=document.querySelector("#password"),loginButton=document.querySelector("#login-button"),status=document.querySelector("#status"),table=document.querySelector("table"),body=document.querySelector("tbody"),refresh=document.querySelector("#refresh"),logout=document.querySelector("#logout");
 const stages={awaiting_payment:"Aguardando pagamento",awaiting_confirmation:"Aguardando confirmação da loja",confirmed:"Pedido confirmado",preparing:"Em preparo",ready:"Pronto para retirada/entrega",out_for_delivery:"Saiu para entrega",delivered:"Entregue",cancelled:"Cancelado"};
 const next={awaiting_confirmation:[["confirmed","Confirmar pedido"],["cancelled","Cancelar"]],confirmed:[["preparing","Iniciar preparo"],["cancelled","Cancelar"]],preparing:[["ready","Marcar como pronto"],["cancelled","Cancelar"]],ready:[["out_for_delivery","Saiu para entrega"],["cancelled","Cancelar"]],out_for_delivery:[["delivered","Marcar como entregue"],["cancelled","Cancelar"]]};
 function addCell(row,value){const cell=document.createElement("td");cell.textContent=value;row.append(cell);return cell}
 function button(label,handler){const el=document.createElement("button");el.type="button";el.textContent=label;el.addEventListener("click",handler);return el}
-function messageLink(order,customer){const digits=String(customer.whatsapp||"").replace(/\\D/g,"");if(digits.length<10)return null;const phone=digits.startsWith("55")?digits:"55"+digits;const text="Olá, "+(customer.name||"")+"! Atualização do pedido "+order.localId+": "+(stages[order.fulfillmentStatus]||order.fulfillmentStatus)+". Acompanhe aqui: "+order.trackingUrl;const link=document.createElement("a");link.href="https://wa.me/"+phone+"?text="+encodeURIComponent(text);link.target="_blank";link.rel="noopener noreferrer";link.className="subtle";link.textContent="WhatsApp pronto";return link}
-async function updateOrder(order,target,control){control.disabled=true;try{const response=await fetch("/api/admin/orders/"+encodeURIComponent(order.localId)+"/status",{method:"POST",headers:{Authorization:"Bearer "+bearer,"content-type":"application/json"},body:JSON.stringify({status:target})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Não foi possível atualizar o pedido.");await loadOrders()}catch(error){status.textContent=error.message;control.disabled=false}}
-async function loadOrders(){if(busy||!bearer)return;busy=true;status.textContent="Atualizando pedidos…";try{const response=await fetch("/api/admin/orders",{headers:{Authorization:"Bearer "+bearer},cache:"no-store"});if(!response.ok)throw new Error(response.status===401?"Senha inválida ou não configurada.":"Não foi possível carregar os pedidos.");const data=await response.json();body.replaceChildren();for(const order of data.orders){const row=document.createElement("tr"),customer=order.customer||{},created=new Date(order.createdAt).toLocaleString("pt-BR"),lines=(order.lines||[]).map(line=>[line.quantity+" × "+line.title,...(line.details||[]).map(detail=>"  · "+detail)].join("\n")).join("\n"),payment=order.paymentTypeId==="cash"?"Dinheiro na entrega":({created:"Aguardando pagamento",pending:"Pix aguardando pagamento",in_process:"Pagamento em análise",approved:"Pago",review_required:"Revisar valor",processed:"Pago",failed:"Recusado",rejected:"Recusado",canceled:"Cancelado",cancelled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[order.status]||order.status||"—",audit=[order.paymentTypeId,order.paymentMethodId].filter(Boolean).join(" / ");addCell(row,order.localId+"\n"+created);addCell(row,(stages[order.fulfillmentStatus]||"Aguardando pagamento")+"\nPagamento: "+payment+(order.statusDetail?" · "+order.statusDetail:"")+(audit?"\nMeio: "+audit:"")+(order.lastPaymentWebhookAt?"\nWebhook: "+new Date(order.lastPaymentWebhookAt).toLocaleString("pt-BR"):""));addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));const actions=document.createElement("td"),wrap=document.createElement("div");wrap.className="actions";for(const [target,label] of next[order.fulfillmentStatus]||[]){const control=button(label,()=>updateOrder(order,target,control));wrap.append(control)}const track=document.createElement("a");track.href=order.trackingUrl;track.target="_blank";track.rel="noopener noreferrer";track.textContent="Ver rastreamento";wrap.append(track);const wa=messageLink(order,customer);if(wa)wrap.append(wa);actions.append(wrap);row.append(actions);body.append(row)}table.hidden=false;refresh.hidden=false;status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora; atualização automática em até 2 min.":"Nenhum pedido encontrado. Atualizado agora.")}catch(error){status.textContent=error.message}finally{busy=false}}
-form.addEventListener("submit",event=>{event.preventDefault();bearer=input.value;input.value="";loadOrders()});refresh.addEventListener("click",loadOrders);window.setInterval(loadOrders,120000);
+function messageLink(order,customer){const digits=String(customer.whatsapp||"").replace(/\D/g,"");if(digits.length<10)return null;const phone=digits.startsWith("55")?digits:"55"+digits;const text="Olá, "+(customer.name||"")+"! Atualização do pedido "+order.localId+": "+(stages[order.fulfillmentStatus]||order.fulfillmentStatus)+". Acompanhe aqui: "+order.trackingUrl;const link=document.createElement("a");link.href="https://wa.me/"+phone+"?text="+encodeURIComponent(text);link.target="_blank";link.rel="noopener noreferrer";link.className="subtle";link.textContent="WhatsApp pronto";return link}
+async function updateOrder(order,target,control){control.disabled=true;try{const response=await fetch("/api/admin/orders/"+encodeURIComponent(order.localId)+"/status",{method:"POST",credentials:"same-origin",headers:{"content-type":"application/json"},body:JSON.stringify({status:target})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Não foi possível atualizar o pedido.");await loadOrders()}catch(error){status.textContent=error.message;control.disabled=false}}
+async function loadOrders(){
+  if(busy)return;busy=true;status.textContent="Atualizando pedidos…";
+  try{
+    const response=await fetch("/api/admin/orders",{credentials:"same-origin",cache:"no-store"});
+    if(response.status===401){authenticated=false;table.hidden=true;refresh.hidden=true;logout.hidden=true;form.hidden=false;body.replaceChildren();status.textContent="Digite a senha do painel para entrar.";return}
+    if(!response.ok)throw new Error("Não foi possível carregar os pedidos.");
+    authenticated=true;form.hidden=true;logout.hidden=false;
+    const data=await response.json();body.replaceChildren();
+    for(const order of data.orders){
+      const row=document.createElement("tr"),customer=order.customer||{},created=new Date(order.createdAt).toLocaleString("pt-BR");
+      const lines=(order.lines||[]).map(line=>[line.quantity+" × "+line.title,...(line.details||[]).map(detail=>"  · "+detail)].join("\n")).join("\n");
+      const payment=order.paymentTypeId==="cash"?"Dinheiro na entrega":({created:"Aguardando pagamento",pending:"Pix aguardando pagamento",in_process:"Pagamento em análise",approved:"Pago",review_required:"Revisar valor",processed:"Pago",failed:"Recusado",rejected:"Recusado",canceled:"Cancelado",cancelled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[order.status]||order.status||"—";
+      const audit=[order.paymentTypeId,order.paymentMethodId].filter(Boolean).join(" / ");
+      addCell(row,order.localId+"\n"+created);
+      addCell(row,(stages[order.fulfillmentStatus]||"Aguardando pagamento")+"\nPagamento: "+payment+(order.statusDetail?" · "+order.statusDetail:"")+(audit?"\nMeio: "+audit:"")+(order.lastPaymentWebhookAt?"\nWebhook: "+new Date(order.lastPaymentWebhookAt).toLocaleString("pt-BR"):""));
+      addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));
+      addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));
+      const actions=document.createElement("td"),wrap=document.createElement("div");wrap.className="actions";
+      for(const [target,label] of next[order.fulfillmentStatus]||[]){const control=button(label,()=>updateOrder(order,target,control));wrap.append(control)}
+      const track=document.createElement("a");track.href=order.trackingUrl;track.target="_blank";track.rel="noopener noreferrer";track.textContent="Ver rastreamento";wrap.append(track);
+      const wa=messageLink(order,customer);if(wa)wrap.append(wa);actions.append(wrap);row.append(actions);body.append(row);
+    }
+    table.hidden=false;refresh.hidden=false;
+    status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora; atualização automática em até 2 min.":"Nenhum pedido encontrado. Atualizado agora.";
+  }catch(error){status.textContent=error.message}finally{busy=false}
+}
+form.addEventListener("submit",async event=>{event.preventDefault();loginButton.disabled=true;status.textContent="Verificando senha…";try{const response=await fetch("/api/admin/login",{method:"POST",credentials:"same-origin",headers:{"content-type":"application/json"},body:JSON.stringify({password:input.value})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Não foi possível entrar.");input.value="";await loadOrders()}catch(error){status.textContent=error.message;input.focus()}finally{loginButton.disabled=false}});refresh.addEventListener("click",loadOrders);logout.addEventListener("click",async()=>{await fetch("/api/admin/logout",{method:"POST",credentials:"same-origin"});authenticated=false;table.hidden=true;refresh.hidden=true;logout.hidden=true;form.hidden=false;body.replaceChildren();status.textContent="Você saiu do painel.";input.focus()});window.setInterval(()=>{if(authenticated)loadOrders()},120000);loadOrders();
 </script></main></html>`;
 
 async function adminOrders(request, env) {
-  const authorization = request.headers.get("authorization") || "";
-  const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
-  if (!env.ADMIN_TOKEN || !sameHex(bearer, env.ADMIN_TOKEN)) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
+  if (!(await isAdminAuthorized(request, env))) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
   const marker = "admin-index:legacy-backfill-v1";
   if (!(await env.ORDERS.get(marker))) {
     for (const prefix of ["payment:", "mp:"]) {
@@ -537,9 +616,7 @@ async function adminOrders(request, env) {
 }
 
 async function updateAdminOrderStatus(request, env, localId) {
-  const authorization = request.headers.get("authorization") || "";
-  const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
-  if (!env.ADMIN_TOKEN || !sameHex(bearer, env.ADMIN_TOKEN)) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
+  if (!(await isAdminAuthorized(request, env))) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
   if (!/^CB-[A-Z0-9-]{8,64}$/.test(localId)) fail("Número do pedido inválido.", 400);
   const body = await request.json().catch(() => fail("Atualização inválida."));
   const target = String(body?.status || "");
@@ -600,6 +677,11 @@ export default {
         return await getBrickSession(env, headers, url.pathname.split("/").pop());
       }
       if (url.pathname === "/api/webhook/mercado-pago" && request.method === "POST") return receiveWebhook(request, env, ctx);
+      if (url.pathname === "/api/admin/login" && request.method === "POST") return await adminLogin(request, env);
+      if (url.pathname === "/api/admin/logout" && request.method === "POST") {
+        if (request.headers.get("origin") !== url.origin) return json({ error: "Origem não autorizada." }, 403, { "cache-control": "no-store" });
+        return await adminLogout(request, env);
+      }
       if (url.pathname === "/gestao" && request.method === "GET") return new Response(ADMIN_PAGE, { headers: {
         "content-type": "text/html; charset=utf-8", "cache-control": "no-store",
         "content-security-policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'",

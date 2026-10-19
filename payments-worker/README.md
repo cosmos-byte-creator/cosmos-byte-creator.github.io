@@ -4,7 +4,7 @@ O checkout online usa o Payment Brick do Mercado Pago dentro do site Cosmos. O W
 
 ## Configuração do Worker
 
-O Worker precisa dos segredos `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET` e `ADMIN_TOKEN`, além da variável não secreta `MP_PUBLIC_KEY`. A chave pública é segura para expor ao navegador, mas o endpoint `/api/mp-config` só a entrega em JSON sem cache. Nunca coloque o Access Token ou o segredo do webhook no site ou no Git.
+O Worker precisa dos segredos `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`, `ADMIN_TOKEN` e `PANEL_PASSWORD`, além da variável não secreta `MP_PUBLIC_KEY`. A chave pública é segura para expor ao navegador, mas o endpoint `/api/mp-config` só a entrega em JSON sem cache. Nunca coloque o Access Token, a senha do painel ou o segredo do webhook no site ou no Git.
 
 Configure `MP_PUBLIC_KEY` em Settings → Variables and Secrets como variável de texto. Configure os três segredos abaixo no Cloudflare ou com Wrangler:
 
@@ -12,7 +12,10 @@ Configure `MP_PUBLIC_KEY` em Settings → Variables and Secrets como variável d
 npx wrangler secret put MP_ACCESS_TOKEN
 npx wrangler secret put MP_WEBHOOK_SECRET
 npx wrangler secret put ADMIN_TOKEN
+npx wrangler secret put PANEL_PASSWORD
 ```
+
+`PANEL_PASSWORD` é a senha própria e fácil de digitar no painel `/gestao`; prefira uma frase-senha única com pelo menos 16 caracteres. O painel cria uma sessão em cookie `HttpOnly`, segura, `SameSite=Strict`, válida por até 12 horas, e limita tentativas inválidas. Enquanto `PANEL_PASSWORD` não existir, o formulário continua aceitando `ADMIN_TOKEN` como contingência. Não envie sua senha pelo chat; configure-a em Cloudflare → Workers & Pages → `cosmos-burguer-payments` → Settings → Variables and Secrets → Add secret.
 
 Use primeiro credenciais de teste para validar. A aplicação precisa estar configurada para Checkout Bricks/Payments API. O token privado fica no Worker; somente `MP_PUBLIC_KEY` é enviada ao navegador.
 
