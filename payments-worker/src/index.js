@@ -34,6 +34,7 @@ const json = (value, status = 200, headers = {}) => new Response(JSON.stringify(
 });
 const cents = value => (value / 100).toFixed(2);
 const isObject = value => value && typeof value === "object" && !Array.isArray(value);
+const isUuidV4 = value => typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
 function cors(request, env) {
   const origin = request.headers.get("origin");
@@ -135,6 +136,7 @@ function sameHex(a, b) {
 }
 
 async function validWebhook(request, env, dataId) {
+  if (!env.MP_WEBHOOK_SECRET) return false;
   const signature = request.headers.get("x-signature") || "";
   const requestId = request.headers.get("x-request-id") || "";
   const fields = Object.fromEntries(signature.split(",").map(part => part.trim().split("=")).filter(pair => pair.length === 2));
@@ -151,93 +153,163 @@ async function validWebhook(request, env, dataId) {
   return valid;
 }
 
-async function createCheckout(request, env, headers) {
+async function createBrickSession(request, env, headers) {
   const body = await request.json().catch(() => fail("Pedido em formato inválido."));
   if (!isObject(body) || !Array.isArray(body.items) || body.items.length < 1 || body.items.length > 20) fail("Carrinho inválido.");
   const customer = validateCustomer(body.customer);
   const lines = body.items.map(lineForItem);
   const total = lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
+  if (!Number.isFinite(total) || total < 1) fail("Total do pedido inválido.");
   const localId = `CB-${Date.now().toString(36).toUpperCase()}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
-  const returnUrl = `${new URL(request.url).origin}/checkout/return?order=${encodeURIComponent(localId)}`;
-  const order = {
-    type: "online", processing_mode: "manual", capture_mode: "automatic_async",
-    total_amount: cents(total), external_reference: localId,
-    description: `Pedido Cosmos Burguer ${localId}`,
-    expiration_time: "P1D",
-    config: { online: {
-      success_url: `${returnUrl}&result=success`,
-      failure_url: `${returnUrl}&result=failure`,
-      pending_url: `${returnUrl}&result=pending`,
-      auto_return: "all"
-    } },
-    items: lines.map(line => ({ title: line.title, unit_price: cents(line.unitPrice), quantity: line.quantity }))
-  };
-  const response = await fetch("https://api.mercadopago.com/v1/orders", {
-    method: "POST",
-    headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}`, "content-type": "application/json", "x-idempotency-key": crypto.randomUUID() },
-    body: JSON.stringify(order)
-  });
-  const paymentOrder = await response.json().catch(() => ({}));
-  if (!response.ok || !paymentOrder.checkout_url || !paymentOrder.id) {
-    console.error("Mercado Pago order creation failed", response.status, JSON.stringify(paymentOrder));
-    return json({ error: "Não foi possível criar o pagamento. Tente novamente." }, 502, headers);
+  const sessionId = crypto.randomUUID();
+  const order = { localId, sessionId, expectedCents: total, currency: "BRL", status: "created", customer, lines, createdAt: new Date().toISOString() };
+  const ttl = 60 * 60 * 24 * 30;
+  await env.ORDERS.put(`brick-session:${sessionId}`, JSON.stringify(order), { expirationTtl: ttl });
+  await env.ORDERS.put(`brick-local:${localId}`, sessionId, { expirationTtl: ttl });
+  const checkoutUrl = `${env.SITE_ORIGIN}/checkout/pagamento/?session=${encodeURIComponent(sessionId)}`;
+  return json({ checkoutUrl, sessionId, localId, amount: total / 100, currency: "BRL" }, 201, headers);
+}
+
+async function getBrickSession(env, headers, sessionId) {
+  if (!isUuidV4(sessionId)) return json({ error: "Sessão inválida." }, 400, headers);
+  const order = await env.ORDERS.get(`brick-session:${sessionId}`, "json");
+  if (!order) return json({ error: "Esta sessão expirou. Volte ao cardápio para iniciar novamente." }, 404, headers);
+  return json({
+    sessionId: order.sessionId, localId: order.localId,
+    amount: order.expectedCents / 100, currency: order.currency,
+    lines: order.lines.map(line => ({ title: line.title, quantity: line.quantity })),
+    status: order.status, statusDetail: order.statusDetail || null,
+    paymentId: order.paymentId || null, qrCode: order.qrCode || null,
+    qrCodeBase64: order.qrCodeBase64 || null
+  }, 200, { ...headers, "cache-control": "no-store" });
+}
+
+function mapBrickPayload(body, saved) {
+  const form = isObject(body.formData) ? body.formData : {};
+  const rawPayer = isObject(form.payer) ? form.payer : {};
+  const email = String(rawPayer.email || form.email || "").trim().toLowerCase();
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fail("Informe um e-mail válido no formulário de pagamento.");
+  const methodId = String(form.payment_method_id || form.paymentMethodId || (body.selectedPaymentMethod === "pix" ? "pix" : "")).trim();
+  if (!methodId || methodId.length > 80) fail("Não foi possível identificar a forma de pagamento escolhida.");
+  const payer = { email };
+  const identification = isObject(rawPayer.identification) ? rawPayer.identification : null;
+  if (identification && typeof identification.type === "string" && typeof identification.number === "string") {
+    const type = identification.type.slice(0, 20);
+    const number = identification.number.replace(/\D/g, "").slice(0, 30);
+    if (type && number) payer.identification = { type, number };
   }
-  await env.ORDERS.put(`mp:${paymentOrder.id}`, JSON.stringify({
-    localId, mpOrderId: paymentOrder.id, expectedCents: total, status: paymentOrder.status,
-    customer, lines, createdAt: new Date().toISOString()
-  }), { expirationTtl: 60 * 60 * 24 * 30 });
-  await env.ORDERS.put(`local:${localId}`, paymentOrder.id, { expirationTtl: 60 * 60 * 24 * 30 });
-  return json({ checkoutUrl: paymentOrder.checkout_url, orderId: paymentOrder.id, localId }, 201, headers);
+  const token = String(form.token || "");
+  const installments = Number(form.installments);
+  const payload = {
+    transaction_amount: Number(cents(saved.expectedCents)),
+    description: `Pedido Cosmos Burguer ${saved.localId}`,
+    external_reference: saved.localId,
+    payment_method_id: methodId,
+    payer: { email: email },
+    token: token || undefined,
+    installments: token ? installments : undefined
+  };
+  if (identification && payer.identification) payload.payer.identification = payer.identification;
+  if (rawPayer.first_name) payload.payer.first_name = String(rawPayer.first_name).slice(0, 80);
+  if (rawPayer.last_name) payload.payer.last_name = String(rawPayer.last_name).slice(0, 80);
+  if (methodId === "pix") {
+    if (token) fail("Dados inesperados no pagamento Pix.");
+  } else {
+    if (!token || token.length > 512) fail("Não foi possível validar o cartão. Revise os dados e tente novamente.");
+    if (!Number.isInteger(installments) || installments < 1 || installments > 24) fail("Selecione uma opção válida de parcelas.");
+    const issuerId = form.issuer_id ?? form.issuerId;
+    if (issuerId !== undefined && issuerId !== null && String(issuerId)) payload.issuer_id = String(issuerId);
+    payload.binary_mode = false;
+  }
+  return payload;
 }
 
-async function checkoutReturn(request, env) {
-  const localId = new URL(request.url).searchParams.get("order") || "";
-  if (!/^CB-[A-Z0-9]+-[A-F0-9]{8}$/.test(localId)) return new Response("Pedido inválido.", { status: 400 });
-  const mpOrderId = await env.ORDERS.get(`local:${localId}`);
-  if (!mpOrderId) return new Response("Pedido não encontrado.", { status: 404 });
-  const saved = await env.ORDERS.get(`mp:${mpOrderId}`, "json");
-  if (!saved || saved.localId !== localId) return new Response("Pedido não encontrado.", { status: 404 });
-  const remote = await fetch(`https://api.mercadopago.com/v1/orders/${encodeURIComponent(mpOrderId)}`, {
-    headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` }
-  });
-  const paymentOrder = await remote.json().catch(() => ({}));
-  const paid = remote.ok && paymentOrder.external_reference === localId &&
-    paymentOrder.status === "processed" && paymentOrder.status_detail === "accredited" &&
-    Math.round(Number(paymentOrder.total_paid_amount) * 100) >= saved.expectedCents;
-  const failed = remote.ok && ["failed", "canceled"].includes(paymentOrder.status);
-  const title = !remote.ok ? "Não foi possível consultar o pagamento" : paid ? "Pagamento confirmado" : failed ? "Pagamento não concluído" : "Pagamento ainda não confirmado";
-  const message = paid
-    ? "Recebemos a confirmação do Mercado Pago. Guarde o número do pedido para acompanhar com a loja."
-    : !remote.ok ? "Tente atualizar esta página daqui a pouco ou consulte o pagamento no Mercado Pago."
-      : failed ? "O pagamento não foi aprovado. Você pode voltar ao cardápio e tentar novamente."
-      : "Ainda não recebemos confirmação do pagamento. Acompanhe pelo Mercado Pago antes de considerar o pedido concluído.";
-  const html = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} · Cosmos Burguer</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#080b19;color:#fff;font:16px system-ui,sans-serif}main{max-width:34rem;padding:2rem;margin:1rem;border:1px solid #4b5684;border-radius:18px;background:#151a33}h1{margin-top:0;color:#f5c96a}p{line-height:1.5}a{color:#f5c96a}</style><main><h1>${title}</h1><p>${message}</p><p>Pedido: <strong>${localId}</strong></p><a href="${env.SITE_ORIGIN}/">Voltar ao cardápio</a></main></html>`;
-  return new Response(html, { status: remote.ok ? 200 : 502, headers: {
-    "content-type": "text/html; charset=utf-8", "cache-control": "no-store",
-    "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'",
-    "x-content-type-options": "nosniff"
-  } });
+function derivePurchase(sessionOrder) {
+  const amountCents = Number(sessionOrder.expectedCents);
+  if (!Number.isSafeInteger(amountCents) || amountCents < 1 || !Array.isArray(sessionOrder.lines) || !sessionOrder.localId) {
+    fail("O pedido salvo não é válido.", 409);
+  }
+  return { amountCents };
 }
 
-async function processWebhookOrder(dataId, env) {
-  const remote = await fetch(`https://api.mercadopago.com/v1/orders/${encodeURIComponent(dataId)}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
-  const paymentOrder = await remote.json().catch(() => ({}));
-  if (!remote.ok) throw new Error(`Mercado Pago order lookup failed: ${remote.status}`);
-  const key = `mp:${dataId}`;
+function paymentPublicData(payment) {
+  const transaction = payment.point_of_interaction?.transaction_data || {};
+  return { paymentId: String(payment.id), status: payment.status || "unknown", statusDetail: payment.status_detail || null,
+    qrCode: transaction.qr_code || null, qrCodeBase64: transaction.qr_code_base64 || null };
+}
+
+async function createBrickPayment(request, env, headers) {
+  const body = await request.json().catch(() => fail("Dados de pagamento inválidos."));
+  const sessionId = String(body?.sessionId || "");
+  const attemptId = String(body?.attemptId || "");
+  if (!isUuidV4(sessionId) || !isUuidV4(attemptId)) fail("Sessão de pagamento inválida.");
+  const key = `brick-session:${sessionId}`;
   const saved = await env.ORDERS.get(key, "json");
-  if (!saved) return;
-  saved.status = paymentOrder.status;
-  saved.statusDetail = paymentOrder.status_detail;
-  saved.paidAmount = paymentOrder.total_paid_amount;
+  if (!saved) fail("Esta sessão expirou. Volte ao cardápio para iniciar novamente.", 404);
+  if (["approved", "pending", "in_process"].includes(saved.status) && saved.paymentId) {
+    return json({ paymentId: saved.paymentId, status: saved.status, statusDetail: saved.statusDetail || null, qrCode: saved.qrCode || null, qrCodeBase64: saved.qrCodeBase64 || null }, 200, headers);
+  }
+  const purchase = derivePurchase(saved);
+  const payload = mapBrickPayload(body, { ...saved, expectedCents: purchase.amountCents });
+  const response = await fetch("https://api.mercadopago.com/v1/payments", {
+    method: "POST",
+    headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}`, "content-type": "application/json", "x-idempotency-key": attemptId },
+    body: JSON.stringify(payload)
+  });
+  const payment = await response.json().catch(() => ({}));
+  if (!response.ok || !payment.id) {
+    console.error("Mercado Pago payment creation failed", response.status);
+    return json({ error: "Não foi possível concluir o pagamento. Confira os dados e tente novamente." }, 502, headers);
+  }
+  const amountMatches = Math.round(Number(payment.transaction_amount) * 100) === saved.expectedCents;
+  const referenceMatches = payment.external_reference === saved.localId && payment.currency_id === "BRL";
+  const status = amountMatches && referenceMatches ? payment.status : "review_required";
+  const result = { ...paymentPublicData(payment), status };
+  saved.paymentId = String(payment.id);
+  saved.status = status;
+  saved.statusDetail = payment.status_detail || null;
+  saved.paidAmount = payment.transaction_amount ?? null;
+  saved.qrCode = result.qrCode;
+  saved.qrCodeBase64 = result.qrCodeBase64;
   saved.updatedAt = new Date().toISOString();
-  await env.ORDERS.put(key, JSON.stringify(saved), { expirationTtl: 60 * 60 * 24 * 30 });
+  const ttl = 60 * 60 * 24 * 30;
+  await env.ORDERS.put(key, JSON.stringify(saved), { expirationTtl: ttl });
+  await env.ORDERS.put(`payment:${payment.id}`, JSON.stringify(saved), { expirationTtl: ttl });
+  return json(result, 201, headers);
+}
+
+async function processWebhookPayment(dataId, env) {
+  const remote = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(dataId)}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
+  const payment = await remote.json().catch(() => ({}));
+  if (!remote.ok) throw new Error(`Mercado Pago payment lookup failed: ${remote.status}`);
+  let saved = await env.ORDERS.get(`payment:${dataId}`, "json");
+  if (!saved && typeof payment.external_reference === "string") {
+    const sessionId = await env.ORDERS.get(`brick-local:${payment.external_reference}`);
+    if (sessionId) saved = await env.ORDERS.get(`brick-session:${sessionId}`, "json");
+  }
+  if (!saved || payment.external_reference !== saved.localId) return;
+  const amountMatches = Math.round(Number(payment.transaction_amount) * 100) === saved.expectedCents && payment.currency_id === "BRL";
+  saved.status = amountMatches ? payment.status : "review_required";
+  saved.statusDetail = payment.status_detail || null;
+  saved.paidAmount = payment.transaction_amount ?? null;
+  saved.paymentId = String(payment.id);
+  saved.qrCode = payment.point_of_interaction?.transaction_data?.qr_code || saved.qrCode || null;
+  saved.qrCodeBase64 = payment.point_of_interaction?.transaction_data?.qr_code_base64 || saved.qrCodeBase64 || null;
+  saved.updatedAt = new Date().toISOString();
+  const ttl = 60 * 60 * 24 * 30;
+  const value = JSON.stringify(saved);
+  await env.ORDERS.put(`brick-session:${saved.sessionId}`, value, { expirationTtl: ttl });
+  await env.ORDERS.put(`payment:${payment.id}`, value, { expirationTtl: ttl });
 }
 
 async function receiveWebhook(request, env, ctx) {
+  const body = await request.json().catch(() => ({}));
   const url = new URL(request.url);
-  const dataId = url.searchParams.get("data.id");
+  const dataId = url.searchParams.get("data.id") || body?.data?.id;
   if (!(await validWebhook(request, env, dataId))) return json({ error: "Assinatura inválida." }, 401);
-  ctx.waitUntil(processWebhookOrder(dataId, env).catch(error => console.error("Mercado Pago webhook processing failed", error)));
+  if (body.type === "payment" || (typeof body.action === "string" && body.action.startsWith("payment."))) {
+    ctx.waitUntil(processWebhookPayment(String(dataId), env).catch(error => console.error("Mercado Pago webhook processing failed", error)));
+  }
   return json({ received: true });
 }
 
@@ -246,7 +318,7 @@ const ADMIN_PAGE = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><met
 </style><main><h1>Pedidos Cosmos Burguer</h1><p>Área privada da loja. O acesso fica apenas nesta sessão do navegador.</p><form id="login"><input id="token" type="password" autocomplete="current-password" placeholder="Senha administrativa" required><button>Entrar</button></form><p id="status" role="status"></p><div class="tabela"><table hidden><thead><tr><th>Pedido / data</th><th>Status</th><th>Itens</th><th>Cliente / entrega</th></tr></thead><tbody></tbody></table></div><script>
 let bearer="";const form=document.querySelector("#login"),input=document.querySelector("#token"),status=document.querySelector("#status"),table=document.querySelector("table"),body=document.querySelector("tbody");
 function addCell(row,value){const cell=document.createElement("td");cell.textContent=value;row.append(cell)}
-function statusLabel(value){return ({created:"Aguardando pagamento",processed:"Pago",failed:"Recusado",canceled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[value]||value||"—"}
+function statusLabel(value){return ({created:"Aguardando pagamento",pending:"Aguardando pagamento",in_process:"Em análise",approved:"Pago",review_required:"Revisar valor",processed:"Pago",failed:"Recusado",rejected:"Recusado",canceled:"Cancelado",cancelled:"Cancelado",expired:"Expirado",refunded:"Reembolsado"})[value]||value||"—"}
 async function loadOrders(){status.textContent="Carregando pedidos…";try{const response=await fetch("/api/admin/orders",{headers:{Authorization:"Bearer "+bearer},cache:"no-store"});if(!response.ok)throw new Error(response.status===401?"Senha inválida ou não configurada.":"Não foi possível carregar os pedidos.");const data=await response.json();body.replaceChildren();for(const order of data.orders){const row=document.createElement("tr"),created=new Date(order.createdAt).toLocaleString("pt-BR"),lines=(order.lines||[]).map(line=>line.quantity+" × "+line.title).join("\n"),customer=order.customer||{};addCell(row,order.localId+"\n"+created);addCell(row,statusLabel(order.status)+(order.statusDetail?" · "+order.statusDetail:""));addCell(row,lines+"\nTotal: "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((order.expectedCents||0)/100));addCell(row,[customer.name,customer.whatsapp,customer.address].filter(Boolean).join("\n"));body.append(row)}table.hidden=false;status.textContent=data.orders.length?data.orders.length+" pedido(s). Atualizado agora.":"Nenhum pedido encontrado.")}catch(error){status.textContent=error.message}}
 form.addEventListener("submit",event=>{event.preventDefault();bearer=input.value;input.value="";loadOrders()});
 </script></main></html>`;
@@ -256,12 +328,14 @@ async function adminOrders(request, env) {
   const bearer = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
   if (!env.ADMIN_TOKEN || !sameHex(bearer, env.ADMIN_TOKEN)) return json({ error: "Não autorizado." }, 401, { "cache-control": "no-store" });
   const keys = [];
-  let cursor;
-  do {
-    const page = await env.ORDERS.list({ prefix: "mp:", limit: 1000, ...(cursor ? { cursor } : {}) });
-    keys.push(...page.keys);
-    cursor = page.list_complete ? undefined : page.cursor;
-  } while (cursor && keys.length < 10000);
+  for (const prefix of ["payment:", "mp:"]) {
+    let cursor;
+    do {
+      const page = await env.ORDERS.list({ prefix, limit: 1000, ...(cursor ? { cursor } : {}) });
+      keys.push(...page.keys);
+      cursor = page.list_complete ? undefined : page.cursor;
+    } while (cursor && keys.length < 10000);
+  }
   const orders = (await Promise.all(keys.map(key => env.ORDERS.get(key.name, "json"))))
     .filter(Boolean)
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
@@ -275,23 +349,31 @@ export default {
     const headers = cors(request, env);
     if (request.method === "OPTIONS") return new Response(null, { headers });
     try {
-      if (url.pathname === "/api/checkout" && request.method === "POST") {
-        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
-        return createCheckout(request, env, headers);
+      if (url.pathname === "/api/mp-config" && request.method === "GET") {
+        return env.MP_PUBLIC_KEY
+          ? json({ publicKey: env.MP_PUBLIC_KEY }, 200, { ...headers, "cache-control": "no-store, max-age=0" })
+          : json({ error: "Checkout online temporariamente indisponível." }, 503, { ...headers, "cache-control": "no-store, max-age=0" });
       }
-      if (url.pathname === "/checkout/return" && request.method === "GET") return checkoutReturn(request, env);
+      if (url.pathname === "/api/brick/session" && request.method === "POST") {
+        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
+        if (!env.MP_PUBLIC_KEY) return json({ error: "Checkout online temporariamente indisponível." }, 503, headers);
+        return await createBrickSession(request, env, headers);
+      }
+      if (url.pathname === "/api/brick/payment" && request.method === "POST") {
+        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
+        return await createBrickPayment(request, env, headers);
+      }
+      if (url.pathname.startsWith("/api/brick/session/") && request.method === "GET") {
+        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
+        return await getBrickSession(env, headers, url.pathname.split("/").pop());
+      }
       if (url.pathname === "/api/webhook/mercado-pago" && request.method === "POST") return receiveWebhook(request, env, ctx);
       if (url.pathname === "/gestao" && request.method === "GET") return new Response(ADMIN_PAGE, { headers: {
         "content-type": "text/html; charset=utf-8", "cache-control": "no-store",
         "content-security-policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'",
         "x-content-type-options": "nosniff", "referrer-policy": "no-referrer"
       } });
-      if (url.pathname === "/api/admin/orders" && request.method === "GET") return adminOrders(request, env);
-      if (url.pathname.startsWith("/api/order/") && request.method === "GET") {
-        if (request.headers.get("origin") !== env.SITE_ORIGIN) return json({ error: "Origem não autorizada." }, 403, headers);
-        const order = await env.ORDERS.get(`mp:${url.pathname.split("/").pop()}`, "json");
-        return order ? json({ status: order.status, statusDetail: order.statusDetail || null }, 200, headers) : json({ error: "Pedido não encontrado." }, 404, headers);
-      }
+      if (url.pathname === "/api/admin/orders" && request.method === "GET") return await adminOrders(request, env);
       return json({ error: "Rota não encontrada." }, 404, headers);
     } catch (error) {
       console.error(error);

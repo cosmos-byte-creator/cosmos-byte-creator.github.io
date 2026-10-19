@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20260926.3";
+  var VERSAO_SITE = "20261019.1";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -1218,7 +1218,7 @@ button,a,input{touch-action:manipulation}
       <button class="fechar" id="fechar-checkout" type="button" aria-label="Fechar finalização">✕</button>
     </div>
     <form class="modal-fluxo-corpo" id="form-checkout">
-      <p class="modal-intro">Preencha os dados obrigatórios e escolha como prefere pagar. Para Pix ou cartão, você será levado ao ambiente seguro do Mercado Pago.</p>
+      <p class="modal-intro">Preencha os dados de entrega. No próximo passo, você paga com Pix ou cartão sem sair do site.</p>
       <label class="campo-checkout"><span>Nome do cliente *</span><input id="checkout-nome" name="nome" type="text" autocomplete="name" required maxlength="80" placeholder="Como podemos chamar você?"></label>
       <label class="campo-checkout"><span>WhatsApp para contato *</span><input id="checkout-whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" placeholder="(16) 99999-9999"></label>
       <label class="campo-checkout"><span>Endereço de entrega *</span><span class="endereco-linha"><textarea id="checkout-endereco" name="endereco" required rows="2" maxlength="240" placeholder="Rua, número, bairro e complemento"></textarea><button class="btn-loc" id="usar-localizacao" type="button" aria-label="Usar localização atual">⌖ LOC</button></span><small class="loc-status" id="loc-status" role="status"></small></label>
@@ -1226,8 +1226,8 @@ button,a,input{touch-action:manipulation}
         <label class="pagamento"><input type="radio" name="pagamento" value="Dinheiro" required><span>💵 Dinheiro</span></label>
         <label class="pagamento"><input type="radio" name="pagamento" value="mercado-pago"><span>◆ Pix ou cartão</span></label>
       </div></fieldset>
-      <p class="checkout-nota" id="checkout-nota">Pagamentos online são confirmados pelo Mercado Pago. Dinheiro é confirmado com a loja pelo WhatsApp.</p>
-      <div class="modal-acoes"><button class="btn-neutro" id="voltar-checkout" type="button">Voltar</button><button class="btn btn-primario" id="checkout-enviar" type="submit" data-mp-checkout-cta="checkout-pro">Continuar →</button></div>
+      <p class="checkout-nota" id="checkout-nota">Pix e cartão são processados com segurança pelo Mercado Pago. Dinheiro é combinado com a loja pelo WhatsApp.</p>
+      <div class="modal-acoes"><button class="btn-neutro" id="voltar-checkout" type="button">Voltar</button><button class="btn btn-primario" id="checkout-enviar" type="submit" data-mp-checkout-cta="bricks-payment">Continuar →</button></div>
     </form>
   </div>
 </div>
@@ -2298,14 +2298,14 @@ button,a,input{touch-action:manipulation}
     if (!botao) return;
     botao.disabled = ocupado;
     botao.setAttribute("aria-busy", String(ocupado));
-    botao.textContent = ocupado ? "Criando pagamento…" : "Continuar →";
+    botao.textContent = ocupado ? "Preparando checkout…" : "Continuar →";
   }
 
   async function criarPagamentoMercadoPago(nome, whatsapp, endereco) {
     if (!CONFIG.pagamentosUrl) {
       throw new Error("O pagamento online ainda não está configurado.");
     }
-    const resposta = await fetch(CONFIG.pagamentosUrl.replace(/\/$/, "") + "/api/checkout", {
+    const resposta = await fetch(CONFIG.pagamentosUrl.replace(/\/$/, "") + "/api/brick/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

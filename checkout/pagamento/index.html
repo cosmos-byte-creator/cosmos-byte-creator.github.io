@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07060A">
+  <meta name="description" content="Finalize seu pedido Cosmos Burguer com Pix ou cartão, sem sair do site.">
+  <title>Pagamento seguro · Cosmos Burguer</title>
+  <link rel="preconnect" href="https://sdk.mercadopago.com">
+  <link rel="preconnect" href="https://www.mercadopago.com.br">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@85..125,400..900&amp;display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#07060a;--panel:#14111b;--panel2:#1b1622;--line:rgba(255,255,255,.1);--cream:#f4ebe0;--muted:#a3958c;--orange:#ff6a13;--gold:#ffc24b;--green:#80d9a0;box-sizing:border-box;font-family:"Archivo",system-ui,sans-serif;color:var(--cream);background:var(--bg)}
+    *,*::before,*::after{box-sizing:inherit}body{margin:0;min-height:100vh;background:radial-gradient(80% 35% at 50% 0,rgba(255,106,19,.16),transparent 70%),var(--bg)}button,a{font:inherit}a{color:inherit}.page{width:min(100% - 28px,680px);margin:0 auto;padding:20px 0 48px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 24px}.brand{font-weight:900;letter-spacing:.08em;color:var(--gold);text-decoration:none}.secure{font-size:.82rem;color:var(--muted)}.back{color:var(--muted);font-size:.9rem;text-decoration:none}.back:hover{color:var(--gold)}
+    .card{padding:clamp(20px,5vw,34px);border:1px solid var(--line);border-radius:22px;background:linear-gradient(155deg,rgba(27,22,34,.98),rgba(15,12,20,.98));box-shadow:0 26px 80px rgba(0,0,0,.32)}.eyebrow{margin:0 0 8px;color:var(--gold);font-size:.74rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}h1{margin:0;font-size:clamp(1.65rem,6vw,2.35rem);line-height:1.06;letter-spacing:-.04em} .lede{margin:10px 0 24px;color:var(--muted);line-height:1.5}.summary{padding:16px 0;border-block:1px solid var(--line)}.summary-title{margin:0 0 10px;font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}.lines{display:grid;gap:7px;margin:0;padding:0;list-style:none}.line{display:flex;justify-content:space-between;gap:14px;font-size:.94rem}.line span:last-child{color:#d9cfc6;white-space:nowrap}.total{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:16px 0 18px}.total span{font-weight:700}.total strong{font-size:1.55rem;color:var(--gold);font-variant-numeric:tabular-nums}.methods{padding-top:4px}.method-heading{margin:0 0 5px;font-size:1.03rem}.method-note{margin:0 0 16px;color:var(--muted);font-size:.87rem;line-height:1.45}.loading{display:flex;align-items:center;gap:11px;min-height:54px;color:var(--muted);font-size:.92rem}.spinner{width:19px;height:19px;border:2px solid rgba(255,194,75,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite;flex:0 0 auto}@keyframes spin{to{transform:rotate(360deg)}}#paymentBrick_container{min-height:150px}.notice{margin:14px 0 0;padding:13px 15px;border:1px solid rgba(255,194,75,.25);border-radius:13px;background:rgba(255,194,75,.07);color:#e7d9c8;line-height:1.45;font-size:.9rem}.notice.error{border-color:rgba(255,106,19,.45);background:rgba(255,106,19,.09)}.notice.success{border-color:rgba(128,217,160,.35);background:rgba(128,217,160,.08);color:#d5f1df}.status-title{margin:0 0 4px;font-weight:800}.status-copy{margin:0;color:inherit}.pix-box{display:grid;justify-items:center;gap:14px;margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:16px;background:rgba(0,0,0,.18)}.pix-box img{width:min(230px,70vw);aspect-ratio:1;object-fit:contain;padding:8px;background:#fff;border-radius:12px}.pix-box label{width:100%;font-size:.82rem;font-weight:700;color:var(--muted)}.pix-code{display:block;width:100%;min-height:82px;margin-top:7px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#0b0910;color:var(--cream);font:12px/1.4 ui-monospace,monospace;resize:vertical}.copy{width:100%;min-height:46px;border:0;border-radius:999px;background:var(--gold);color:#211508;font-weight:900;cursor:pointer}.copy:hover{filter:brightness(1.07)}.foot{margin:18px 0 0;text-align:center;color:var(--muted);font-size:.78rem;line-height:1.5}.foot strong{color:#d9cfc6}.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+    @media(max-width:480px){.page{width:min(100% - 20px,680px);padding-top:12px}.top{padding-bottom:18px}.secure{font-size:.75rem}.card{border-radius:18px}.line{font-size:.88rem}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="page" data-mp-bricks-page="payment">
+    <nav class="top" aria-label="Navegação do pagamento">
+      <a class="brand" href="/" aria-label="Cosmos Burguer, voltar ao cardápio">COSMOS BURGUER</a>
+      <span class="secure">◆ Pagamento protegido</span>
+    </nav>
+    <section class="card" aria-labelledby="title">
+      <p class="eyebrow">Quase na sua órbita</p>
+      <h1 id="title">Finalize seu pedido</h1>
+      <p class="lede">Escolha Pix ou cartão aqui mesmo. Seus dados de cartão são protegidos pelo Mercado Pago.</p>
+
+      <section class="summary" aria-labelledby="summary-title">
+        <h2 class="summary-title" id="summary-title">Resumo do pedido</h2>
+        <ul class="lines" id="order-lines"><li class="line"><span>Carregando pedido…</span></li></ul>
+      </section>
+      <div class="total"><span>Total a pagar</span><strong id="order-total">—</strong></div>
+
+      <section class="methods" aria-labelledby="methods-title">
+        <h2 class="method-heading" id="methods-title">Como você quer pagar?</h2>
+        <p class="method-note">Pix ou cartão de crédito/débito. Você verá as opções e concluirá sem sair desta página.</p>
+        <div class="loading" id="loading" role="status"><span class="spinner" aria-hidden="true"></span><span>Preparando pagamento seguro…</span></div>
+        <div id="paymentBrick_container" hidden></div>
+        <div class="notice" id="notice" role="status" aria-live="polite" hidden></div>
+        <section class="pix-box" id="pix-box" aria-label="Pagamento Pix" hidden>
+          <img id="pix-qr" alt="QR Code Pix para pagamento">
+          <label for="pix-code">Pix copia e cola<textarea class="pix-code" id="pix-code" readonly></textarea></label>
+          <button class="copy" id="copy-pix" type="button">Copiar código Pix</button>
+          <p class="status-copy" id="pix-status">Aguardando confirmação do pagamento…</p>
+        </section>
+      </section>
+      <p class="foot">O pedido só é confirmado quando o Mercado Pago aprovar o pagamento.<br><strong>Não feche esta página enquanto o Pix estiver pendente.</strong></p>
+    </section>
+  </main>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+  <script>
+    (function () {
+      "use strict";
+      const API = "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev";
+      const sessionId = new URLSearchParams(location.search).get("session") || "";
+      const $ = selector => document.querySelector(selector);
+      const loading = $("#loading"), notice = $("#notice"), brickNode = $("#paymentBrick_container");
+      let brickController = null, pollTimer = 0, orderData = null;
+      const money = value => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+      function tell(message, kind) {
+        notice.hidden = false;
+        notice.className = "notice" + (kind ? " " + kind : "");
+        notice.textContent = message;
+      }
+      async function getJson(url, options) {
+        const response = await fetch(url, options);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) { const error = new Error(data.error || "Não foi possível carregar o pagamento."); error.status = response.status; throw error; }
+        return data;
+      }
+      function showOrder(order) {
+        orderData = order;
+        const list = $("#order-lines");
+        list.replaceChildren();
+        for (const item of order.lines || []) {
+          const li = document.createElement("li"), name = document.createElement("span"), quantity = document.createElement("span");
+          li.className = "line";
+          name.textContent = item.title;
+          quantity.textContent = item.quantity + " un.";
+          li.append(name, quantity);
+          list.append(li);
+        }
+        $("#order-total").textContent = money(order.amount);
+      }
+      function stopBrick() {
+        if (!brickController) return;
+        try { brickController.unmount(); } catch (_) {}
+        brickController = null;
+      }
+      function showPix(result) {
+        $("#paymentBrick_container").hidden = true;
+        loading.hidden = true;
+        notice.hidden = false;
+        notice.className = "notice";
+        notice.innerHTML = "<p class=\"status-title\">Pix gerado. Falta só pagar.</p><p class=\"status-copy\">Abra o app do seu banco e escaneie o QR Code, ou copie o código abaixo.</p>";
+        $("#pix-box").hidden = false;
+        if (result.qrCodeBase64) $("#pix-qr").src = "data:image/jpeg;base64," + result.qrCodeBase64;
+        else $("#pix-qr").hidden = true;
+        $("#pix-code").value = result.qrCode || "";
+        $("#copy-pix").hidden = !result.qrCode;
+        startPolling();
+      }
+      function showApproved() {
+        stopBrick();
+        clearInterval(pollTimer);
+        brickNode.hidden = true;
+        $("#pix-box").hidden = true;
+        loading.hidden = true;
+        notice.hidden = false;
+        notice.className = "notice success";
+        notice.innerHTML = "<p class=\"status-title\">Pagamento confirmado! ✦</p><p class=\"status-copy\">A Cosmos já recebeu a confirmação. Guarde o número do pedido: <strong></strong></p>";
+        notice.querySelector("strong").textContent = orderData.localId;
+      }
+      function showPending() {
+        loading.hidden = true;
+        tell("Pagamento enviado. Estamos aguardando a confirmação segura do Mercado Pago.", "");
+        startPolling();
+      }
+      function applyStatus(state) {
+        if (state.status === "approved") return showApproved();
+        if (["rejected", "cancelled", "canceled", "refunded"].includes(state.status)) {
+          clearInterval(pollTimer);
+          loading.hidden = true;
+          $("#pix-box").hidden = true;
+          brickNode.hidden = false;
+          tell("Este pagamento não foi concluído. Volte à opção de pagamento e tente novamente ou escolha outro meio.", "error");
+        }
+        if (state.status === "review_required") {
+          clearInterval(pollTimer);
+          loading.hidden = true;
+          $("#pix-box").hidden = true;
+          tell("Não conseguimos confirmar o valor deste pagamento. Não faça outro pagamento; fale com a loja para conferirmos.", "error");
+        }
+      }
+      function startPolling() {
+        if (pollTimer || !sessionId) return;
+        let tries = 0;
+        pollTimer = window.setInterval(async function () {
+          tries += 1;
+          try {
+            const state = await getJson(API + "/api/brick/session/" + encodeURIComponent(sessionId), { cache: "no-store" });
+            applyStatus(state);
+            if (state.status === "approved" || ["rejected", "cancelled", "canceled", "refunded", "review_required"].includes(state.status) || tries >= 90) {
+              clearInterval(pollTimer);
+              pollTimer = 0;
+            }
+          } catch (_) {
+            if (tries >= 90) { clearInterval(pollTimer); pollTimer = 0; }
+          }
+        }, 4000);
+      }
+      async function mountBrick(publicKey) {
+        if (!window.MercadoPago) throw new Error("O componente seguro de pagamento não carregou. Desative o bloqueador de anúncios e atualize a página.");
+        const mp = new window.MercadoPago(publicKey, { locale: "pt-BR" });
+        const bricksBuilder = mp.bricks();
+        brickNode.hidden = false;
+        brickController = await bricksBuilder.create("payment", "paymentBrick_container", {
+          initialization: { amount: orderData.amount },
+          customization: {
+            visual: { style: { theme: "dark", customVariables: {
+              textPrimaryColor: "#F4EBE0", textSecondaryColor: "#A3958C",
+              inputBackgroundColor: "#0C0A11", formBackgroundColor: "#14111B",
+              baseColor: "#FFC24B", baseColorFirstVariant: "#FF6A13",
+              baseColorSecondVariant: "#8E1C07", buttonTextColor: "#211508",
+              borderRadiusMedium: "12px", borderRadiusLarge: "16px"
+            } } },
+            paymentMethods: { bankTransfer: ["pix"], creditCard: "all", debitCard: "all", prepaidCard: "all" }
+          },
+          callbacks: {
+            onReady: function () { loading.hidden = true; },
+            onSubmit: async function (submission) {
+              loading.hidden = false;
+              $("#loading span:last-child").textContent = "Enviando pagamento com segurança…";
+              notice.hidden = true;
+              const attemptKey = "cosmos:payment-attempt:" + sessionId;
+              let attemptId = sessionStorage.getItem(attemptKey);
+              if (!attemptId) { attemptId = crypto.randomUUID(); sessionStorage.setItem(attemptKey, attemptId); }
+              try {
+                const result = await getJson(API + "/api/brick/payment", {
+                  method: "POST", headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ sessionId, attemptId, selectedPaymentMethod: submission.selectedPaymentMethod, formData: submission.formData })
+                });
+                if (result.status === "approved") showApproved();
+                else if (result.status === "pending" && result.qrCode) showPix(result);
+                else if (["pending", "in_process"].includes(result.status)) showPending();
+                else if (result.status === "review_required") { sessionStorage.removeItem(attemptKey); throw new Error("O valor retornado não corresponde ao pedido. Não tente pagar novamente; fale com a loja."); }
+                else if (["rejected", "cancelled", "canceled"].includes(result.status)) { sessionStorage.removeItem(attemptKey); throw new Error("O pagamento não foi aprovado. Confira os dados ou escolha outra forma de pagamento."); }
+                else throw new Error("O pagamento foi enviado, mas ainda não temos uma confirmação. Aguarde alguns instantes.");
+                sessionStorage.removeItem(attemptKey);
+                return result;
+              } catch (error) {
+                if (error.status) sessionStorage.removeItem(attemptKey);
+                loading.hidden = true;
+                tell(error.message || "Não foi possível processar o pagamento. Tente novamente.", "error");
+                throw error;
+              }
+            },
+            onError: function () {
+              loading.hidden = true;
+              tell("Não foi possível carregar o formulário. Verifique sua conexão, desative bloqueadores de conteúdo e atualize a página.", "error");
+            }
+          }
+        });
+      }
+      $("#copy-pix").addEventListener("click", async function () {
+        const field = $("#pix-code");
+        try { await navigator.clipboard.writeText(field.value); this.textContent = "Código copiado!"; }
+        catch (_) { field.focus(); field.select(); document.execCommand("copy"); this.textContent = "Código selecionado"; }
+      });
+      async function init() {
+        if (!/^[0-9a-f-]{36}$/i.test(sessionId)) throw new Error("Não encontramos este pedido. Volte ao cardápio e inicie novamente.");
+        const [config, order] = await Promise.all([
+          getJson(API + "/api/mp-config", { cache: "no-store" }),
+          getJson(API + "/api/brick/session/" + encodeURIComponent(sessionId), { cache: "no-store" })
+        ]);
+        showOrder(order);
+        if (order.status === "approved") return showApproved();
+        if (order.status === "review_required") { loading.hidden = true; return tell("Não conseguimos confirmar o valor deste pagamento. Não tente pagar novamente; fale com a loja.", "error"); }
+        if (order.status === "pending") return order.qrCode ? showPix(order) : showPending();
+        if (order.status === "in_process") { showPending(); return; }
+        await mountBrick(config.publicKey);
+      }
+      init().catch(function (error) {
+        loading.hidden = true;
+        tell(error.message || "Não foi possível preparar o pagamento. Volte ao cardápio para tentar de novo.", "error");
+      });
+      window.addEventListener("pagehide", stopBrick, { once: true });
+    })();
+  </script>
+</body>
+</html>
