@@ -6,7 +6,7 @@ O checkout online usa o Payment Brick do Mercado Pago dentro do site Cosmos. O W
 
 O Worker precisa dos segredos `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET` e `ADMIN_TOKEN`, além da variável não secreta `MP_PUBLIC_KEY`. A chave pública é segura para expor ao navegador, mas o endpoint `/api/mp-config` só a entrega em JSON sem cache. Nunca coloque o Access Token ou o segredo do webhook no site ou no Git.
 
-Configure os segredos no Cloudflare ou com Wrangler:
+Configure `MP_PUBLIC_KEY` em Settings → Variables and Secrets como variável de texto. Configure os três segredos abaixo no Cloudflare ou com Wrangler:
 
 ```sh
 npx wrangler secret put MP_ACCESS_TOKEN
