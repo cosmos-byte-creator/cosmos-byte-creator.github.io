@@ -1,0 +1,7 @@
+.env
+.env.*
+!.env.example
+.env.*.local
+.mp-integrate-progress.md
+.wrangler/
+node_modules/

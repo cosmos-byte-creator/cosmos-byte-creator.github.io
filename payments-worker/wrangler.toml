@@ -1,0 +1,11 @@
+name = "cosmos-burguer-payments"
+main = "src/index.js"
+compatibility_date = "2026-10-07"
+
+[[kv_namespaces]]
+binding = "ORDERS"
+id = "b178e016b37b4a8b852a64d313450aad"
+
+[vars]
+# Use exatamente a origem pública do site, sem barra final.
+SITE_ORIGIN = "https://cosmos-byte-creator.github.io"
