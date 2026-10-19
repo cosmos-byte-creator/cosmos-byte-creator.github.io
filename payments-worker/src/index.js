@@ -215,22 +215,25 @@ async function checkoutReturn(request, env) {
   } });
 }
 
-async function receiveWebhook(request, env) {
+async function processWebhookOrder(dataId, env) {
+  const remote = await fetch(`https://api.mercadopago.com/v1/orders/${encodeURIComponent(dataId)}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
+  const paymentOrder = await remote.json().catch(() => ({}));
+  if (!remote.ok) throw new Error(`Mercado Pago order lookup failed: ${remote.status}`);
+  const key = `mp:${dataId}`;
+  const saved = await env.ORDERS.get(key, "json");
+  if (!saved) return;
+  saved.status = paymentOrder.status;
+  saved.statusDetail = paymentOrder.status_detail;
+  saved.paidAmount = paymentOrder.total_paid_amount;
+  saved.updatedAt = new Date().toISOString();
+  await env.ORDERS.put(key, JSON.stringify(saved), { expirationTtl: 60 * 60 * 24 * 30 });
+}
+
+async function receiveWebhook(request, env, ctx) {
   const url = new URL(request.url);
   const dataId = url.searchParams.get("data.id");
   if (!(await validWebhook(request, env, dataId))) return json({ error: "Assinatura inválida." }, 401);
-  const remote = await fetch(`https://api.mercadopago.com/v1/orders/${encodeURIComponent(dataId)}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
-  const paymentOrder = await remote.json().catch(() => ({}));
-  if (!remote.ok) return json({ error: "Order não encontrada." }, 404);
-  const key = `mp:${dataId}`;
-  const saved = await env.ORDERS.get(key, "json");
-  if (saved) {
-    saved.status = paymentOrder.status;
-    saved.statusDetail = paymentOrder.status_detail;
-    saved.paidAmount = paymentOrder.total_paid_amount;
-    saved.updatedAt = new Date().toISOString();
-    await env.ORDERS.put(key, JSON.stringify(saved), { expirationTtl: 60 * 60 * 24 * 30 });
-  }
+  ctx.waitUntil(processWebhookOrder(dataId, env).catch(error => console.error("Mercado Pago webhook processing failed", error)));
   return json({ received: true });
 }
 
@@ -263,7 +266,7 @@ async function adminOrders(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const headers = cors(request, env);
     if (request.method === "OPTIONS") return new Response(null, { headers });
@@ -273,7 +276,7 @@ export default {
         return createCheckout(request, env, headers);
       }
       if (url.pathname === "/checkout/return" && request.method === "GET") return checkoutReturn(request, env);
-      if (url.pathname === "/api/webhook/mercado-pago" && request.method === "POST") return receiveWebhook(request, env);
+      if (url.pathname === "/api/webhook/mercado-pago" && request.method === "POST") return receiveWebhook(request, env, ctx);
       if (url.pathname === "/gestao" && request.method === "GET") return new Response(ADMIN_PAGE, { headers: {
         "content-type": "text/html; charset=utf-8", "cache-control": "no-store",
         "content-security-policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'",
