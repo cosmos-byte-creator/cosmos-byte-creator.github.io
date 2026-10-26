@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20261026.1";
+  var VERSAO_SITE = "20261026.3";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -981,7 +981,7 @@ button,a,input{touch-action:manipulation}
 <!-- ================= ABERTURA CURTA (somente na primeira visita) ================= -->
 <div id="abertura" aria-hidden="true">
   <picture>
-    <source media="(max-width:699px)" srcset="images/generated/HeroSiteInicialHorizontal.png">
+    <source media="(max-width:699px)" srcset="images/generated/HeroSiteInicialHorizontalFinal.png">
     <img class="abertura-imagem" src="images/generated/HeroSiteInicial.png" alt="" width="2172" height="724" fetchpriority="high" decoding="sync">
   </picture>
 </div>
@@ -1246,8 +1246,9 @@ button,a,input{touch-action:manipulation}
     pagamentosUrl: "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev",
     // Texto que abre a mensagem enviada ao WhatsApp
     saudacao: "COSMOS BURGUER 🚀",
-    // Abertura animada (ms). 0 desliga.
-    aberturaMs: 4000,
+    // Abertura: fica obrigatoriamente 2s, aceita toque até completar 8s.
+    aberturaMinimaMs: 2000,
+    aberturaMs: 8000,
     // A "Missão Cosmos" só aparece depois que a pessoa passa desta seção
     missaoGatilho: "#bebidas"
   };
@@ -2453,14 +2454,37 @@ button,a,input{touch-action:manipulation}
 
   function abertura() {
     const tela = $("#abertura");
+    if (!tela) return;
+    let encerrada = false;
+    let podeFecharPorToque = false;
+    let habilitarToque;
+    let encerrarAutomaticamente;
+
     const fim = function () {
+      if (encerrada) return;
+      encerrada = true;
+      clearTimeout(habilitarToque);
+      clearTimeout(encerrarAutomaticamente);
+      tela.removeEventListener("pointerup", fecharPorToque);
       tela.classList.add("saindo");
       document.body.classList.remove("abrindo");
       setTimeout(function () { if (tela.parentNode) tela.parentNode.removeChild(tela); }, 400);
     };
+
+    const fecharPorToque = function () {
+      if (podeFecharPorToque) fim();
+    };
     const previa = new URLSearchParams(window.location.search).has("preview");
-    const espera = previa ? 0 : (reduzido() ? 120 : CONFIG.aberturaMs);
-    setTimeout(fim, espera);
+    if (previa) {
+      fim();
+      return;
+    }
+
+    habilitarToque = setTimeout(function () {
+      podeFecharPorToque = true;
+      tela.addEventListener("pointerup", fecharPorToque);
+    }, CONFIG.aberturaMinimaMs);
+    encerrarAutomaticamente = setTimeout(fim, CONFIG.aberturaMs);
   }
 
   function fecharMenuMobile() {
