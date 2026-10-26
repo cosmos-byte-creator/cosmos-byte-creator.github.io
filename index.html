@@ -14,7 +14,7 @@
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20261026.3";
+  var VERSAO_SITE = "20261026.4";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -827,6 +827,8 @@ section{padding:clamp(82px,10vw,136px) 0}
 .combo-card[data-combo-card="combo-abducao"] .combo-imagem img{transform:none!important;transition:none!important}
 
 footer{padding-top:70px;background:radial-gradient(60% 110% at 0 100%,rgba(237,106,29,.10),transparent 65%);border-top:1px solid rgba(255,255,255,.07)}
+.comparador-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;width:max-content;max-width:100%;padding:0 14px;border:1px solid rgba(255,194,75,.32);border-radius:999px;background:rgba(255,194,75,.055);color:#D9B879;font-size:11px;font-weight:700;letter-spacing:.035em;text-decoration:none;transition:background var(--t-rapido) var(--ease),border-color var(--t-rapido) var(--ease)}
+.comparador-link:hover{background:rgba(255,194,75,.12);border-color:rgba(255,194,75,.55)}
 .provisorio{border-radius:4px;background:rgba(255,196,95,.045)}
 .modal-planeta{background:radial-gradient(72% 58% at 72% 12%,rgba(237,106,29,.16),transparent 68%),#050506}
 .modal-planeta .foto{border-radius:16px;border-color:rgba(255,196,95,.18)}
@@ -1097,6 +1099,7 @@ button,a,input{touch-action:manipulation}
         <span class="marca-sub">Burguer</span>
       </span>
       <p>Hambúrgueres artesanais e batatas. Pedidos pelo WhatsApp <strong>(16) 99212-5648</strong>, todos os dias das 18h à meia-noite.</p>
+      <a class="comparador-link" href="https://cosmos-byte-creator.github.io/visualizador-cosmos.html" target="_blank" rel="noopener">Ver e baixar as versões do site</a>
     </div>
   </footer>
 </main>
