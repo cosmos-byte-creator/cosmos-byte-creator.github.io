@@ -1,5 +1,5 @@
 /* Cosmos Burguer — atualização de navegação para hospedagem estática. */
-const VERSAO = "20261026.4";
+const VERSAO = "20261026.5";
 
 self.addEventListener("install", function () {
   self.skipWaiting();
