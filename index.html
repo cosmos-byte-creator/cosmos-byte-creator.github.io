@@ -9,12 +9,13 @@
 <title>Cosmos Burguer — cardápio</title>
 <meta name="description" content="Oito receitas artesanais inspiradas no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
 <meta name="theme-color" content="#07060A">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="canonical" href="https://cosmos-byte-creator.github.io/">
 <script>(function(){var p=new URLSearchParams(location.search).get("preview");if(p){document.documentElement.classList.add("preview");document.documentElement.dataset.preview=p}})()</script>
 <script>
 /* Atualização do GitHub Pages sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20261027.2";
+  var VERSAO_SITE = "20261027.4";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -976,9 +977,204 @@ button,a,input{touch-action:manipulation}
   .combo-card:not(.aberto){min-height:0;aspect-ratio:auto}
   .combo-card.aberto{min-height:460px;aspect-ratio:auto}
 }
+/* COSMOS — TESTE 2: descoberta rápida e informação comercial mais direta. */
+body.teste-2 header{background:rgba(5,5,6,.94)}
+body.teste-2 .header-in{height:62px}
+body.teste-2 .atalhos{gap:6px}
+body.teste-2 .atalhos a{min-height:42px;display:inline-flex;align-items:center}
+body.teste-2 .atalhos .nav-pedir{background:var(--ouro);color:#1A0F00;border-radius:999px}
+body.teste-2 .hero{min-height:min(700px,calc(100svh - 62px))}
+body.teste-2 .hero .ctas{gap:10px}
+body.teste-2 .hero .btn{min-height:50px}
+body.teste-2 .hero .btn[href="#burgers"]{background:var(--ouro);color:#1A0F00;border-color:var(--ouro);font-weight:900}
+body.teste-2 .teste2-atalhos{position:sticky;top:62px;z-index:35;display:flex;gap:8px;overflow-x:auto;padding:9px max(16px,var(--borda-pag));background:rgba(9,8,10,.96);border-block:1px solid rgba(255,196,95,.15);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+body.teste-2 .teste2-atalhos::-webkit-scrollbar{display:none}
+body.teste-2 .teste2-atalhos a{flex:0 0 auto;display:flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid rgba(255,196,95,.24);border-radius:999px;color:#F5EEE4;font-size:11px;font-weight:800;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+body.teste-2 .teste2-atalhos a:focus-visible{outline:3px solid var(--ouro);outline-offset:2px}
+body.teste-2 section{padding-block:clamp(58px,7vw,92px)}
+body.teste-2 #sistema{min-height:0;padding-block:54px}
+body.teste-2 #sistema .system-instruction{justify-self:start;max-width:none;padding:8px 12px;border:1px solid rgba(255,196,95,.2);border-radius:10px;background:rgba(255,196,95,.04)}
+body.teste-2 .trilha{margin-top:16px;padding-block:14px 10px;scrollbar-width:thin;scrollbar-color:rgba(255,196,95,.4) transparent}
+body.teste-2 #combos .env:first-child{grid-template-columns:1fr minmax(220px,.55fr)}
+body.teste-2 .combos-viewport{margin-top:20px}
+body.teste-2 .combos-track{gap:14px;padding-bottom:18px}
+body.teste-2 .combo-card{border-radius:16px}
+body.teste-2 .combo-resumo{gap:8px;padding:12px}
+body.teste-2 .combo-preco-base strong{font-size:21px}
+body.teste-2 .combo-convite{font-size:10px}
+body.teste-2 #burgers .secao-nota{margin-bottom:22px}
+body.teste-2 .grade{gap:16px}
+body.teste-2 .card{border-radius:16px}
+body.teste-2 .card h3{letter-spacing:-.025em}
+body.teste-2 .card-pe .preco{color:var(--ouro);font-weight:900}
+body.teste-2 .btn-add{background:linear-gradient(135deg,#FFD177,#F18A2D 65%,#D64F12);border-color:transparent;color:#180A02;font-weight:900}
+body.teste-2 #lista-acomp{gap:10px;padding-block:16px}
+body.teste-2 #lista-acomp .linha{flex-basis:min(86vw,360px);grid-template-columns:68px minmax(0,1fr) auto;grid-template-areas:"imagem texto texto" "imagem preco botao";gap:6px 10px;align-items:center;padding:10px;border:1px solid rgba(255,196,95,.18);border-radius:14px}
+body.teste-2 #lista-acomp .miniatura{width:68px;height:68px;border-radius:10px}
+body.teste-2 #lista-acomp .txt{padding:0;align-self:end}
+body.teste-2 #lista-acomp .nome{font-size:13px}
+body.teste-2 #lista-acomp .desc{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;font-size:11px}
+body.teste-2 #lista-acomp .preco{margin:0;font-size:16px;font-weight:900;color:var(--ouro)}
+body.teste-2 #lista-acomp .btn-mini{width:42px;height:42px;margin:0}
+body.teste-2 #lista-acomp .selo-breve{grid-area:botao;margin:0}
+body.teste-2 #bebidas .linhas{display:grid;grid-template-columns:1fr;gap:8px}
+body.teste-2 #bebidas .linha{display:grid;grid-template-columns:54px minmax(0,1fr) auto 42px;gap:8px;min-height:74px;padding:8px 10px;border-radius:13px}
+body.teste-2 #bebidas .miniatura{width:54px;height:54px;border-radius:9px}
+body.teste-2 #bebidas .txt{min-width:0}
+body.teste-2 #bebidas .nome{font-size:13px;line-height:1.2;overflow-wrap:normal}
+body.teste-2 #bebidas .desc{font-size:11px;line-height:1.25}
+body.teste-2 #bebidas .preco{font-size:14px;font-weight:900;color:var(--ouro)}
+body.teste-2 #bebidas .btn-mini{width:42px;height:42px}
+body.teste-2 .barra-carrinho{padding:5px max(10px,var(--borda-pag)) calc(5px + env(safe-area-inset-bottom,0px))}
+body.teste-2 .barra-in{min-height:46px;gap:8px;padding-inline:11px}
+body.teste-2 .barra-in .qtd{font-size:12px}
+body.teste-2 .barra-in .tot{font-size:15px}
+body.teste-2 .barra-in .abrir{height:38px;padding-inline:13px;font-size:11px}
+@media(max-width:900px){body.teste-2 .atalhos{display:none;position:absolute;top:100%;left:0;right:0;margin:0;padding:10px 16px;background:#080709;border-bottom:1px solid rgba(255,196,95,.18)}body.teste-2 .atalhos a:not(.nav-pedir){display:none}body.teste-2 .atalhos.aberto{display:grid}body.teste-2 .atalhos.aberto a:not(.nav-pedir){display:flex}}
+@media(max-width:640px){
+  body.teste-2 .header-in{height:54px}
+  body.teste-2 .teste2-atalhos{top:54px;padding-inline:12px}
+  body.teste-2 .hero{min-height:500px;min-height:min(560px,calc(100dvh - 54px))}
+  body.teste-2 .hero-media{height:49%}
+  body.teste-2 .hero .env.hero-grid{padding-top:min(31svh,275px);padding-bottom:22px}
+  body.teste-2 .hero-title{font-size:clamp(42px,12.5vw,58px)}
+  body.teste-2 .hero .lema{margin-top:15px;font-size:13px}
+  body.teste-2 .hero .ctas{display:grid;grid-template-columns:1.15fr .85fr;margin-top:17px}
+  body.teste-2 .hero .btn{min-height:48px;padding-inline:8px;font-size:9px}
+  body.teste-2 #sistema{padding-block:42px}
+  body.teste-2 #sistema .cabeca h2{font-size:clamp(36px,10vw,48px)}
+  body.teste-2 #sistema .system-top{gap:8px}
+  body.teste-2 .system-instruction{font-size:10px}
+  body.teste-2 .trilha{margin-top:10px}
+  body.teste-2 section{padding-block:48px}
+  body.teste-2 #combos .env:first-child{grid-template-columns:1fr;gap:8px}
+  body.teste-2 .combos-track{grid-auto-columns:min(calc(100vw - 32px),400px)}
+  body.teste-2 #burgers .grade{grid-template-columns:1fr;gap:10px}
+  body.teste-2 #burgers .card,body.teste-2 #burgers .card:first-child{display:grid;grid-template-columns:96px minmax(0,1fr);grid-column:auto;min-height:0}
+  body.teste-2 #burgers .palco,body.teste-2 #burgers .card:first-child .palco{grid-column:1;grid-row:1;min-height:100%;aspect-ratio:auto}
+  body.teste-2 #burgers .card-corpo,body.teste-2 #burgers .card:first-child .card-corpo{grid-column:2;grid-row:1;justify-content:flex-start;gap:7px;padding:12px}
+  body.teste-2 #burgers .card h3,body.teste-2 #burgers .card:first-child h3{font-size:clamp(19px,6vw,25px);overflow-wrap:anywhere}
+  body.teste-2 #burgers .card .desc,body.teste-2 #burgers .card .ingr{font-size:11px;line-height:1.35}
+  body.teste-2 #burgers .card-pe{gap:8px;padding-top:4px}
+  body.teste-2 #burgers .card-pe .preco{font-size:16px}
+  body.teste-2 #burgers .btn-add{min-height:42px;padding-inline:11px;font-size:10px}
+  body.teste-2 #lista-acomp .linha{flex-basis:min(88vw,350px)}
+}
+@media(max-width:360px){body.teste-2 #bebidas .linha{grid-template-columns:48px minmax(0,1fr) auto 40px;gap:6px;padding-inline:7px}body.teste-2 #bebidas .miniatura{width:48px;height:48px}body.teste-2 #bebidas .nome{font-size:12px}}
+@media(prefers-reduced-motion:reduce){body.teste-2 *,body.teste-2 *::before,body.teste-2 *::after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+
+/* Comercial: ação de compra e dados do produto ficam no mesmo eixo visual. */
+body.teste-2 #burgers .card{display:grid;grid-template-columns:minmax(160px,.72fr) minmax(0,1fr);min-height:270px}
+body.teste-2 #burgers .card .palco{grid-column:1;grid-row:1;min-height:100%;aspect-ratio:auto}
+body.teste-2 #burgers .card .card-corpo{grid-column:2;grid-row:1;justify-content:center}
+body.teste-2 #burgers .card:not(:first-child){grid-column:span 1}
+body.teste-2 #burgers .grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body.teste-2 #burgers .card:first-child{grid-column:1/-1}
+body.teste-2 #burgers .card:first-child .palco{aspect-ratio:1.45;min-height:0}
+body.teste-2 #burgers .card:first-child .card-corpo{justify-content:center}
+body.teste-2 .teste2-atalhos{box-shadow:0 8px 24px #0008}
+body.teste-2 #combos .combo-resumo{background:linear-gradient(180deg,#17121a,#0d0b10)}
+body.teste-2 #burgers .btn-add,body.teste-2 #lista-acomp .btn-mini{box-shadow:0 6px 18px rgba(255,106,19,.19)}
+@media(max-width:640px){
+  body.teste-2 .hero{min-height:min(520px,calc(100dvh - 54px))}
+  body.teste-2 .hero .hero-title{max-width:9ch}
+  body.teste-2 #burgers .grade{grid-template-columns:1fr}
+  body.teste-2 #burgers .card,body.teste-2 #burgers .card:first-child{grid-template-columns:100px minmax(0,1fr);min-height:176px}
+  body.teste-2 #burgers .card .palco,body.teste-2 #burgers .card:first-child .palco{grid-column:1;grid-row:1;min-height:100%;aspect-ratio:auto}
+  body.teste-2 #burgers .card .card-corpo,body.teste-2 #burgers .card:first-child .card-corpo{grid-column:2;grid-row:1;justify-content:flex-start;gap:7px;padding:11px}
+  body.teste-2 #burgers .card:first-child .card-corpo{padding:11px}
+  body.teste-2 #burgers .card .desc,body.teste-2 #burgers .card .ingr{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;font-size:9px;line-height:1.25}
+  body.teste-2 #burgers .card h3,body.teste-2 #burgers .card:first-child h3{font-size:20px}
+  body.teste-2 #burgers .card-pe{margin-top:auto}
+  body.teste-2 #burgers .card:first-child .palco{aspect-ratio:auto}
+  body.teste-2 .teste2-atalhos a{min-height:42px}
+}
+@media(max-width:360px){body.teste-2 #burgers .card,body.teste-2 #burgers .card:first-child{grid-template-columns:84px minmax(0,1fr)}}
+
+/* CORREÇÃO V1 — hierarquia clara com a linguagem visual Cosmos. */
+body.correcao-v1 .hero .ctas .btn-primario{order:1;min-width:210px;background:linear-gradient(135deg,#FFD177,#F18A2D 58%,#C94812);color:#180A02;border-color:transparent;box-shadow:0 16px 34px -18px rgba(237,106,29,.72)}
+body.correcao-v1 .hero .ctas .correcao-abrir-sistema{order:2;min-height:50px;border-color:rgba(255,215,154,.4);background:rgba(5,5,6,.48);color:#E6D3B9}
+body.correcao-v1 #sistema[hidden]{display:none!important}
+body.correcao-v1 #sistema:not([hidden]){animation:correcao-sistema-abre .35s var(--ease) both}
+@keyframes correcao-sistema-abre{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* A faixa infinita existente mantém os combos; peek e setas deixam o gesto evidente. */
+body.correcao-v1 .combos-viewport{isolation:isolate;overflow:visible}
+body.correcao-v1 .combos-viewport::before,body.correcao-v1 .combos-viewport::after{content:"";position:absolute;z-index:1;top:12px;bottom:24px;width:34px;pointer-events:none}
+body.correcao-v1 .combos-viewport::before{left:var(--borda-pag);background:linear-gradient(90deg,#080709,transparent)}
+body.correcao-v1 .combos-viewport::after{right:var(--borda-pag);background:linear-gradient(270deg,#080709,transparent)}
+body.correcao-v1 .combos-track{grid-auto-columns:calc((100% - 42px)/2.28);gap:18px;scroll-padding-inline:22px;padding-inline:22px}
+body.correcao-v1 .combo-nav{display:grid;z-index:3;width:40px;height:40px;border:1px solid rgba(255,196,95,.7);background:rgba(18,13,12,.9);color:#FFD27A;box-shadow:0 0 18px rgba(237,106,29,.2)}
+body.correcao-v1 .combo-nav.prev{left:4px}body.correcao-v1 .combo-nav.next{right:4px}
+body.correcao-v1 .combos-ajuda{display:grid;gap:4px;color:#B6A99A;font-size:11px;line-height:1.5}
+body.correcao-v1 .combos-ajuda span{color:#DDAA59;font-size:14px;letter-spacing:.18em}
+
+/* Foto maior e integral; texto segue no mesmo card em coluna legível. */
+body.correcao-v1 #burgers .card{grid-template-columns:minmax(200px,1.05fr) minmax(0,1fr);min-height:300px}
+body.correcao-v1 #burgers .card .palco{grid-column:1;grid-row:1;min-height:260px;height:auto;aspect-ratio:auto;background:#08070A}
+body.correcao-v1 .correcao-foto{display:block;width:100%;height:100%;min-height:inherit;padding:0;border:0;background:#08070A;cursor:zoom-in}
+body.correcao-v1 .correcao-foto img{width:100%;height:100%;object-fit:contain;transition:transform .2s var(--ease)}
+body.correcao-v1 .correcao-foto:hover img{transform:scale(1.025)}
+body.correcao-v1 .correcao-foto:focus-visible{outline:3px solid var(--ouro);outline-offset:-4px}
+body.correcao-v1 #burgers .card .card-corpo{grid-column:2;grid-row:1;justify-content:center;gap:10px;padding:18px}
+body.correcao-v1 #burgers .card .desc,body.correcao-v1 #burgers .card .ingr{display:flex;-webkit-line-clamp:unset;overflow:visible;font-size:12px;line-height:1.42}
+body.correcao-v1 #burgers .card .campo{font-size:10px}
+
+/* Miniaturas de acompanhamentos com o dobro da área atual do Teste 2. */
+body.correcao-v1 #lista-acomp .linha{flex-basis:min(90vw,430px);grid-template-columns:136px minmax(0,1fr) auto;grid-template-areas:"imagem texto texto" "imagem preco botao";gap:8px 12px;min-height:152px;padding:8px;border:1px solid rgba(255,196,95,.2);border-radius:16px}
+body.correcao-v1 #lista-acomp .miniatura{grid-area:imagem;width:136px;height:136px;border-radius:12px}
+body.correcao-v1 #lista-acomp .txt{grid-area:texto;align-self:end;padding:0}
+body.correcao-v1 #lista-acomp .nome{font-size:14px;line-height:1.25}
+body.correcao-v1 #lista-acomp .desc{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;font-size:11px;line-height:1.35}
+body.correcao-v1 #lista-acomp .preco{grid-area:preco;margin:0;font-size:16px}
+body.correcao-v1 #lista-acomp .btn-mini{grid-area:botao;width:44px;height:44px;margin:0}
+body.correcao-v1 #lista-acomp .selo-breve{grid-area:botao;margin:0}
+
+/* Carrinho quase em tela cheia; seu conteúdo continua rolável e inalterado. */
+body.correcao-v1 .painel-inf{inset:max(8px,env(safe-area-inset-top,0px)) 8px max(8px,env(safe-area-inset-bottom,0px));width:auto;height:auto;max-height:none;border:1px solid rgba(255,196,95,.34);border-radius:20px;transform:translateY(102%)}
+body.correcao-v1 .painel-inf.aberto{transform:none}
+body.correcao-v1 .painel-topo{min-height:76px;padding:12px 16px}
+body.correcao-v1 .painel-topo .fechar{flex:0 0 52px;width:52px;height:52px;border:1px solid rgba(255,196,95,.58);background:linear-gradient(145deg,#392015,#211414);color:#FFF4E7;font-size:23px;box-shadow:0 0 18px rgba(237,106,29,.2)}
+body.correcao-v1 .painel-topo .fechar:focus-visible{outline:3px solid var(--ouro);outline-offset:2px}
+body.correcao-v1 .correcao-modal-foto{position:fixed;z-index:130;inset:0;display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:rgba(2,2,4,.9);backdrop-filter:blur(12px)}
+body.correcao-v1 .correcao-modal-foto[hidden]{display:none!important}
+body.correcao-v1 .correcao-modal-caixa{position:relative;display:grid;place-items:center;width:min(920px,100%);height:min(84dvh,820px);padding:48px 12px 12px;border:1px solid rgba(255,196,95,.34);border-radius:18px;background:#09090B;box-shadow:0 30px 90px #000b}
+body.correcao-v1 .correcao-modal-caixa img{display:block;width:100%;height:100%;object-fit:contain}
+body.correcao-v1 .correcao-modal-fechar{position:absolute;top:8px;right:8px;width:48px;height:48px;border:1px solid rgba(255,196,95,.55);border-radius:50%;background:#26170c;color:#fff;font-size:23px}
+body.correcao-v1.modal-foto-aberto{overflow:hidden}
+
+@media(max-width:699px){
+  body.correcao-v1 .hero .ctas{grid-template-columns:.82fr 1.18fr;gap:8px}
+  body.correcao-v1 .hero .ctas .btn-primario{grid-column:2;grid-row:1;min-width:0;min-height:52px;padding-inline:12px;font-size:11px}
+  body.correcao-v1 .hero .ctas .correcao-abrir-sistema{grid-column:1;grid-row:1;min-width:0;min-height:48px;padding-inline:8px;font-size:9px}
+  body.correcao-v1 .combos-track{grid-auto-columns:min(calc(100vw - 88px),430px);gap:12px;padding-inline:8px;scroll-padding-inline:8px}
+  body.correcao-v1 .combos-viewport::before{left:8px}body.correcao-v1 .combos-viewport::after{right:8px}
+  body.correcao-v1 .combo-nav{top:calc(50% - 20px);width:38px;height:38px;font-size:22px}
+  body.correcao-v1 .combo-nav.prev{left:5px}body.correcao-v1 .combo-nav.next{right:5px}
+  body.correcao-v1 #burgers .card,body.correcao-v1 #burgers .card:first-child{grid-template-columns:minmax(190px,1.05fr) minmax(0,1fr);min-height:290px}
+  body.correcao-v1 #burgers .card .palco,body.correcao-v1 #burgers .card:first-child .palco{grid-column:1;grid-row:1;min-height:260px;height:auto;aspect-ratio:auto}
+  body.correcao-v1 #burgers .card .card-corpo,body.correcao-v1 #burgers .card:first-child .card-corpo{grid-column:2;grid-row:1;justify-content:center;gap:8px;padding:12px}
+  body.correcao-v1 #burgers .card h3,body.correcao-v1 #burgers .card:first-child h3{font-size:clamp(19px,5.7vw,24px)}
+  body.correcao-v1 #burgers .card .desc,body.correcao-v1 #burgers .card .ingr{font-size:10px;line-height:1.35}
+  body.correcao-v1 #burgers .card-pe{flex-wrap:wrap;gap:7px}
+  body.correcao-v1 #burgers .card-pe .preco{font-size:17px}
+  body.correcao-v1 #burgers .btn-add{min-height:42px;padding-inline:10px;font-size:10px}
+  body.correcao-v1 .painel-inf{inset:max(6px,env(safe-area-inset-top,0px)) 6px max(6px,env(safe-area-inset-bottom,0px));border-radius:18px}
+  body.correcao-v1 #lista-acomp .linha{flex-basis:min(92vw,430px);grid-template-columns:136px minmax(0,1fr) auto}
+}
+@media(max-width:379px){
+  body.correcao-v1 #burgers .card,body.correcao-v1 #burgers .card:first-child{grid-template-columns:minmax(0,1fr);grid-template-rows:220px auto;min-height:0}
+  body.correcao-v1 #burgers .card .palco,body.correcao-v1 #burgers .card:first-child .palco{grid-column:1;grid-row:1;width:100%;height:220px;min-height:220px}
+  body.correcao-v1 #burgers .card .card-corpo,body.correcao-v1 #burgers .card:first-child .card-corpo{grid-column:1;grid-row:2;padding:14px}
+  body.correcao-v1 #lista-acomp .linha{grid-template-columns:104px minmax(0,1fr) auto;min-height:120px;gap:6px 8px}
+  body.correcao-v1 #lista-acomp .miniatura{width:104px;height:104px}
+}
+@media(prefers-reduced-motion:reduce){body.correcao-v1 #sistema:not([hidden]){animation:none}}
+
 </style>
 </head>
-<body class="abrindo">
+<body class="abrindo teste-2 correcao-v1">
 
 <!-- ================= ABERTURA CURTA (somente na primeira visita) ================= -->
 <div id="abertura" aria-hidden="true">
@@ -1026,8 +1222,8 @@ button,a,input{touch-action:manipulation}
       <h1 class="hero-title">O sabor <em>é de outro mundo.</em></h1>
       <p class="lema">O melhor hambúrguer num raio de 1000 anos-luz.</p>
       <div class="ctas">
-        <a class="btn btn-primario" href="#sistema">Explorar o sistema solar</a>
-        <a class="btn btn-fantasma" href="#burgers">Ver cardápio</a>
+        <button class="btn btn-fantasma correcao-abrir-sistema" type="button" data-abrir-sistema aria-controls="sistema" aria-expanded="false">Explorar o sistema solar</button>
+        <a class="btn btn-primario" href="#burgers">Ver cardápio</a>
       </div>
       <p class="hero-meta"><span>8 receitas planetárias</span><i></i><span>Pedido pelo WhatsApp</span></p>
       </div>
@@ -1035,8 +1231,13 @@ button,a,input{touch-action:manipulation}
     <p class="hero-caption">Duplo burger · bacon · cheddar</p>
   </div>
 
+  <nav class="teste2-atalhos" aria-label="Ir direto a uma seção do cardápio">
+    <a href="#combos">Combos</a><a href="#burgers">Hambúrgueres</a>
+    <a href="#acompanhamentos">Acompanhamentos</a><a href="#bebidas">Bebidas</a>
+  </nav>
+
   <!-- ================= SISTEMA SOLAR ================= -->
-  <section id="sistema" aria-labelledby="t-sistema">
+  <section id="sistema" aria-labelledby="t-sistema" hidden>
     <div class="env system-top">
       <div>
         <span class="section-index">01 · Sistema solar</span>
@@ -1059,7 +1260,7 @@ button,a,input{touch-action:manipulation}
       <div class="combos-track" id="grade-combos" aria-label="Combos disponíveis"></div>
       <button class="combo-nav next" type="button" data-combo-mover="1" aria-label="Ver próximos combos">›</button>
     </div>
-    <p class="combos-ajuda">Deslize horizontalmente · a viagem continua nos dois sentidos</p>
+    <p class="combos-ajuda"><span aria-hidden="true">⇠ · · · ✦ · · · ⇢</span><br>Deslize para os lados ou use as setas · o seletor continua nos dois sentidos</p>
   </section>
 
   <!-- ================= HAMBÚRGUERES ================= -->
@@ -1103,6 +1304,13 @@ button,a,input{touch-action:manipulation}
     </div>
   </footer>
 </main>
+
+<div class="correcao-modal-foto" id="correcao-modal-foto" role="dialog" aria-modal="true" aria-label="Foto do hambúrguer" tabindex="-1" hidden>
+  <div class="correcao-modal-caixa">
+    <button class="correcao-modal-fechar" id="correcao-modal-fechar" type="button" data-fechar-foto aria-label="Fechar foto ampliada">✕</button>
+    <img id="correcao-modal-imagem" alt="">
+  </div>
+</div>
 
 <!-- ================= CARRINHO ================= -->
 <div class="barra-carrinho" id="barra-carrinho">
@@ -1246,7 +1454,10 @@ button,a,input{touch-action:manipulation}
     whatsapp: "5516992125648",
     moeda: "BRL",
     // URL pública do Worker de pagamentos. É configurada no deploy; nunca coloque o Access Token aqui.
-    pagamentosUrl: "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev",
+    pagamentosUrl: location.protocol === "file:" ? "" :
+      (location.hostname === "cosmos-byte-creator.github.io"
+        ? "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev"
+        : location.origin),
     // Texto que abre a mensagem enviada ao WhatsApp
     saudacao: "COSMOS BURGUER 🚀",
     // Abertura: fica obrigatoriamente 2s, aceita toque até completar 8s.
@@ -1490,8 +1701,8 @@ button,a,input{touch-action:manipulation}
   /* ---------- 5. RENDER ---------- */
   function palcoHTML(p) {
     if (p.imagem) {
-      return '<div class="palco"><img src="' + p.imagem + '" alt="Hambúrguer ' + p.nome +
-             '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="800" height="600"></div>';
+      return '<div class="palco"><button class="correcao-foto" type="button" data-correcao-foto aria-label="Ampliar foto do hambúrguer ' + p.nome + '"><img src="' + p.imagem + '" alt="Hambúrguer ' + p.nome +
+             '" loading="' + (emPrevia ? 'eager' : 'lazy') + '" decoding="async" width="800" height="600"></button></div>';
     }
     return '<div class="palco"><span class="estrelas"></span>' + esferaHTML(p) +
            '<span class="tag-foto">foto em breve</span></div>';
@@ -2499,7 +2710,43 @@ button,a,input{touch-action:manipulation}
     botao.setAttribute("aria-label", "Abrir menu");
   }
 
+  let focoFotoAnterior = null;
+  function abrirFotoHamburguer(botao) {
+    const imagemOrigem = botao.querySelector("img");
+    if (!imagemOrigem) return;
+    focoFotoAnterior = botao;
+    const modal = $("#correcao-modal-foto");
+    const imagemModal = $("#correcao-modal-imagem");
+    imagemModal.src = imagemOrigem.currentSrc || imagemOrigem.src;
+    imagemModal.alt = imagemOrigem.alt;
+    modal.hidden = false;
+    document.body.classList.add("modal-foto-aberto");
+    requestAnimationFrame(() => $("#correcao-modal-fechar").focus());
+  }
+  function fecharFotoHamburguer() {
+    const modal = $("#correcao-modal-foto");
+    if (modal.hidden) return;
+    modal.hidden = true;
+    $("#correcao-modal-imagem").removeAttribute("src");
+    document.body.classList.remove("modal-foto-aberto");
+    if (focoFotoAnterior && focoFotoAnterior.focus) focoFotoAnterior.focus();
+    focoFotoAnterior = null;
+  }
+
   function ligarEventos() {
+    const botaoAbrirSistema = $("[data-abrir-sistema]");
+    if (botaoAbrirSistema) {
+      botaoAbrirSistema.addEventListener("click", function () {
+        const sistema = $("#sistema");
+        sistema.hidden = false;
+        botaoAbrirSistema.setAttribute("aria-expanded", "true");
+        requestAnimationFrame(function () {
+          sistema.scrollIntoView({ behavior: reduzido() ? "auto" : "smooth", block:"start" });
+          requestAnimationFrame(atualizarPlanetaCentral);
+        });
+      });
+    }
+
     const trilhaPlanetas = $("#trilha");
     trilhaPlanetas.addEventListener("scroll", function () {
       cancelAnimationFrame(quadroPlanetaCentral);
@@ -2521,6 +2768,9 @@ button,a,input{touch-action:manipulation}
     // adicionar produto (delegação: serve para cards e linhas)
     document.addEventListener("click", function (ev) {
       if ($("#atalhos").classList.contains("aberto") && !ev.target.closest("header")) fecharMenuMobile();
+      const fotoHamburguer = ev.target.closest("[data-correcao-foto]");
+      if (fotoHamburguer) { abrirFotoHamburguer(fotoHamburguer); return; }
+      if (ev.target.closest("[data-fechar-foto]") || ev.target.id === "correcao-modal-foto") { fecharFotoHamburguer(); return; }
       const btnIngredientes = ev.target.closest("[data-lanche]");
       if (btnIngredientes && btnIngredientes.getAttribute("data-lanche")) {
         abrirPopupIngredientes(btnIngredientes.getAttribute("data-lanche"));
@@ -2616,7 +2866,7 @@ button,a,input{touch-action:manipulation}
     $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
     $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { fecharPopupIngredientes(); fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
+      if (e.key === "Escape") { fecharFotoHamburguer(); fecharPopupIngredientes(); fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
       const combo = e.target.closest && e.target.closest("[data-combo-card]");
       if (combo && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
@@ -2713,7 +2963,10 @@ button,a,input{touch-action:manipulation}
   const alvoPrevia = new URLSearchParams(window.location.search).get("preview");
   if (alvoPrevia && alvoPrevia !== "1") {
     const secaoPrevia = document.getElementById(alvoPrevia);
-    if (secaoPrevia) secaoPrevia.scrollIntoView({ block:"start" });
+    if (secaoPrevia) {
+      if (secaoPrevia.id === "sistema") secaoPrevia.hidden = false;
+      secaoPrevia.scrollIntoView({ block:"start" });
+    }
   }
 })();
 </script>

@@ -1,0 +1,18 @@
+{
+  "name": "Cosmos Burguer",
+  "short_name": "Cosmos",
+  "description": "Cardápio, pedidos e acompanhamento da Cosmos Burguer.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07060A",
+  "theme_color": "#07060A",
+  "icons": [
+    {
+      "src": "/images/LogoCosmosBurguer.webp",
+      "sizes": "1536x1536",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}
