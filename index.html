@@ -10,12 +10,12 @@
 <meta name="description" content="Oito receitas artesanais inspiradas no Sistema Solar. Monte seu pedido e envie pelo WhatsApp.">
 <meta name="theme-color" content="#07060A">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="canonical" href="https://cosmos-byte-creator.github.io/">
+<link rel="canonical" href="https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev/">
 <script>(function(){var p=new URLSearchParams(location.search).get("preview");if(p){document.documentElement.classList.add("preview");document.documentElement.dataset.preview=p}})()</script>
 <script>
-/* Atualização do GitHub Pages sem expor versões no endereço público. */
+/* Atualização do site Cosmos sem expor versões no endereço público. */
 (function () {
-  var VERSAO_SITE = "20261027.4";
+  var VERSAO_SITE = "20261028.6";
   window.COSMOS_VERSAO = VERSAO_SITE;
 
   /* Remove links versionados antigos, preservando parâmetros de preview. */
@@ -54,6 +54,9 @@
     })
     .catch(function () {});
 })();
+</script>
+<script>
+(function(){window.CosmosPwaInstallPrompt=null;window.addEventListener("beforeinstallprompt",function(event){event.preventDefault();window.CosmosPwaInstallPrompt=event;});})();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -565,10 +568,17 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .config-radio:has(input:checked){border-color:rgba(255,196,95,.58);background:rgba(255,196,95,.075)}
 .config-radio strong{font-size:13px}.config-radio small{color:var(--fosco);font-size:11px;line-height:1.35}
 .config-slot{margin-bottom:12px;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:#0E0D10}
-.config-slot-topo{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px}.config-slot-num{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,106,19,.16);color:var(--brasa);font-size:12px;font-weight:800}
-.config-slot-topo:has(.btn-ingredientes:not([hidden])){grid-template-columns:auto minmax(0,1fr) auto}
-.btn-ingredientes{min-height:40px;padding:0 10px;border:1px solid #FF624D;border-radius:9px;background:rgba(196,46,31,.2);color:#FF8B7C;font-size:9px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.btn-ingredientes:hover{background:rgba(220,55,38,.34)}
-.config-select{width:100%;min-height:48px;padding:0 40px 0 12px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:#151317;color:var(--creme);font:inherit;font-size:14px}
+.config-slot-topo{display:flex;align-items:center;gap:11px}.config-slot-num{display:grid;place-items:center;width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:rgba(255,106,19,.16);color:var(--brasa);font-size:12px;font-weight:800}
+.config-slot-label{min-width:0;flex:1}.config-slot-label strong{display:block;color:#F3E8DD;font-size:13px}.config-slot-label small{display:block;margin-top:2px;color:var(--fosco);font-size:11px}
+.combo-picker{margin-top:12px}.combo-source-select{display:none!important}
+.combo-picked{display:grid;grid-template-columns:86px minmax(0,1fr) auto;align-items:center;gap:11px;padding:10px;border:1px solid rgba(255,196,95,.24);border-radius:12px;background:#151217}
+.combo-picked img{display:block;width:86px;height:86px;object-fit:cover;border-radius:9px;background:#09080a}
+.combo-picked-copy{min-width:0}.combo-picked-copy strong{display:block;color:var(--ouro);font-size:14px}.combo-picked-copy p{margin:5px 0 0;color:#D2C6BC;font-size:11px;line-height:1.4}.combo-picked-tag{display:inline-block;margin-top:6px;color:#C4A5D1;font-size:10px;font-weight:800}
+.combo-picker-toggle{min-height:40px;padding:8px 10px;border:1px solid rgba(255,196,95,.38);border-radius:9px;background:transparent;color:var(--ouro);font:inherit;font-size:10px;font-weight:850;letter-spacing:.04em;cursor:pointer}.combo-picker-toggle:hover{background:rgba(255,196,95,.08)}
+.combo-unselected{padding:13px;border:1px dashed rgba(255,196,95,.28);border-radius:11px;color:var(--fosco);font-size:12px;line-height:1.4}
+.combo-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 0;padding:0;border:0}.combo-choice{position:relative;display:grid;grid-template-columns:72px minmax(0,1fr);align-items:start;gap:9px;min-width:0;padding:9px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:#121014;cursor:pointer}.combo-choice:has(input:checked){border-color:rgba(255,196,95,.75);background:rgba(255,196,95,.08);box-shadow:0 0 0 1px rgba(255,196,95,.15)}
+.combo-choice input{position:absolute;top:10px;right:10px;width:18px;height:18px;accent-color:var(--ouro)}.combo-choice:focus-within{outline:2px solid var(--ouro);outline-offset:2px}.combo-choice img{display:block;width:72px;height:72px;object-fit:cover;border-radius:8px;background:#09080a}.combo-choice-copy{min-width:0;padding-right:23px}.combo-choice-copy strong{display:block;color:#F3E8DD;font-size:12px;line-height:1.25}.combo-choice-copy small{display:block;margin-top:4px;color:#C9BDB3;font-size:10px;line-height:1.35}.combo-choice-copy em{display:inline-block;margin-top:5px;color:var(--ouro);font-size:9px;font-style:normal;font-weight:800}
+.combo-picker[hidden],.combo-choice-grid[hidden],.combo-picked[hidden]{display:none!important}
 .config-addons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}.config-addons[hidden]{display:none}
 .config-addon{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 9px;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#D8CEC5;font-size:11px;line-height:1.25;cursor:pointer}.config-addon:has(input:checked){border-color:rgba(255,196,95,.45);background:rgba(255,196,95,.06)}.config-addon input{flex:0 0 auto;width:17px;height:17px;accent-color:var(--ouro)}
 .config-addon em{margin-left:auto;color:var(--ouro);font-style:normal;white-space:nowrap}.config-doce{margin-top:9px;color:#CFA7C8;font-size:11px}
@@ -576,9 +586,7 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .config-total div{flex:1}.config-total small{display:block;color:var(--fosco);font-size:10px;text-transform:uppercase}.config-total strong{font-size:22px;color:var(--ouro)}.config-total .btn{min-width:190px}
 .item-config{margin-top:5px;color:#CDBEB2;font-size:11.5px;line-height:1.45}.editar-combo{margin-top:8px;min-height:32px;padding:0 11px;border:1px solid rgba(255,196,95,.38);border-radius:var(--r-pill);color:var(--ouro);font-size:10px;font-variation-settings:"wdth" 108,"wght" 800;letter-spacing:.07em;text-transform:uppercase}
 .editar-produto{margin-top:8px;min-height:32px;padding:0 11px;border:1px solid rgba(255,196,95,.38);border-radius:var(--r-pill);color:var(--ouro);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
-.popup-ingredientes{position:fixed;z-index:140;inset:0;display:grid;place-items:center;padding:18px;background:rgba(2,2,3,.72);backdrop-filter:blur(6px)}
-.popup-ingredientes-caixa{width:min(390px,100%);padding:20px;border:1px solid rgba(255,98,77,.55);border-radius:16px;background:#100D10;box-shadow:0 24px 70px #000}.popup-ingredientes-topo{display:flex;align-items:center;gap:12px}.popup-ingredientes-topo h3{font-size:24px}.popup-ingredientes-caixa p{margin-top:14px;color:#D6C8BE;font-size:14px;line-height:1.55}.popup-ingredientes-caixa .fechar{flex:0 0 auto}
-@media(max-width:520px){.config-opcoes.duas,.config-addons{grid-template-columns:1fr}.config-total{margin-inline:-16px;padding-inline:16px}.config-total .btn{min-width:0;padding-inline:14px}}
+@media(max-width:520px){.config-opcoes.duas,.config-addons,.combo-choice-grid{grid-template-columns:1fr}.combo-picked{grid-template-columns:68px minmax(0,1fr);align-items:start}.combo-picked img{width:68px;height:68px}.combo-picked .combo-picker-toggle{grid-column:1/-1;width:100%}.combo-choice{grid-template-columns:76px minmax(0,1fr)}.combo-choice img{width:76px;height:76px}.config-total{margin-inline:-16px;padding-inline:16px}.config-total .btn{min-width:0;padding-inline:14px}}
 .modal-acoes{display:grid;grid-template-columns:.72fr 1.28fr;gap:10px;margin-top:20px}
 .modal-acoes .btn{width:100%;padding-inline:12px}
 .btn-neutro{min-height:52px;border:1px solid var(--linha);border-radius:4px;color:var(--fosco);font-size:11px;font-variation-settings:"wdth" 108,"wght" 800;letter-spacing:.08em;text-transform:uppercase}
@@ -1173,6 +1181,49 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
 @media(prefers-reduced-motion:reduce){body.correcao-v1 #sistema:not([hidden]){animation:none}}
 
 </style>
+<style>
+#topo[hidden]{display:none!important}
+#cosmos-app-orders[hidden],#cosmos-app-orders-tab[hidden]{display:none!important}
+.hero-track-cta{justify-self:center;min-width:min(100%,280px);margin:13px auto 0;border:1px solid rgba(255,194,75,.78);background:rgba(13,10,18,.78);color:#FFD177;box-shadow:0 10px 28px #0005}
+.hero-track-cta:hover{background:#21182a;color:#fff}
+.cosmos-track-dialog{width:min(92vw,560px);max-width:560px;max-height:calc(100dvh - 24px);margin:auto;padding:10px;border:1px solid rgba(190,105,255,.7);border-radius:18px;background:#09080c;box-shadow:0 24px 90px #000b;overflow:auto}
+.cosmos-track-dialog::backdrop{background:rgba(3,2,8,.82);backdrop-filter:blur(4px)}
+.cosmos-track-dialog__head{display:flex;justify-content:flex-end;margin-bottom:7px}
+.cosmos-track-dialog__close{min-width:42px;min-height:42px;border:1px solid #675078;border-radius:50%;background:#17111f;color:#fff;font-size:1.3rem;cursor:pointer}
+.cosmos-track-dialog__image{display:block;width:100%;height:auto;max-height:calc(100dvh - 96px);object-fit:contain;border-radius:10px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.cosmos-install-banner{position:fixed;z-index:10020;right:16px;bottom:max(16px,env(safe-area-inset-bottom));left:16px;width:min(620px,calc(100% - 32px));margin:auto;display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid rgba(255,194,75,.55);border-radius:15px;background:#17131d;color:#F5EEE4;box-shadow:0 12px 44px #000a}
+.cosmos-install-banner[hidden]{display:none!important}.cosmos-install-banner__copy{flex:1;min-width:0;font-size:.92rem;line-height:1.35}.cosmos-install-banner__copy strong{display:block;color:#FFD177}.cosmos-install-banner__install{min-height:42px;padding:9px 14px;border:0;border-radius:999px;background:#FFC24B;color:#211508;font:inherit;font-weight:850;cursor:pointer}.cosmos-install-banner__close{min-width:36px;min-height:36px;border:0;background:transparent;color:#d7d0dc;font-size:1.25rem;cursor:pointer}
+#cosmos-app-orders{width:min(100% - 28px,980px);min-height:calc(100svh - 68px);margin:0 auto;padding:clamp(24px,5vw,54px) 0 50px;color:#F5EEE4}
+.cosmos-app-orders__head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px}
+.cosmos-app-orders__head h1{margin:0;color:#FFC24B;font-size:clamp(26px,5vw,38px)}
+.cosmos-app-orders__intro,.cosmos-app-orders__status{color:#B9B2AA;line-height:1.5}
+.cosmos-app-orders__status{min-height:24px;margin:8px 0}
+.cosmos-app-orders__actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.cosmos-app-orders__import{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin:18px 0;padding:16px;border:1px solid rgba(255,194,75,.2);border-radius:16px;background:#121015}
+.cosmos-app-orders__import label{grid-column:1/-1;color:#F5EEE4;font-weight:750}
+.cosmos-app-orders__import input{width:100%;min-width:0;min-height:46px;padding:10px 12px;border:1px solid #5a4b34;border-radius:10px;background:#0d0b0f;color:#fff;font:inherit}
+.cosmos-app-orders__import input:focus-visible{outline:3px solid #FFC24B;outline-offset:2px}
+.cosmos-app-orders__hint{grid-column:1/-1;margin:0;color:#B9B2AA;font-size:.9rem;line-height:1.45}
+.cosmos-app-orders__import-status{grid-column:1/-1;min-height:1.4em;margin:0;color:#FFC24B;font-size:.92rem}
+.cosmos-app-orders__whatsapp{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border:1px solid #39c878;border-radius:999px;color:#9ff0bb;font:inherit;font-weight:750;text-decoration:none}
+.cosmos-app-orders__button{min-height:44px;padding:10px 15px;border:1px solid #FFC24B;border-radius:999px;background:#FFC24B;color:#211508;font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+.cosmos-app-orders__button.secondary{background:transparent;color:#FFC24B}
+.cosmos-app-orders__button:focus-visible,.cosmos-app-orders__link:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.cosmos-app-orders__list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:13px;margin-top:18px}
+.cosmos-app-order{min-width:0;padding:16px;border:1px solid rgba(255,194,75,.24);border-radius:16px;background:linear-gradient(145deg,#17131c,#0e0c11);box-shadow:0 8px 24px #0004}
+.cosmos-app-order__head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.cosmos-app-order h2{margin:0;color:#FFC24B;font-size:1.1rem;overflow-wrap:anywhere}
+.cosmos-app-order__date,.cosmos-app-order__payment{margin:5px 0;color:#B9B2AA;font-size:.85rem}
+.cosmos-app-order__state{margin:10px 0 6px;color:#fff;font-weight:800}
+.cosmos-app-order__items{margin:8px 0;padding-left:20px;line-height:1.45}
+.cosmos-app-order__items li{margin:4px 0}
+.cosmos-app-order__details{display:block;color:#B9B2AA;font-size:.84rem}
+.cosmos-app-order__footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.09)}
+.cosmos-app-order__amount{color:#FFC24B;font-weight:850;font-variant-numeric:tabular-nums}
+.cosmos-app-orders__empty{grid-column:1/-1;padding:24px;border:1px dashed rgba(255,194,75,.3);border-radius:14px;color:#B9B2AA;text-align:center;line-height:1.5}
+@media(max-width:560px){#cosmos-app-orders{width:min(100% - 24px,980px);min-height:calc(100svh - 60px);padding-top:24px}.cosmos-app-orders__head{align-items:flex-start}.cosmos-app-order__footer{align-items:flex-start;flex-direction:column}.cosmos-app-orders__import{grid-template-columns:1fr}.cosmos-app-orders__import label,.cosmos-app-orders__hint,.cosmos-app-orders__import-status{grid-column:1}.cosmos-install-banner{right:10px;left:10px;width:calc(100% - 20px);gap:8px;padding:11px}.cosmos-install-banner__copy{font-size:.82rem}.cosmos-install-banner__install{padding-inline:11px}}
+</style>
 </head>
 <body class="abrindo teste-2 correcao-v1">
 
@@ -1203,6 +1254,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       <a href="#acompanhamentos">Acompanhamentos</a>
       <a href="#bebidas">Bebidas</a>
       <a class="nav-pedir" href="#burgers">Montar pedido</a>
+      <a id="cosmos-app-orders-tab" href="#cosmos-app-orders" aria-controls="cosmos-app-orders" hidden>Meus pedidos</a>
     </nav>
   </div>
 </header>
@@ -1225,6 +1277,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
         <button class="btn btn-fantasma correcao-abrir-sistema" type="button" data-abrir-sistema aria-controls="sistema" aria-expanded="false">Explorar o sistema solar</button>
         <a class="btn btn-primario" href="#burgers">Ver cardápio</a>
       </div>
+        <button class="btn hero-track-cta" id="cosmos-open-tracking-promo" type="button" aria-haspopup="dialog" aria-controls="cosmos-tracking-promo">Acompanhar pedidos</button>
       <p class="hero-meta"><span>8 receitas planetárias</span><i></i><span>Pedido pelo WhatsApp</span></p>
       </div>
     </div>
@@ -1300,10 +1353,36 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
         <span class="marca-sub">Burguer</span>
       </span>
       <p>Hambúrgueres artesanais e batatas. Pedidos pelo WhatsApp <strong>(16) 99212-5648</strong>, todos os dias das 18h à meia-noite.</p>
-      <a class="comparador-link" href="https://cosmos-byte-creator.github.io/visualizador-cosmos.html" target="_blank" rel="noopener">Abrir Correção V1</a>
     </div>
   </footer>
 </main>
+
+<section id="cosmos-app-orders" aria-labelledby="cosmos-app-orders-title" hidden>
+  <div class="cosmos-app-orders__head"><h1 id="cosmos-app-orders-title">Meus pedidos</h1></div>
+  <p class="cosmos-app-orders__intro">Acompanhe o preparo e a entrega dos seus pedidos por aqui.</p>
+  <div class="cosmos-app-orders__import" aria-labelledby="cosmos-app-orders-import-label">
+    <label id="cosmos-app-orders-import-label" for="cosmos-app-orders-token">Adicionar pedido pelo link privado</label>
+    <input id="cosmos-app-orders-token" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Cole o link de acompanhamento ou o código">
+    <button class="cosmos-app-orders__button" id="cosmos-app-orders-add" type="button">Adicionar pedido</button>
+    <p class="cosmos-app-orders__hint">Ainda não tem o link? Peça ao atendimento no WhatsApp. O link é privado: compartilhe apenas com quem pode acompanhar este pedido.</p>
+    <a class="cosmos-app-orders__whatsapp" id="cosmos-app-orders-whatsapp" href="https://wa.me/5516992125648?text=Ol%C3%A1%2C%20quero%20adicionar%20meu%20pedido%20ao%20app%20Cosmos.%20Pode%20me%20enviar%20o%20link%20privado%20de%20acompanhamento%3F" target="_blank" rel="noopener noreferrer">Pedir link pelo WhatsApp</a>
+    <p class="cosmos-app-orders__import-status" id="cosmos-app-orders-import-status" role="status" aria-live="polite"></p>
+  </div>
+  <div class="cosmos-app-orders__actions"><button class="cosmos-app-orders__button" id="cosmos-app-orders-refresh" type="button">Atualizar pedidos</button><button class="cosmos-app-orders__button secondary" id="cosmos-app-orders-back" type="button">Voltar ao cardápio</button></div>
+  <p class="cosmos-app-orders__status" id="cosmos-app-orders-status" role="status" aria-live="polite"></p>
+  <div class="cosmos-app-orders__list" id="cosmos-app-orders-list"></div>
+</section>
+
+<dialog class="cosmos-track-dialog" id="cosmos-tracking-promo" aria-labelledby="cosmos-tracking-promo-title">
+  <div class="cosmos-track-dialog__head"><span id="cosmos-tracking-promo-title" class="visually-hidden">Acompanhe seus pedidos pelo app Cosmos</span><button class="cosmos-track-dialog__close" id="cosmos-tracking-promo-close" type="button" aria-label="Fechar aviso">×</button></div>
+  <img class="cosmos-track-dialog__image" src="images/PopUpAcompanhamentoPedidos.png" alt="Acompanhe sua missão em tempo real pelo aplicativo Cosmos Burguer. Instale o app para acompanhar o pedido e receber avisos sobre a entrega." width="1080" height="1350" decoding="async">
+</dialog>
+
+<aside class="cosmos-install-banner" id="cosmos-install-banner" aria-label="Instalar aplicativo Cosmos" hidden>
+  <span class="cosmos-install-banner__copy"><strong>Leve a Cosmos para sua tela inicial</strong>Instale o app para acessar seus pedidos com mais facilidade.</span>
+  <button class="cosmos-install-banner__install" id="cosmos-install-button" type="button">Instalar</button>
+  <button class="cosmos-install-banner__close" id="cosmos-install-dismiss" type="button" aria-label="Dispensar aviso de instalação">×</button>
+</aside>
 
 <div class="correcao-modal-foto" id="correcao-modal-foto" role="dialog" aria-modal="true" aria-label="Foto do hambúrguer" tabindex="-1" hidden>
   <div class="correcao-modal-caixa">
@@ -1393,14 +1472,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       <button class="fechar" id="fechar-produto-config" type="button" aria-label="Fechar personalização">✕</button>
     </div>
     <div class="modal-fluxo-corpo" id="produto-config-conteudo"></div>
-  </div>
-</div>
-
-<!-- ================= INGREDIENTES DO LANCHE ================= -->
-<div class="popup-ingredientes" id="popup-ingredientes" role="dialog" aria-modal="true" aria-labelledby="t-popup-ingredientes" hidden>
-  <div class="popup-ingredientes-caixa">
-    <div class="popup-ingredientes-topo"><h3 id="t-popup-ingredientes">Ingredientes</h3><button class="fechar" id="fechar-popup-ingredientes" type="button" aria-label="Fechar ingredientes">✕</button></div>
-    <p id="texto-popup-ingredientes"></p>
   </div>
 </div>
 
@@ -2090,6 +2161,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
   /* ---------- 6B. CONFIGURADOR DE COMBOS ---------- */
   let comboConfigurando = null;
   let comboKeyEditando = null;
+  let comboOpenSlot = null;
   function bebidaTemUmLitro(bebida) { return /(^|\s)1L($|\s)/i.test(String(bebida || "")); }
 
   function opcoesLanchesHTML(valor) {
@@ -2100,6 +2172,33 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
         return '<option value="' + lanche.id + '"' + (lanche.id === valor ? ' selected' : '') + '>' + lanche.nome + (lanche.doce ? ' · doce' : '') + '</option>';
       }).join("") + '</optgroup>';
     }).join("");
+  }
+
+  function etiquetaLancheCombo(lanche) {
+    if (!lanche) return "";
+    if (lanche.doce) return "Doce · não recebe adicionais salgados";
+    return lanche.tipo === "duplo" ? "Duplo · + R$ 6,00" : "Simples · incluso";
+  }
+
+  function escolhaVisualLancheHTML(indice, lanche, escolhido) {
+    const produto = acharProduto(lanche.id);
+    if (!produto) return "";
+    const checked = lanche.id === escolhido ? " checked" : "";
+    return '<label class="combo-choice"><input type="radio" name="combo-lanche-' + indice + '" data-combo-choice="' + indice + '" value="' + lanche.id + '"' + checked + '><img src="' + (produto.imagem || "") + '" alt="" loading="lazy" decoding="async" width="144" height="144"><span class="combo-choice-copy"><strong>' + produto.nome + '</strong><small>' + produto.descricao + '</small><em>' + etiquetaLancheCombo(lanche) + '</em></span></label>';
+  }
+
+  function miniCardLancheComboHTML(indice, lanche) {
+    const produto = lanche && acharProduto(lanche.id);
+    if (!produto) return '<div class="combo-unselected"><strong>Escolha visualmente seu lanche.</strong><br>Veja a foto e os ingredientes antes de selecionar.</div><button class="combo-picker-toggle" type="button" data-combo-picker-toggle="' + indice + '" aria-expanded="' + String(comboOpenSlot === indice) + '">Ver opções de lanches</button>';
+    return '<div class="combo-picked"><img src="' + (produto.imagem || "") + '" alt="Lanche ' + produto.nome + '" loading="lazy" decoding="async" width="172" height="172"><div class="combo-picked-copy"><strong>' + produto.nome + '</strong><p>' + produto.descricao + '</p><span class="combo-picked-tag">' + etiquetaLancheCombo(lanche) + '</span></div><button class="combo-picker-toggle" type="button" data-combo-picker-toggle="' + indice + '" aria-expanded="' + String(comboOpenSlot === indice) + '">Trocar lanche</button></div>';
+  }
+
+  function primeiroSlotSemLanche(inicio) {
+    const slots = $$('#form-configurador [data-slot]');
+    for (let indice = Math.max(0, inicio || 0); indice < slots.length; indice += 1) {
+      if (!lancheCombo(slots[indice].value)) return indice;
+    }
+    return null;
   }
 
   function adicionaisSlotHTML(indice, escolhidos, doce) {
@@ -2142,14 +2241,21 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
   function atualizarConfigurador() {
     if (!comboConfigurando || !$('#form-configurador')) return;
     $$('#form-configurador [data-slot]').forEach(function (select, indice) {
+      const radio = $('#form-configurador [data-combo-choice="' + indice + '"]:checked');
+      if (radio && select.value !== radio.value) select.value = radio.value;
       const lanche = lancheCombo(select.value);
       const doce = !!(lanche && lanche.doce);
       const lista = $('#form-configurador [data-addons-slot="' + indice + '"]');
       const aviso = $('#form-configurador [data-doce-slot="' + indice + '"]');
-      const botaoIngredientes = $('#form-configurador [data-ingredientes-slot="' + indice + '"]');
+      const preview = $('#form-configurador [data-picked-slot="' + indice + '"]');
+      const grade = $('#form-configurador [data-choice-grid="' + indice + '"]');
+      if (preview) preview.innerHTML = miniCardLancheComboHTML(indice, lanche);
+      if (grade) {
+        grade.hidden = comboOpenSlot !== indice;
+        grade.setAttribute("aria-label", "Opções para o lanche " + (indice + 1));
+      }
       if (lista) lista.hidden = doce;
       if (aviso) aviso.hidden = !doce;
-      if (botaoIngredientes) { botaoIngredientes.hidden = !lanche; botaoIngredientes.dataset.lanche = lanche ? lanche.id : ""; }
       if (doce && lista) $$('input', lista).forEach(function (campo) { campo.checked = false; });
     });
     const config = configAtualDoFormulario();
@@ -2175,12 +2281,15 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     const config = itemExistente && itemExistente.config ? itemExistente.config : { burgers:[], variante:"comum", batatas:[], bebida:"" };
     comboConfigurando = produto;
     comboKeyEditando = itemExistente ? itemExistente.key : null;
+    comboOpenSlot = Array.from({ length:produto.slots }, function (_, indice) { return config.burgers[indice] && lancheCombo(config.burgers[indice].id) ? -1 : indice; }).find(function (indice) { return indice >= 0; });
+    if (comboOpenSlot === undefined) comboOpenSlot = null;
     focoFluxoAnterior = document.activeElement;
 
     const slots = Array.from({ length:produto.slots }, function (_, indice) {
       const escolha = config.burgers[indice] || { id:"", adicionais:[] };
       const lanche = lancheCombo(escolha.id);
-      return '<div class="config-slot"><div class="config-slot-topo"><span class="config-slot-num">' + (indice + 1) + '</span><select class="config-select" data-slot="' + indice + '" required aria-label="Escolha do lanche ' + (indice + 1) + '">' + opcoesLanchesHTML(escolha.id) + '</select><button class="btn-ingredientes" type="button" data-ingredientes-slot="' + indice + '" data-lanche="' + (lanche ? lanche.id : '') + '"' + (lanche ? '' : ' hidden') + '>Ingredientes</button></div>' + adicionaisSlotHTML(indice, escolha.adicionais || [], !!(lanche && lanche.doce)) + '</div>';
+      const cards = LANCHES_COMBO.map(function (opcao) { return escolhaVisualLancheHTML(indice, opcao, escolha.id); }).join("");
+      return '<div class="config-slot"><div class="config-slot-topo"><span class="config-slot-num">' + (indice + 1) + '</span><div class="config-slot-label"><strong>Lanche ' + (indice + 1) + ' de ' + produto.slots + '</strong><small>' + (lanche ? 'Sua escolha' : 'Escolha pela foto e pelos ingredientes') + '</small></div></div><select class="combo-source-select" data-slot="' + indice + '" aria-hidden="true" tabindex="-1">' + opcoesLanchesHTML(escolha.id) + '</select><div class="combo-picker"><div data-picked-slot="' + indice + '">' + miniCardLancheComboHTML(indice, lanche) + '</div><fieldset class="combo-choice-grid" data-choice-grid="' + indice + '" aria-label="Opções para o lanche ' + (indice + 1) + '"' + (comboOpenSlot === indice ? '' : ' hidden') + '>' + cards + '</fieldset></div>' + adicionaisSlotHTML(indice, escolha.adicionais || [], !!(lanche && lanche.doce)) + '</div>';
     }).join("");
 
     const variante = produto.marciano ? '<fieldset class="config-grupo"><legend>2 · Escolha a versão</legend><div class="config-opcoes duas"><label class="config-radio"><input type="radio" name="variante" value="comum"' + (config.variante !== "marciano" ? ' checked' : '') + '><strong>Comum</strong><small>Mantém o preço-base</small></label><label class="config-radio"><input type="radio" name="variante" value="marciano"' + (config.variante === "marciano" ? ' checked' : '') + '><strong>Marciana · + R$ 15,00</strong><small>Inclui uma batata média preparada</small></label></div></fieldset>' : '';
@@ -2197,7 +2306,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     $('#modal-configurador').hidden = false;
     atualizarBloqueioFluxo();
     atualizarConfigurador();
-    requestAnimationFrame(function () { const primeiro = $('#form-configurador [data-slot]'); if (primeiro) primeiro.focus(); });
+    requestAnimationFrame(function () { const primeiro = comboOpenSlot !== null ? ($('#form-configurador [data-combo-choice="' + comboOpenSlot + '"]:checked') || $('#form-configurador [data-combo-choice="' + comboOpenSlot + '"]')) : $('#form-configurador [data-combo-picker-toggle]'); if (primeiro) primeiro.focus(); });
   }
 
   function fecharConfigurador() {
@@ -2205,16 +2314,25 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     $('#modal-configurador').hidden = true;
     comboConfigurando = null;
     comboKeyEditando = null;
+    comboOpenSlot = null;
     atualizarBloqueioFluxo();
     if (focoFluxoAnterior && focoFluxoAnterior.focus) focoFluxoAnterior.focus();
   }
 
   function salvarComboConfigurado() {
     const formulario = $('#form-configurador');
-    if (!formulario || !formulario.reportValidity()) return;
+    if (!formulario) return;
     const produto = comboConfigurando;
     const config = configAtualDoFormulario();
-    if (config.burgers.some(function (escolha) { return !lancheCombo(escolha.id); })) return toast("Escolha todos os lanches");
+    const slotIncompleto = config.burgers.findIndex(function (escolha) { return !lancheCombo(escolha.id); });
+    if (slotIncompleto > -1) {
+      comboOpenSlot = slotIncompleto;
+      atualizarConfigurador();
+      toast("Escolha o lanche " + (slotIncompleto + 1) + " para continuar");
+      requestAnimationFrame(function () { const opcao = $('#form-configurador [data-combo-choice="' + slotIncompleto + '"]'); if (opcao) { opcao.focus(); opcao.scrollIntoView({ block:"nearest", behavior:reduzido() ? "auto" : "smooth" }); } });
+      return;
+    }
+    if (!formulario.reportValidity()) return;
     if (config.batatas.some(function (sabor) { return !sabor; })) return toast("Escolha o preparo de cada batata");
     const novaKey = produto.id + "::" + encodeURIComponent(JSON.stringify(config));
     const anterior = comboKeyEditando ? carrinho.find(function (item) { return item.key === comboKeyEditando; }) : null;
@@ -2227,17 +2345,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     fecharConfigurador();
     toast(produto.nome + " no pedido");
   }
-
-  function abrirPopupIngredientes(id) {
-    const produto = acharProduto(id);
-    if (!produto) return;
-    $('#t-popup-ingredientes').textContent = produto.nome;
-    $('#texto-popup-ingredientes').textContent = produto.descricao;
-    $('#popup-ingredientes').hidden = false;
-    requestAnimationFrame(function () { $('#fechar-popup-ingredientes').focus(); });
-  }
-
-  function fecharPopupIngredientes() { $('#popup-ingredientes').hidden = true; }
 
   let produtoConfigurando = null;
   let produtoKeyEditando = null;
@@ -2530,7 +2637,10 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     if (!resposta.ok || !dados.checkoutUrl) {
       throw new Error(dados.error || "Não foi possível iniciar o pagamento.");
     }
-    window.location.assign(dados.checkoutUrl);
+    if (window.CosmosAppOrders) window.CosmosAppOrders.remember(dados);
+    const checkoutUrl = new URL(dados.checkoutUrl);
+    checkoutUrl.searchParams.set("cosmosAppOrigin", location.origin);
+    window.location.assign(checkoutUrl.href);
   }
 
   async function criarPedidoDinheiro(nome, whatsapp, endereco) {
@@ -2569,15 +2679,18 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     definirEnvioCheckout(true, "Registrando pedido…");
     try {
       const pedido = await criarPedidoDinheiro(nome, whatsapp, endereco);
+      if (window.CosmosAppOrders) window.CosmosAppOrders.remember(pedido);
+      const tokenAcompanhamento = new URL(pedido.trackingUrl, location.href).searchParams.get("token");
+      const linkAcompanhamentoApp = tokenAcompanhamento ? new URL("/acompanhar/?token=" + encodeURIComponent(tokenAcompanhamento), location.origin).href : pedido.trackingUrl;
       const sub = subtotal();
       const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "WhatsApp: " + whatsapp, "Endereço: " + endereco];
       if (localizacaoCheckout) linhas.push("Localização: https://maps.google.com/?q=" + localizacaoCheckout.latitude.toFixed(6) + "," + localizacaoCheckout.longitude.toFixed(6));
-      linhas.push("Pagamento: dinheiro na entrega", "Número do pedido: " + pedido.localId, "Acompanhe o preparo e a entrega: " + pedido.trackingUrl);
+      linhas.push("Pagamento: dinheiro na entrega", "Número do pedido: " + pedido.localId, "Acompanhe o preparo e a entrega: " + linkAcompanhamentoApp);
       const texto = linhas.join("\n");
       const waUrl = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto);
       try { sessionStorage.setItem("cosmos:tracking-whatsapp:" + new URL(pedido.trackingUrl).searchParams.get("token"), waUrl); } catch (_) {}
       if (whatsappWindow && !whatsappWindow.closed) whatsappWindow.location.assign(waUrl);
-      window.location.assign(pedido.trackingUrl);
+      window.location.assign(linkAcompanhamentoApp);
     } catch (erro) {
       if (whatsappWindow && !whatsappWindow.closed) whatsappWindow.close();
       toast(erro && erro.message ? erro.message : "Não foi possível registrar o pedido.");
@@ -2771,9 +2884,17 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       const fotoHamburguer = ev.target.closest("[data-correcao-foto]");
       if (fotoHamburguer) { abrirFotoHamburguer(fotoHamburguer); return; }
       if (ev.target.closest("[data-fechar-foto]") || ev.target.id === "correcao-modal-foto") { fecharFotoHamburguer(); return; }
-      const btnIngredientes = ev.target.closest("[data-lanche]");
-      if (btnIngredientes && btnIngredientes.getAttribute("data-lanche")) {
-        abrirPopupIngredientes(btnIngredientes.getAttribute("data-lanche"));
+      const toggleComboPicker = ev.target.closest("[data-combo-picker-toggle]");
+      if (toggleComboPicker) {
+        const indice = Number(toggleComboPicker.getAttribute("data-combo-picker-toggle"));
+        comboOpenSlot = comboOpenSlot === indice ? null : indice;
+        atualizarConfigurador();
+        requestAnimationFrame(function () {
+          const foco = comboOpenSlot === indice
+            ? ($('#form-configurador [data-combo-choice="' + indice + '"]:checked') || $('#form-configurador [data-combo-choice="' + indice + '"]'))
+            : $('#form-configurador [data-combo-picker-toggle="' + indice + '"]');
+          if (foco) foco.focus();
+        });
         return;
       }
       const btnPersonalizar = ev.target.closest("[data-personalizar]");
@@ -2866,7 +2987,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
     $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { fecharFotoHamburguer(); fecharPopupIngredientes(); fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
+      if (e.key === "Escape") { fecharFotoHamburguer(); fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
       const combo = e.target.closest && e.target.closest("[data-combo-card]");
       if (combo && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
@@ -2877,7 +2998,22 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     $("#reservar-cashback").addEventListener("click", solicitarCashback);
 
     $("#fechar-configurador").addEventListener("click", fecharConfigurador);
-    $("#configurador-conteudo").addEventListener("change", atualizarConfigurador);
+    $("#configurador-conteudo").addEventListener("change", function (ev) {
+      const escolha = ev.target.closest("[data-combo-choice]");
+      if (escolha) {
+        const indice = Number(escolha.getAttribute("data-combo-choice"));
+        const select = $('#form-configurador [data-slot="' + indice + '"]');
+        if (select) select.value = escolha.value;
+        if (comboOpenSlot === indice) comboOpenSlot = primeiroSlotSemLanche(indice + 1);
+      }
+      atualizarConfigurador();
+      if (escolha) requestAnimationFrame(function () {
+        const foco = comboOpenSlot !== null
+          ? ($('#form-configurador [data-combo-choice="' + comboOpenSlot + '"]:checked') || $('#form-configurador [data-combo-choice="' + comboOpenSlot + '"]'))
+          : $('#form-configurador [data-combo-picker-toggle="' + escolha.getAttribute("data-combo-choice") + '"]');
+        if (foco) foco.focus();
+      });
+    });
     $("#configurador-conteudo").addEventListener("submit", function (ev) {
       ev.preventDefault();
       salvarComboConfigurado();
@@ -2889,9 +3025,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       ev.preventDefault();
       salvarProdutoConfigurado();
     });
-    $("#fechar-popup-ingredientes").addEventListener("click", fecharPopupIngredientes);
-    $("#popup-ingredientes").addEventListener("click", function (ev) { if (ev.target.id === "popup-ingredientes") fecharPopupIngredientes(); });
-
     $("#fechar-adicionais").addEventListener("click", fecharAdicionais);
     $("#adicionais-conteudo").addEventListener("click", function (ev) {
       if (ev.target.closest("#sem-adicionais")) fecharAdicionais();
@@ -2968,6 +3101,48 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       secaoPrevia.scrollIntoView({ block:"start" });
     }
   }
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var STORAGE_KEY="cosmos:app:orders", MAX_ORDERS=50;
+  var appMode=!!(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||window.navigator.standalone===true;
+  var tab=document.getElementById("cosmos-app-orders-tab"), panel=document.getElementById("cosmos-app-orders"), home=document.getElementById("topo");
+  if(!appMode||!tab||!panel||!home)return;
+  tab.hidden=false;
+  var listNode=document.getElementById("cosmos-app-orders-list"), statusNode=document.getElementById("cosmos-app-orders-status"), refreshButton=document.getElementById("cosmos-app-orders-refresh"), backButton=document.getElementById("cosmos-app-orders-back"), tokenInput=document.getElementById("cosmos-app-orders-token"), addButton=document.getElementById("cosmos-app-orders-add"), importStatus=document.getElementById("cosmos-app-orders-import-status"), refreshing=false, importing=false;
+  var apiBase=location.hostname==="cosmos-byte-creator.github.io"?"https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev":location.origin;
+  var labels={awaiting_payment:"Aguardando pagamento",awaiting_confirmation:"Aguardando confirmação da loja",confirmed:"Pedido confirmado",preparing:"Em preparo",ready:"Pronto para despacho",out_for_delivery:"Saiu para entrega",delivered:"Entregue",completed:"Concluído",cancelled:"Cancelado",canceled:"Cancelado"};
+  function saved(){try{var v=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return Array.isArray(v)?v.filter(function(x){return x&&/^[0-9a-f-]{36}$/i.test(String(x.token||""))}).slice(0,MAX_ORDERS):[]}catch(_){return[]}}
+  function remember(order){try{var u=new URL(order&&order.trackingUrl||"",location.href),token=u.searchParams.get("token");if(!/^[0-9a-f-]{36}$/i.test(token||""))return;var list=saved().filter(function(x){return x.token!==token});list.unshift({token:token,localId:String(order.localId||"").slice(0,80),savedAt:new Date().toISOString()});localStorage.setItem(STORAGE_KEY,JSON.stringify(list.slice(0,MAX_ORDERS)))}catch(_){}}
+  async function addOrder(){if(importing)return;var raw=String(tokenInput.value||"").trim(),token="";try{var parsed=new URL(raw,location.href);token=parsed.searchParams.get("token")||""}catch(_){}if(!token&&/^[0-9a-f-]{36}$/i.test(raw))token=raw;if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(token)){importStatus.textContent="Cole o link completo de acompanhamento ou o código válido do pedido.";tokenInput.focus();return}importing=true;addButton.disabled=true;importStatus.textContent="Validando o link com segurança…";try{var response=await fetch(apiBase+"/api/orders/track/"+encodeURIComponent(token),{cache:"no-store"}),data=await response.json().catch(function(){return{}});if(!response.ok)throw new Error(data.error||"Não encontramos esse pedido. Confira o link e tente novamente.");remember({trackingUrl:apiBase+"/acompanhar/?token="+encodeURIComponent(token),localId:data.localId||""});tokenInput.value="";importStatus.textContent="Pedido "+(data.localId||"")+" adicionado. Atualizando a lista…";await loadOrders()}catch(error){importStatus.textContent=error.message||"Não foi possível validar esse pedido agora."}finally{importing=false;addButton.disabled=false}}
+  window.CosmosAppOrders={remember:remember};
+  function show(open,updateUrl){panel.hidden=!open;home.hidden=open;if(open){loadOrders();window.scrollTo({top:0,behavior:"auto"})}if(updateUrl){var u=new URL(location.href);if(open)u.searchParams.set("cosmos-tab","pedidos");else u.searchParams.delete("cosmos-tab");history.replaceState(null,"",u.pathname+u.search+u.hash)}}
+  function node(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+  function money(value){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(value)||0)}
+  function paymentLabel(value){var map={created:"Aguardando pagamento",pending:"Pagamento pendente",in_process:"Pagamento em análise",approved:"Aprovado",processed:"Aprovado",paid:"Pago",confirmed:"Pago",cash_on_delivery:"Dinheiro na entrega",rejected:"Pagamento recusado",cancelled:"Pagamento cancelado",canceled:"Pagamento cancelado",refunded:"Reembolsado",review_required:"Pagamento em conferência"};return map[String(value||"").toLowerCase()]||value||"em processamento"}
+  function card(order,entry){var el=node("article","cosmos-app-order"),head=node("div","cosmos-app-order__head"),identity=node("div"),title=node("h2","",order.localId||entry.localId||"Pedido"),date=node("p","cosmos-app-order__date",new Date(order.createdAt||entry.savedAt).toLocaleString("pt-BR"));identity.append(title,date);head.append(identity);el.append(head);var state=labels[order.fulfillmentStatus]||"Status em atualização";el.append(node("p","cosmos-app-order__state",state));el.append(node("p","cosmos-app-order__payment","Pagamento: "+paymentLabel(order.paymentStatus)));var items=node("ul","cosmos-app-order__items");(order.lines||[]).forEach(function(line){var li=node("li","",(line.quantity||1)+" × "+(line.title||"Item"));(line.details||[]).forEach(function(detail){li.append(node("span","cosmos-app-order__details","· "+detail))});items.append(li)});el.append(items);var foot=node("div","cosmos-app-order__footer");foot.append(node("span","cosmos-app-order__amount",money(order.amount)));var link=node("a","cosmos-app-orders__button cosmos-app-orders__link","Acompanhar pedido");link.href=apiBase+"/acompanhar/?token="+encodeURIComponent(entry.token);foot.append(link);el.append(foot);return el}
+  async function loadOrders(){if(refreshing)return;refreshing=true;refreshButton.disabled=true;var entries=saved();listNode.replaceChildren();if(!entries.length){listNode.append(node("div","cosmos-app-orders__empty","Seus pedidos ainda não aparecem aqui. Adicione um pedido usando o link privado de acompanhamento. Se não tiver o link, peça pelo WhatsApp."));statusNode.textContent="Nenhum pedido adicionado neste aparelho.";refreshButton.disabled=false;refreshing=false;return}statusNode.textContent="Atualizando "+entries.length+" pedido(s)…";var results=await Promise.all(entries.map(async function(entry){try{var r=await fetch(apiBase+"/api/orders/track/"+encodeURIComponent(entry.token),{cache:"no-store"});var data=await r.json().catch(function(){return{}});if(!r.ok)throw new Error(data.error||"Não foi possível consultar este pedido.");return{entry:entry,order:data}}catch(error){return{entry:entry,error:error}}}));var count=0;results.forEach(function(result){if(result.order){listNode.append(card(result.order,result.entry));count++}else{var el=node("article","cosmos-app-order"),title=node("h2","",result.entry.localId||"Pedido salvo"),msg=node("p","cosmos-app-order__state",navigator.onLine?"Este pedido não pôde ser atualizado agora.":"Sem conexão. O estado pode estar desatualizado.");el.append(title,msg);listNode.append(el)}});statusNode.textContent=count?count+" pedido(s) carregado(s). Atualização automática a cada 30 segundos enquanto esta aba estiver aberta.":"Não foi possível atualizar os pedidos. Tente novamente quando a conexão voltar.";refreshButton.disabled=false;refreshing=false}
+  tab.addEventListener("click",function(event){event.preventDefault();var menu=document.getElementById("atalhos"),menuButton=document.getElementById("menu-mobile");if(menu)menu.classList.remove("aberto");if(menuButton){menuButton.setAttribute("aria-expanded","false");menuButton.setAttribute("aria-label","Abrir menu")}show(true,true)});
+  refreshButton.addEventListener("click",loadOrders);addButton.addEventListener("click",addOrder);tokenInput.addEventListener("keydown",function(event){if(event.key==="Enter"){event.preventDefault();addOrder()}});backButton.addEventListener("click",function(){show(false,true)});
+  window.setInterval(function(){if(!panel.hidden&&!document.hidden)loadOrders()},30000);
+  if(new URLSearchParams(location.search).get("cosmos-tab")==="pedidos")show(true,false);
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var trigger=document.getElementById("cosmos-open-tracking-promo"),dialog=document.getElementById("cosmos-tracking-promo"),closeDialog=document.getElementById("cosmos-tracking-promo-close");
+  if(trigger&&dialog){trigger.addEventListener("click",function(){if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","")});if(closeDialog)closeDialog.addEventListener("click",function(){if(typeof dialog.close==="function")dialog.close();else dialog.removeAttribute("open")});dialog.addEventListener("click",function(event){if(event.target===dialog&&typeof dialog.close==="function")dialog.close()})}
+  var banner=document.getElementById("cosmos-install-banner"),installButton=document.getElementById("cosmos-install-button"),dismissButton=document.getElementById("cosmos-install-dismiss"),installPrompt=window.CosmosPwaInstallPrompt||null,dismissKey="cosmos:pwa-install-dismissed-until",standalone=!!(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||window.navigator.standalone===true;
+  function wasDismissed(){try{return Number(localStorage.getItem(dismissKey)||0)>Date.now()}catch(_){return false}}
+  function showInstallBanner(){if(banner&&installPrompt&&!standalone&&!wasDismissed())window.setTimeout(function(){banner.hidden=false},1800)}
+  window.addEventListener("beforeinstallprompt",function(event){event.preventDefault();installPrompt=event;window.CosmosPwaInstallPrompt=event;showInstallBanner()});
+  if(installPrompt)showInstallBanner();
+  if(installButton)installButton.addEventListener("click",async function(){if(!installPrompt)return;var event=installPrompt;installPrompt=null;banner.hidden=true;try{await event.prompt();var choice=await event.userChoice;if(choice&&choice.outcome==="dismissed")try{localStorage.setItem(dismissKey,String(Date.now()+7*24*60*60*1000))}catch(_){}}catch(_){} });
+  if(dismissButton)dismissButton.addEventListener("click",function(){banner.hidden=true;try{localStorage.setItem(dismissKey,String(Date.now()+7*24*60*60*1000))}catch(_){}});
+  window.addEventListener("appinstalled",function(){if(banner)banner.hidden=true;installPrompt=null;window.CosmosPwaInstallPrompt=null;try{localStorage.removeItem(dismissKey)}catch(_){}});
 })();
 </script>
 </body>

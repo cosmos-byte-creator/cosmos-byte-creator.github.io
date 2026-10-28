@@ -56,7 +56,7 @@
   <script>
     (function () {
       "use strict";
-      const API = "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev";
+      const API = location.hostname === "cosmos-byte-creator.github.io" ? "https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev" : location.origin;
       const sessionId = new URLSearchParams(location.search).get("session") || "";
       const $ = selector => document.querySelector(selector);
       const loading = $("#loading"), notice = $("#notice"), brickNode = $("#paymentBrick_container");
@@ -124,6 +124,12 @@
         if (orderData.trackingUrl) {
           const link = document.createElement("a");
           link.href = orderData.trackingUrl;
+          const requestedAppOrigin = new URLSearchParams(location.search).get("cosmosAppOrigin");
+          const allowedAppOrigins = new Set([location.origin, "https://cosmos-byte-creator.github.io"]);
+          const orderToken = new URL(orderData.trackingUrl, API).searchParams.get("token");
+          if (requestedAppOrigin && allowedAppOrigins.has(requestedAppOrigin) && /^[0-9a-f-]{36}$/i.test(orderToken || "")) {
+            link.href = requestedAppOrigin + "/acompanhar/?token=" + encodeURIComponent(orderToken);
+          }
           link.textContent = "Acompanhar preparo e entrega";
           link.style.cssText = "display:inline-block;margin-top:10px;color:#ffc24b;font-weight:800";
           notice.append(document.createElement("br"), link);

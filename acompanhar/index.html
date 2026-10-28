@@ -9,7 +9,7 @@
   <title>Acompanhar pedido · Cosmos Burguer</title>
   <style>
     :root{color-scheme:dark;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;background:#09080c;color:#f5eee5;--gold:#ffc24b;--muted:#b9b2aa;--line:#34313b;--panel:#15121b}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px 14px;background:radial-gradient(ellipse at 50% -10%,rgba(255,106,19,.2),transparent 52%),#09080c}main{width:min(680px,100%);margin:auto}.brand{display:block;margin:0 0 20px;color:var(--gold);font-size:.76rem;font-weight:800;letter-spacing:.17em;text-align:center;text-transform:uppercase}.card{padding:clamp(20px,5vw,34px);border:1px solid var(--line);border-radius:22px;background:linear-gradient(155deg,rgba(27,22,34,.98),rgba(15,12,20,.98));box-shadow:0 26px 80px rgba(0,0,0,.32)}h1{margin:0;color:var(--gold);font-size:clamp(1.6rem,6vw,2.15rem);line-height:1.1}.intro{margin:8px 0 20px;color:var(--muted)}.meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:14px 0;border-block:1px solid var(--line)}.meta strong{color:#fff}.state{margin:18px 0 5px;font-size:1.15rem;font-weight:800}.payment{margin:0;color:var(--muted);font-size:.9rem}.section{margin-top:23px}.section h2{margin:0 0 10px;font-size:.83rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}.items,.history{margin:0;padding:0;list-style:none}.items li{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07)}.items small{display:block;margin:3px 0 0 12px;color:var(--muted)}.history{display:grid;gap:11px}.history li{display:grid;grid-template-columns:16px 1fr;gap:9px;color:var(--muted)}.dot{width:10px;height:10px;margin-top:6px;border:2px solid var(--gold);border-radius:50%}.history strong{display:block;color:#f5eee5}.history time{font-size:.78rem}.actions{display:grid;gap:9px;margin-top:24px}.button{display:flex;min-height:48px;align-items:center;justify-content:center;padding:12px 16px;border:1px solid var(--gold);border-radius:999px;background:var(--gold);color:#211508;font-weight:850;text-align:center;text-decoration:none}.button.secondary{background:transparent;color:var(--gold)}.notice{min-height:24px;margin:10px 0 0;color:var(--muted);font-size:.88rem}.notice.error{color:#ff9a7a}.loading{padding:36px 0;color:var(--muted);text-align:center}.amount{color:var(--gold);font-weight:800;font-variant-numeric:tabular-nums}.fine{margin:18px 0 0;color:var(--muted);font-size:.78rem;text-align:center}[hidden]{display:none!important}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px 14px;background:radial-gradient(ellipse at 50% -10%,rgba(255,106,19,.2),transparent 52%),#09080c}main{width:min(680px,100%);margin:auto}.brand{display:block;margin:0 0 20px;color:var(--gold);font-size:.76rem;font-weight:800;letter-spacing:.17em;text-align:center;text-transform:uppercase}.card{padding:clamp(20px,5vw,34px);border:1px solid var(--line);border-radius:22px;background:linear-gradient(155deg,rgba(27,22,34,.98),rgba(15,12,20,.98));box-shadow:0 26px 80px rgba(0,0,0,.32)}h1{margin:0;color:var(--gold);font-size:clamp(1.6rem,6vw,2.15rem);line-height:1.1}.intro{margin:8px 0 20px;color:var(--muted)}.meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:14px 0;border-block:1px solid var(--line)}.meta strong{color:#fff}.state{margin:18px 0 5px;font-size:1.15rem;font-weight:800}.payment{margin:0;color:var(--muted);font-size:.9rem}.section{margin-top:23px}.section h2{margin:0 0 10px;font-size:.83rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}.items,.history{margin:0;padding:0;list-style:none}.items li{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07)}.items small{display:block;margin:3px 0 0 12px;color:var(--muted)}.history{display:grid;gap:11px}.history li{display:grid;grid-template-columns:16px 1fr;gap:9px;color:var(--muted)}.dot{width:10px;height:10px;margin-top:6px;border:2px solid var(--gold);border-radius:50%}.history strong{display:block;color:#f5eee5}.history time{font-size:.78rem}.actions{display:grid;gap:9px;margin-top:24px}.button{display:flex;min-height:48px;align-items:center;justify-content:center;padding:12px 16px;border:1px solid var(--gold);border-radius:999px;background:var(--gold);color:#211508;font-weight:850;text-align:center;text-decoration:none}.button.secondary{background:transparent;color:var(--gold)}.notice{min-height:24px;margin:10px 0 0;color:var(--muted);font-size:.88rem}.notice.error{color:#ff9a7a}.loading{padding:36px 0;color:var(--muted);text-align:center}.amount{color:var(--gold);font-weight:800;font-variant-numeric:tabular-nums}.fine{margin:18px 0 0;color:var(--muted);font-size:.78rem;text-align:center}.app-promo{margin-top:20px;padding:16px;border:1px solid rgba(255,194,75,.25);border-radius:16px;background:#100e13}.app-promo h2{margin:0 0 6px;color:var(--gold);font-size:1rem}.app-promo p{margin:6px 0;color:var(--muted);font-size:.9rem}[hidden]{display:none!important}
   </style>
 </head>
 <body>
@@ -25,7 +25,13 @@
         <p class="payment" id="payment">—</p>
         <section class="section"><h2>Seu pedido</h2><ul class="items" id="items"></ul></section>
         <section class="section"><h2>Atualizações</h2><ol class="history" id="history"></ol></section>
-        <div class="actions"><a class="button" id="whatsapp" href="#" hidden>Enviar pedido pelo WhatsApp</a><a class="button secondary" href="/">Voltar ao cardápio</a></div>
+        <div class="actions"><a class="button" id="whatsapp" href="#" hidden>Enviar pedido pelo WhatsApp</a><a class="button secondary" id="app-orders-link" href="/?cosmos-tab=pedidos" hidden>Meus pedidos</a><a class="button secondary" href="/">Voltar ao cardápio</a></div>
+        <aside class="app-promo" id="app-promo" hidden>
+          <h2>Guarde este pedido no app Cosmos</h2>
+          <p>Depois de instalar o app, abra <strong>Meus pedidos</strong> e cole o link privado. No iPhone, use Compartilhar → Adicionar à Tela de Início; no Android, abra o menu do navegador e escolha Instalar app ou Adicionar à tela inicial.</p>
+          <button class="button secondary" id="copy-tracking-link" type="button">Copiar link privado</button>
+          <p id="copy-tracking-status" role="status" aria-live="polite"></p>
+        </aside>
         <p class="fine">Não compartilhe este link publicamente: ele dá acesso ao andamento deste pedido.</p>
       </div>
       <p class="notice" id="notice" role="status" aria-live="polite"></p>
@@ -34,14 +40,17 @@
   <script>
     (function(){
       "use strict";
-      const API="https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev";
+      const API=location.hostname==="cosmos-byte-creator.github.io"?"https://cosmos-burguer-payments.cosmos-burguer-food.workers.dev":location.origin;
       const token=new URLSearchParams(location.search).get("token")||"";
       const $=s=>document.querySelector(s), money=value=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(value);
       const labels={awaiting_payment:"Aguardando pagamento",awaiting_confirmation:"Pedido enviado · aguardando confirmação da loja",confirmed:"Pedido confirmado pela loja",preparing:"Seu pedido está em preparo",ready:"Pedido pronto para retirada/entrega",out_for_delivery:"Pedido saiu para entrega",delivered:"Pedido entregue",cancelled:"Pedido cancelado"};
       let timer=0;
+      const installed=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||window.navigator.standalone===true;
+      if(!installed)$("#app-promo").hidden=false;
+      $("#copy-tracking-link").addEventListener("click",async function(){const status=$("#copy-tracking-status");try{await navigator.clipboard.writeText(location.href);status.textContent="Link copiado. Depois de instalar o app, cole-o em Meus pedidos."}catch(_){status.textContent="Não foi possível copiar automaticamente. Copie o endereço desta página pelo navegador e cole-o em Meus pedidos no app."}});
       function showError(message){$("#loading").hidden=true;$("#notice").textContent=message;$("#notice").className="notice error"}
       function render(order){
-        $("#loading").hidden=true;$("#content").hidden=false;$("#notice").textContent="Atualizado agora. Acompanhamento automático a cada 15 segundos.";
+        $("#loading").hidden=true;$("#content").hidden=false;$("#notice").textContent="Atualizado agora. Acompanhamento em tempo real com reconexão automática.";
         $("#order-id").textContent=order.localId;$("#amount").textContent=money(order.amount);$("#state").textContent=labels[order.fulfillmentStatus]||"Status em atualização";
         $("#payment").textContent="Pagamento: "+(order.paymentStatus==="approved"?"confirmado":order.paymentStatus==="cash_on_delivery"?"dinheiro na entrega":order.paymentStatus||"em processamento");
         const items=$("#items");items.replaceChildren();for(const line of order.lines||[]){const li=document.createElement("li");li.textContent=line.quantity+" × "+line.title;for(const detail of line.details||[]){const small=document.createElement("small");small.textContent="· "+detail;li.append(small)}items.append(li)}
@@ -50,7 +59,19 @@
       }
       async function update(){if(!/^[0-9a-f-]{36}$/i.test(token))return showError("Link de acompanhamento inválido. Confira se abriu o endereço completo.");try{const response=await fetch(API+"/api/orders/track/"+encodeURIComponent(token),{cache:"no-store"});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||"Não foi possível carregar o pedido.");render(data)}catch(error){if(!$("#content").hidden){$("#notice").textContent="Sem conexão no momento. Vamos tentar novamente.";return}showError(error.message||"Não foi possível carregar o pedido.")}}
       try{const message=sessionStorage.getItem("cosmos:tracking-whatsapp:"+token);if(message){const link=$("#whatsapp");link.href=message;link.target="_blank";link.rel="noopener noreferrer";link.hidden=false}}catch(_){}
-      update();timer=window.setInterval(update,15000);
+      let liveSocket,retryDelay=1000;
+      function connectLive(){if(!/^[0-9a-f-]{36}$/i.test(token)||new URL(API).origin!==location.origin)return;const scheme=location.protocol==="https:"?"wss:":"ws:";liveSocket=new WebSocket(scheme+"//"+new URL(API).host+"/api/orders/track/"+encodeURIComponent(token)+"/live");liveSocket.onopen=()=>{retryDelay=1000;update()};liveSocket.onmessage=event=>{try{if(JSON.parse(event.data).type==="order.updated")update()}catch(_){}};liveSocket.onclose=()=>{if(timer)clearInterval(timer);timer=window.setInterval(update,30000);window.setTimeout(connectLive,retryDelay);retryDelay=Math.min(retryDelay*2,30000)};liveSocket.onerror=()=>{try{liveSocket.close()}catch(_){}}}
+      update();timer=window.setInterval(update,30000);connectLive();
+    })();
+  </script>
+<script>
+    (function(){
+      const installed=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||window.navigator.standalone===true;
+      if(!installed)return;
+      const link=document.getElementById("app-orders-link");if(link)link.hidden=false;
+      const token=new URLSearchParams(location.search).get("token");
+      if(!/^[0-9a-f-]{36}$/i.test(token||""))return;
+      try{const key="cosmos:app:orders",list=JSON.parse(localStorage.getItem(key)||"[]"),filtered=Array.isArray(list)?list.filter(x=>x&&x.token!==token):[];filtered.unshift({token:token,savedAt:new Date().toISOString()});localStorage.setItem(key,JSON.stringify(filtered.slice(0,50)))}catch(_){}
     })();
   </script>
 </body>
