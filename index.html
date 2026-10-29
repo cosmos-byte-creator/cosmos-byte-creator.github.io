@@ -520,17 +520,6 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .cupom input::placeholder{color:#6C625C; letter-spacing:normal; text-transform:none}
 .cupom button{height:48px; padding:0 18px; border-radius:12px; border:1px solid rgba(255,194,75,.4);
   color:var(--ouro); background:rgba(255,194,75,.1); font-size:13px; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 700}
-.cashback-box{margin:16px 0 12px; padding:14px; border:1px solid rgba(127,217,154,.28); border-radius:14px; background:rgba(127,217,154,.06)}
-.cashback-cabeca{display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; font-variation-settings:"wdth" 104,"wght" 700}
-.cashback-valor{color:#7FD99A; font-size:18px; white-space:nowrap; font-variant-numeric:tabular-nums}
-.cashback-box p{margin-top:7px; color:var(--fosco); font-size:12px; line-height:1.45}
-.cashback-identificacao{display:grid; gap:7px; margin:14px 0 4px}
-.cashback-identificacao label{color:var(--fosco); font-size:12px}
-.cashback-form{display:flex; gap:8px}
-.cashback-form input{flex:1; min-width:0; height:44px; padding:0 12px; border-radius:11px; background:var(--painel); border:1px solid var(--linha); color:var(--creme); font:inherit}
-.cashback-form button{height:44px; padding:0 14px; border-radius:11px; color:#1A0F00; background:var(--ouro); font-size:12px; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800}
-.cashback-form button:hover{filter:brightness(1.08)}
-.contas .cashback-linha{color:#7FD99A}
 .aviso{font-size:12.5px; min-height:18px; margin-top:6px}
 .aviso.ok{color:#7FD99A}
 .aviso.erro{color:#FF9A7A}
@@ -604,48 +593,12 @@ section{padding:clamp(40px,9vw,76px) 0; position:relative}
 .pagamento{position:relative;display:grid;place-items:center;min-height:54px;padding:8px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:#100E11;color:var(--fosco);cursor:pointer;font-size:12px;font-variation-settings:"wdth" 104,"wght" 700}
 .pagamento input{position:absolute;opacity:0;pointer-events:none}
 .pagamento:has(input:checked){border-color:var(--ouro);background:rgba(255,196,95,.1);color:var(--creme);box-shadow:inset 0 0 0 1px rgba(255,196,95,.18)}
+.desconto-opcao{display:flex;align-items:center;gap:11px;margin-top:18px;padding:12px 14px;border:1px solid rgba(255,196,95,.35);border-radius:13px;background:rgba(255,196,95,.07);color:var(--creme);cursor:pointer}
+.desconto-opcao input{width:19px;height:19px;flex:none;accent-color:var(--ouro)}
+.desconto-opcao span{display:grid;gap:3px}.desconto-opcao strong{font-size:13px}.desconto-opcao small{color:var(--fosco);font-size:11px}
+.checkout-resumo{display:grid;gap:5px;margin-top:12px;color:var(--fosco);font-size:12px}.checkout-resumo div{display:flex;justify-content:space-between}.checkout-resumo .checkout-total{padding-top:7px;border-top:1px solid var(--linha);color:var(--creme);font-size:15px;font-weight:700}
 .checkout-nota{margin-top:14px;color:#81776F;font-size:11px;line-height:1.45}
 @media(max-width:420px){.modal-fluxo{padding:8px}.modal-caixa{max-height:calc(100dvh - 16px);border-radius:17px}.modal-fluxo-topo,.modal-fluxo-corpo{padding-inline:16px}.modal-acoes{grid-template-columns:1fr}.modal-acoes .btn-primario{grid-row:1}.pagamentos{grid-template-columns:1fr}.pagamento{min-height:48px}}
-
-/* ---------- 10. MISSÃO COSMOS ---------- */
-.missao-chamada{
-  position:fixed; left:var(--borda-pag); right:var(--borda-pag); z-index:45;
-  bottom:calc(16px + env(safe-area-inset-bottom, 0px));
-  display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px;
-  background:rgba(20,16,27,.95); backdrop-filter:blur(10px); border:1px solid rgba(255,194,75,.3);
-  box-shadow:0 18px 40px -20px #000; transform:translateY(160%); visibility:hidden;
-  transition:transform 420ms var(--ease), visibility 420ms;
-}
-body.tem-itens .missao-chamada{bottom:calc(var(--barra) + 12px + env(safe-area-inset-bottom, 0px))}
-.missao-chamada.visivel{transform:none; visibility:visible}
-@media (min-width:760px){ .missao-chamada{left:auto; width:360px; right:24px} }
-.missao-chamada .txt{flex:1; min-width:0}
-.missao-chamada .t{font-variation-settings:"wdth" 106,"wght" 700; font-size:14px; text-transform:uppercase}
-.missao-chamada .d{color:var(--fosco); font-size:12.5px}
-.missao-chamada .agir{padding:0 14px; height:40px; border-radius:var(--r-pill); background:var(--ouro); color:#1A0F00;
-  font-size:12px; letter-spacing:.05em; text-transform:uppercase; font-variation-settings:"wdth" 104,"wght" 800; white-space:nowrap}
-.missao-chamada .dispensar{width:32px; height:32px; border-radius:50%; color:var(--fosco); font-size:15px}
-
-.missao-modal{
-  position:fixed; z-index:70; left:50%; top:50%; transform:translate(-50%,-46%) scale(.96);
-  width:min(420px, calc(100vw - 32px)); padding:28px 22px 22px; border-radius:20px; text-align:center;
-  background:radial-gradient(100% 70% at 50% 0%, rgba(255,106,19,.22), transparent 62%), var(--fundo);
-  border:1px solid rgba(255,194,75,.3); opacity:0; visibility:hidden;
-  transition:opacity var(--t-medio) var(--ease), transform var(--t-medio) var(--ease), visibility var(--t-medio);
-}
-.missao-modal.aberto{opacity:1; transform:translate(-50%,-50%) scale(1); visibility:visible}
-.radar{position:relative; width:112px; height:112px; margin:6px auto 18px; border-radius:50%;
-  border:1px solid rgba(255,194,75,.3); overflow:hidden; background:rgba(255,194,75,.04)}
-.radar::before{content:""; position:absolute; inset:22%; border-radius:50%; border:1px solid rgba(255,194,75,.22)}
-.radar::after{content:""; position:absolute; left:50%; top:50%; width:50%; height:50%; transform-origin:0 0;
-  background:conic-gradient(from 0deg, rgba(255,194,75,.45), transparent 42%); animation:varredura 1.15s linear infinite}
-@keyframes varredura{to{transform:rotate(360deg)}}
-.missao-modal h2{font-size:24px; margin-bottom:8px}
-.missao-modal p{color:var(--fosco); font-size:14px}
-.codigo{display:inline-block; margin:18px 0 6px; padding:12px 22px; border-radius:12px; border:1px dashed rgba(255,194,75,.55);
-  font-variation-settings:"wdth" 118,"wght" 800; font-size:26px; letter-spacing:.14em; color:var(--ouro)}
-.missao-modal .btn{width:100%; margin-top:16px}
-.missao-modal .depois{margin-top:8px; width:100%; min-height:40px; color:var(--fosco); font-size:12.5px}
 
 /* ---------- RODAPÉ ---------- */
 footer{padding:44px 0 calc(120px + env(safe-area-inset-bottom, 0px)); border-top:1px solid var(--linha); color:#7E736C; font-size:13px}
@@ -944,7 +897,6 @@ button,a,input{touch-action:manipulation}
   .modal-planeta .foto{min-height:min(36svh,330px)}
   .painel-inf{border-radius:18px 18px 0 0}
   .painel-topo,.painel-corpo,.painel-pe{padding-inline:var(--borda-pag)}
-  .cashback-form input{font-size:16px}
   .toast{max-width:calc(100vw - 32px);width:max-content;text-align:center}
 }
 
@@ -955,10 +907,6 @@ button,a,input{touch-action:manipulation}
   .item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 10px}
   .item .preco{grid-column:1;text-align:left;min-width:0}
   .item .passo{grid-column:2;grid-row:1/3}
-  .cashback-cabeca{align-items:flex-start;flex-direction:column;gap:4px}
-  .cashback-form{display:grid}
-  .cashback-form button{width:100%}
-  .missao-chamada .d{display:none}
 }
 
 @media (max-width:360px){
@@ -1410,43 +1358,12 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
   </div>
   <div class="painel-corpo">
     <div id="itens-carrinho"></div>
-    <div id="area-cashback" hidden>
-      <div class="cashback-box">
-        <div class="cashback-cabeca">
-          <span>Cashback para a próxima compra</span>
-          <strong class="cashback-valor" id="cashback-valor">—</strong>
-        </div>
-        <p id="cashback-status">O cashback não reduz o valor deste pedido. Ele fica reservado para sua próxima compra após a confirmação da loja.</p>
-      </div>
-      <div class="cashback-identificacao">
-        <label for="campo-celular">Seu WhatsApp para autenticar a reserva</label>
-        <div class="cashback-form">
-          <input id="campo-celular" type="tel" placeholder="(16) 99999-9999" autocomplete="tel" inputmode="tel">
-          <button id="reservar-cashback" type="button">Confirmar</button>
-        </div>
-      </div>
-      <p class="aviso" id="aviso-cashback" role="status"></p>
-      <div class="contas" id="contas"></div>
-    </div>
+    <div class="contas" id="contas"></div>
   </div>
   <div class="painel-pe" id="pe-carrinho" hidden>
     <button class="btn btn-primario" id="enviar-pedido" type="button">🚀 Enviar pedido</button>
     <button class="btn-copiar" id="copiar-pedido">Copiar pedido em texto</button>
   </div>
-</div>
-
-<!-- ================= MISSÃO COSMOS ================= -->
-<div class="missao-chamada" id="missao-chamada" hidden>
-  <div class="txt">
-    <p class="t">🚨 Sinal detectado</p>
-    <p class="d">Uma transmissão desconhecida foi encontrada.</p>
-  </div>
-  <button class="agir" id="missao-abrir">Interceptar</button>
-  <button class="dispensar" id="missao-dispensar" aria-label="Ignorar sinal">✕</button>
-</div>
-
-<div class="missao-modal" id="missao-modal" role="dialog" aria-modal="true" aria-labelledby="t-missao" hidden>
-  <div id="missao-conteudo"></div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1502,6 +1419,8 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
         <label class="pagamento"><input type="radio" name="pagamento" value="Dinheiro" required><span>💵 Dinheiro</span></label>
         <label class="pagamento"><input type="radio" name="pagamento" value="mercado-pago"><span>◆ Pix ou cartão</span></label>
       </div></fieldset>
+      <label class="desconto-opcao" for="checkout-desconto"><input id="checkout-desconto" type="checkbox"><span><strong>Quero 5% de desconto</strong><small>Aplicado ao total deste pedido.</small></span></label>
+      <div class="checkout-resumo" id="checkout-resumo" aria-live="polite"></div>
       <p class="checkout-nota" id="checkout-nota">Pix e cartão são processados com segurança pelo Mercado Pago. Dinheiro é combinado com a loja pelo WhatsApp.</p>
       <div class="modal-acoes"><button class="btn-neutro" id="voltar-checkout" type="button">Voltar</button><button class="btn btn-primario" id="checkout-enviar" type="submit" data-mp-checkout-cta="bricks-payment">Continuar →</button></div>
     </form>
@@ -1511,8 +1430,8 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
 <script>
 /* =========================================================================
    COSMOS BURGUER — aplicação
-   Módulos: 1 CONFIG · 2 MENU (dados) · 3 CASHBACK · 4 utilitários
-            5 render · 6 carrinho · 7 cupom · 8 whatsapp · 9 missão · 10 boot
+   Módulos: 1 CONFIG · 2 MENU (dados) · 3 utilitários · 4 render
+            5 carrinho · 6 configuradores · 7 whatsapp · 8 checkout · 9 boot
    Nada de dados de produto no HTML: tudo vem de MENU.
    ========================================================================= */
 (function () {
@@ -1534,8 +1453,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     // Abertura: fica obrigatoriamente 2s, aceita toque até completar 8s.
     aberturaMinimaMs: 2000,
     aberturaMs: 8000,
-    // A "Missão Cosmos" só aparece depois que a pessoa passa desta seção
-    missaoGatilho: "#bebidas"
   };
 
   const IMG = "images/";
@@ -1643,13 +1560,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     { id:"guarana-1l", categoria:"bebida", nome:"Guaraná 1L", planeta:"jupiter",
       descricao:"Garrafa 1 litro. Leve outra igual por + R$ 7,00.", ingredientes:"", preco:1000, imagem:IMAGENS.guarana1l, litro:true, personalizavel:true }
   ];
-
-  /* ---------- 3. CASHBACK ---------- */
-  const CASHBACK = {
-    codigo: "COSMOS10",
-    percentual: 10,
-    rotulo: "10% de cashback para a próxima compra"
-  };
 
   const ADICIONAIS = [
     { id:"hamburguer-120g", nome:"Hambúrguer 120g", preco:700 },
@@ -1951,7 +1861,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
 
   /* ---------- 6. CARRINHO ---------- */
   const CHAVE_CARRINHO = "cosmos:carrinho";
-  const CHAVE_CASHBACK = "cosmos:cashback";
+  try { localStorage.removeItem("cosmos:cashback"); localStorage.removeItem("cosmos:missao"); } catch (e) {}
   let carrinho = guardar.ler(CHAVE_CARRINHO, []);
   if (!Array.isArray(carrinho)) carrinho = [];
   carrinho = carrinho.filter(function (item) { return !!acharProduto(item.id); }).map(function (item) {
@@ -1959,7 +1869,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     if (item.config) normalizado.config = item.config;
     return normalizado;
   });
-  let cashbackAtivo = guardar.ler(CHAVE_CASHBACK, null); // {id, codigo, percentual, status, telefone}
 
   function lancheCombo(id) { return LANCHES_COMBO.find(function (lanche) { return lanche.id === id; }); }
   function adicionalPorId(id) { return ADICIONAIS.find(function (adicional) { return adicional.id === id; }); }
@@ -2011,30 +1920,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       return p && !Number.isFinite(p.preco);
     });
   }
-  function valorCashback(sub) {
-    return cashbackAtivo ? Math.round(sub * cashbackAtivo.percentual / 100) : 0;
-  }
-
-  function ativarCashback() {
-    if (!cashbackAtivo) {
-      cashbackAtivo = {
-        id: "CB-" + Date.now().toString(36).toUpperCase().slice(-8),
-        codigo: CASHBACK.codigo,
-        percentual: CASHBACK.percentual,
-        status: "pendente",
-        telefone: "",
-        criadoEm: new Date().toISOString()
-      };
-    }
-    guardar.escrever(CHAVE_CASHBACK, cashbackAtivo);
-    pintarCarrinho();
-  }
-
-  function telefoneWhatsApp(valor) {
-    let numero = String(valor || "").replace(/\D/g, "");
-    if (numero.indexOf("55") === 0 && numero.length >= 12) numero = numero.slice(2);
-    return (numero.length === 10 || numero.length === 11) ? "55" + numero : "";
-  }
   function totalItens() { return carrinho.reduce((s, it) => s + it.qtd, 0); }
 
   function adicionar(id) {
@@ -2079,7 +1964,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
   }
 
   function pintarCarrinho() {
-    const n = totalItens(), sub = subtotal(), cash = valorCashback(sub), tot = sub, pendente = temPrecoPendente();
+    const n = totalItens(), sub = subtotal(), tot = sub, pendente = temPrecoPendente();
 
     // barra fixa
     const barra = $("#barra-carrinho");
@@ -2093,11 +1978,9 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     const lista = $("#itens-carrinho");
     if (!n) {
       lista.innerHTML = '<p class="vazio">Seu pedido está vazio. Comece pelo <a href="#burgers" data-fecha="1" style="color:var(--ouro)">Terra</a> se estiver em dúvida.</p>';
-      $("#area-cashback").hidden = true;
       $("#pe-carrinho").hidden = true;
       return;
     }
-    $("#area-cashback").hidden = false;
     $("#pe-carrinho").hidden = false;
 
     lista.innerHTML = carrinho.map(function (it) {
@@ -2139,19 +2022,8 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
         '</div>';
     }).join("");
 
-    // contas
-    $("#cashback-valor").textContent = cashbackAtivo ? preco(cash) : "Ative na missão";
-    $("#cashback-status").textContent = cashbackAtivo
-      ? (cashbackAtivo.status === "solicitado"
-        ? "Solicitação enviada. Aguarde a confirmação da loja pelo WhatsApp; este valor não reduz o pedido atual."
-        : "Este valor será reservado para sua próxima compra após a confirmação da loja; ele não reduz o pedido atual.")
-      : "Resgate o sinal da missão para ativar 10% de cashback. O valor não reduz este pedido e fica reservado para a próxima compra.";
-    if (cashbackAtivo && cashbackAtivo.telefone) {
-      $("#campo-celular").value = cashbackAtivo.telefone.replace(/^55/, "");
-    }
     $("#contas").innerHTML =
       '<div><span>Subtotal</span><span>' + preco(sub) + '</span></div>' +
-      (cash ? '<div class="cashback-linha"><span>Cashback próximo pedido · 10%</span><span>+ ' + preco(cash) + '</span></div>' : "") +
       '<div class="total"><span>Total de hoje</span><span class="preco">' + (pendente ? "A confirmar" : preco(tot)) + '</span></div>' +
       (pendente ? '<p class="aviso">Há um combo com preço pendente. A loja confirmará o valor pelo WhatsApp.</p>' : '');
 
@@ -2473,47 +2345,8 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
     fecharAdicionais();
   }
 
-  /* ---------- 7. RESERVA DE CASHBACK ---------- */
-  function solicitarCashback() {
-    const aviso = $("#aviso-cashback");
-    if (!cashbackAtivo) {
-      aviso.textContent = "Primeiro ative o cashback no sinal da missão.";
-      aviso.className = "aviso erro";
-      return;
-    }
-    const telefone = telefoneWhatsApp($("#campo-celular").value);
-    if (!telefone) {
-      aviso.textContent = "Informe um WhatsApp válido com DDD.";
-      aviso.className = "aviso erro";
-      $("#campo-celular").focus();
-      return;
-    }
-    const sub = subtotal(), cash = valorCashback(sub);
-    cashbackAtivo.telefone = telefone;
-    cashbackAtivo.valorCentavos = cash;
-    cashbackAtivo.status = "solicitado";
-    cashbackAtivo.solicitadoEm = new Date().toISOString();
-    guardar.escrever(CHAVE_CASHBACK, cashbackAtivo);
-
-    const texto = [
-      CONFIG.saudacao,
-      "",
-      "Quero reservar meu cashback para a próxima compra.",
-      "Código de reserva: " + cashbackAtivo.id,
-      "Meu WhatsApp: +" + telefone,
-      "Pedido de referência: " + preco(sub),
-      "Cashback a reservar (10%): " + preco(cash),
-      "",
-      "Por favor, confirme esta reserva por aqui."
-    ].join("\n");
-    window.open("https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto), "_blank", "noopener");
-    $("#aviso-cashback").textContent = "Solicitação pronta no WhatsApp. Envie a mensagem para a loja confirmar seu cashback.";
-    $("#aviso-cashback").className = "aviso ok";
-    pintarCarrinho();
-  }
-
   /* ---------- 8. WHATSAPP ---------- */
-  function textoPedido(sub, tot) {
+  function textoPedido(sub, tot, desconto = 0) {
     const linhas = [CONFIG.saudacao, "", "Meu pedido:"];
     carrinho.forEach(function (it) {
       const p = acharProduto(it.id);
@@ -2543,7 +2376,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       if (extras.length) linhas.push("  Adicionais em cada unidade: " + extras.map(function (a) { return a.nome + " (" + preco(a.preco) + ")"; }).join(", "));
     });
     linhas.push("", "Subtotal: " + preco(sub));
-    if (cashbackAtivo) linhas.push("Cashback para a próxima compra (10%): " + preco(valorCashback(sub)), "Código de reserva: " + cashbackAtivo.id + " (aguarda confirmação)");
+    if (desconto > 0) linhas.push("Desconto solicitado (5%): -" + preco(desconto));
     linhas.push("Total: " + (temPrecoPendente() ? "valor a confirmar" : preco(tot)));
     return linhas.join("\n");
   }
@@ -2555,11 +2388,24 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
   /* ---------- 8B. IDENTIFICAÇÃO, ENTREGA E PAGAMENTO ---------- */
   let localizacaoCheckout = null;
 
+  function descontoCheckout(sub) {
+    return $("#checkout-desconto").checked ? Math.round(sub * 5 / 100) : 0;
+  }
+
+  function atualizarResumoCheckout() {
+    const sub = subtotal(), desconto = descontoCheckout(sub), tot = sub - desconto;
+    $("#checkout-resumo").innerHTML = '<div><span>Subtotal</span><span>' + preco(sub) + '</span></div>' +
+      (desconto ? '<div><span>Desconto de 5%</span><span>− ' + preco(desconto) + '</span></div>' : '') +
+      '<div class="checkout-total"><span>Total do pedido</span><span>' + preco(tot) + '</span></div>';
+  }
+
   function abrirCheckout() {
     if (!totalItens()) return toast("Seu pedido está vazio");
     focoFluxoAnterior = document.activeElement;
     fecharCarrinho();
     $("#modal-checkout").hidden = false;
+    $("#checkout-desconto").checked = false;
+    atualizarResumoCheckout();
     $("#loc-status").textContent = localizacaoCheckout ? "Localização atual anexada ao pedido." : "";
     $("#loc-status").className = localizacaoCheckout ? "loc-status ok" : "loc-status";
     atualizarBloqueioFluxo();
@@ -2625,6 +2471,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         items: pedidoParaPagamento(),
+        discountRequested: $("#checkout-desconto").checked,
         customer: {
           name: nome,
           whatsapp: whatsapp,
@@ -2650,6 +2497,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         items: pedidoParaPagamento(),
+        discountRequested: $("#checkout-desconto").checked,
         customer: { name:nome, whatsapp:whatsapp, address:endereco, location:localizacaoCheckout }
       })
     });
@@ -2682,8 +2530,8 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       if (window.CosmosAppOrders) window.CosmosAppOrders.remember(pedido);
       const tokenAcompanhamento = new URL(pedido.trackingUrl, location.href).searchParams.get("token");
       const linkAcompanhamentoApp = tokenAcompanhamento ? new URL("/acompanhar/?token=" + encodeURIComponent(tokenAcompanhamento), location.origin).href : pedido.trackingUrl;
-      const sub = subtotal();
-      const linhas = [textoPedido(sub, sub), "", "Dados do cliente:", "Nome: " + nome, "WhatsApp: " + whatsapp, "Endereço: " + endereco];
+      const sub = subtotal(), desconto = descontoCheckout(sub), tot = sub - desconto;
+      const linhas = [textoPedido(sub, tot, desconto), "", "Dados do cliente:", "Nome: " + nome, "WhatsApp: " + whatsapp, "Endereço: " + endereco];
       if (localizacaoCheckout) linhas.push("Localização: https://maps.google.com/?q=" + localizacaoCheckout.latitude.toFixed(6) + "," + localizacaoCheckout.longitude.toFixed(6));
       linhas.push("Pagamento: dinheiro na entrega", "Número do pedido: " + pedido.localId, "Acompanhe o preparo e a entrega: " + linkAcompanhamentoApp);
       const texto = linhas.join("\n");
@@ -2696,59 +2544,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       toast(erro && erro.message ? erro.message : "Não foi possível registrar o pedido.");
       definirEnvioCheckout(false);
     }
-  }
-
-  /* ---------- 9. MISSÃO COSMOS ---------- */
-  const CHAVE_MISSAO = "cosmos:missao";
-  function iniciarMissao() {
-    const estado = guardar.ler(CHAVE_MISSAO, null);
-    if (estado === "resgatado" || estado === "dispensado") return;
-
-    const gatilho = $(CONFIG.missaoGatilho);
-    if (!gatilho || !("IntersectionObserver" in window)) return;
-
-    const obs = new IntersectionObserver(function (ents) {
-      if (ents[0].isIntersecting) {
-        $("#missao-chamada").hidden = false;
-        requestAnimationFrame(() => $("#missao-chamada").classList.add("visivel"));
-        obs.disconnect();
-      }
-    }, { threshold: 0.25 });
-    obs.observe(gatilho);
-  }
-  function fecharChamada() {
-    $("#missao-chamada").classList.remove("visivel");
-    setTimeout(() => { $("#missao-chamada").hidden = true; }, 420);
-  }
-  function abrirMissao() {
-    fecharChamada();
-    const modal = $("#missao-modal"), corpo = $("#missao-conteudo");
-    modal.hidden = false; $("#veu").hidden = false;
-    requestAnimationFrame(function () { modal.classList.add("aberto"); $("#veu").classList.add("aberto"); });
-
-    corpo.innerHTML =
-      '<div class="radar"></div>' +
-      '<h2 id="t-missao">Interceptando</h2>' +
-      '<p>Decodificando transmissão…</p>';
-
-    setTimeout(revelarRecompensa, reduzido() || document.body.classList.contains("leve") ? 150 : 1500);
-  }
-  function revelarRecompensa() {
-    $("#missao-conteudo").innerHTML =
-      '<h2 id="t-missao">🛰️ Sinal interceptado</h2>' +
-      '<p>Você ganhou 10% de cashback para a próxima compra.</p>' +
-      '<span class="codigo">10% CASHBACK</span>' +
-      '<p>O valor será calculado sobre o pedido de hoje, mas não reduz o total atual. A loja confirma a reserva pelo WhatsApp.</p>' +
-      '<button class="btn btn-primario" id="ativar-cashback">Reservar meu cashback</button>' +
-      '<button class="depois" id="missao-depois">Depois</button>';
-    guardar.escrever(CHAVE_MISSAO, "resgatado");
-    const ativar = $("#ativar-cashback");
-    if (ativar) ativar.focus();
-  }
-  function fecharMissao() {
-    $("#missao-modal").classList.remove("aberto");
-    $("#veu").classList.remove("aberto");
-    setTimeout(function () { $("#missao-modal").hidden = true; $("#veu").hidden = true; }, 260);
   }
 
   /* ---------- PAINEL DO CARRINHO ---------- */
@@ -2985,17 +2780,15 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
 
     $("#abrir-carrinho").addEventListener("click", abrirCarrinho);
     $("#fechar-carrinho").addEventListener("click", fecharCarrinho);
-    $("#veu").addEventListener("click", function () { fecharCarrinho(); fecharMissao(); });
+    $("#veu").addEventListener("click", fecharCarrinho);
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { fecharFotoHamburguer(); fecharCarrinho(); fecharMissao(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
+      if (e.key === "Escape") { fecharFotoHamburguer(); fecharCarrinho(); fecharPlaneta(); fecharMenuMobile(); fecharConfigurador(); fecharProdutoConfig(); fecharAdicionais(); fecharCheckout(); }
       const combo = e.target.closest && e.target.closest("[data-combo-card]");
       if (combo && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
         combo.classList.toggle("aberto");
       }
     });
-
-    $("#reservar-cashback").addEventListener("click", solicitarCashback);
 
     $("#fechar-configurador").addEventListener("click", fecharConfigurador);
     $("#configurador-conteudo").addEventListener("change", function (ev) {
@@ -3041,6 +2834,7 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
       ev.preventDefault();
       enviarCheckout();
     });
+    $("#checkout-desconto").addEventListener("change", atualizarResumoCheckout);
 
     $("#copiar-pedido").addEventListener("click", function () {
       const texto = $("#enviar-pedido").dataset.texto || "";
@@ -3054,20 +2848,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
         return;
       }
       abrirCheckout();
-    });
-
-    $("#missao-abrir").addEventListener("click", abrirMissao);
-    $("#missao-dispensar").addEventListener("click", function () {
-      guardar.escrever(CHAVE_MISSAO, "dispensado");
-      fecharChamada();
-    });
-    $("#missao-modal").addEventListener("click", function (ev) {
-      if (ev.target.id === "ativar-cashback") {
-        ativarCashback();
-        fecharMissao();
-        if (totalItens() > 0) { abrirCarrinho(); } else { toast("Cashback ativado. Monte seu pedido."); }
-      }
-      if (ev.target.id === "missao-depois") fecharMissao();
     });
 
     // destaque do planeta conforme o card visível
@@ -3092,7 +2872,6 @@ body.correcao-v1.modal-foto-aberto{overflow:hidden}
   pintarCarrinho();
   revelar();
   abertura();
-  iniciarMissao();
   const alvoPrevia = new URLSearchParams(window.location.search).get("preview");
   if (alvoPrevia && alvoPrevia !== "1") {
     const secaoPrevia = document.getElementById(alvoPrevia);

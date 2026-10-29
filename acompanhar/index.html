@@ -21,6 +21,7 @@
         <h1 id="title">Acompanhe seu pedido</h1>
         <p class="intro">Esta página atualiza o andamento automaticamente.</p>
         <div class="meta"><span>Pedido <strong id="order-id">—</strong></span><span class="amount" id="amount">—</span></div>
+        <p class="payment" id="price-breakdown" hidden></p>
         <p class="state" id="state">—</p>
         <p class="payment" id="payment">—</p>
         <section class="section"><h2>Seu pedido</h2><ul class="items" id="items"></ul></section>
@@ -52,6 +53,7 @@
       function render(order){
         $("#loading").hidden=true;$("#content").hidden=false;$("#notice").textContent="Atualizado agora. Acompanhamento em tempo real com reconexão automática.";
         $("#order-id").textContent=order.localId;$("#amount").textContent=money(order.amount);$("#state").textContent=labels[order.fulfillmentStatus]||"Status em atualização";
+        if(Number(order.discount)>0){$("#price-breakdown").textContent="Subtotal "+money(order.subtotal)+" · desconto de 5% −"+money(order.discount);$("#price-breakdown").hidden=false}else{$("#price-breakdown").hidden=true}
         $("#payment").textContent="Pagamento: "+(order.paymentStatus==="approved"?"confirmado":order.paymentStatus==="cash_on_delivery"?"dinheiro na entrega":order.paymentStatus||"em processamento");
         const items=$("#items");items.replaceChildren();for(const line of order.lines||[]){const li=document.createElement("li");li.textContent=line.quantity+" × "+line.title;for(const detail of line.details||[]){const small=document.createElement("small");small.textContent="· "+detail;li.append(small)}items.append(li)}
         const history=$("#history");history.replaceChildren();for(const event of order.statusHistory||[]){const li=document.createElement("li"),dot=document.createElement("span"),wrap=document.createElement("span"),strong=document.createElement("strong"),time=document.createElement("time");dot.className="dot";strong.textContent=labels[event.status]||event.status;time.dateTime=event.at;time.textContent=new Date(event.at).toLocaleString("pt-BR");wrap.append(strong,time);li.append(dot,wrap);history.append(li)}

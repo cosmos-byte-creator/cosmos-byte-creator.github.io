@@ -34,7 +34,7 @@
         <h2 class="summary-title" id="summary-title">Resumo do pedido</h2>
         <ul class="lines" id="order-lines"><li class="line"><span>Carregando pedido…</span></li></ul>
       </section>
-      <div class="total"><span>Total a pagar</span><strong id="order-total">—</strong></div>
+      <p id="order-financial" class="muted"></p><div class="total"><span>Total a pagar</span><strong id="order-total">—</strong></div>
 
       <section class="methods" aria-labelledby="methods-title">
         <h2 class="method-heading" id="methods-title">Como você quer pagar?</h2>
@@ -89,6 +89,17 @@
             option.textContent = "· " + detail;
             option.style.cssText = "margin:-5px 0 2px 10px;color:#bdb2a9;font-size:.82rem;line-height:1.4";
             list.append(option);
+          }
+        }
+        const financial = $("#order-financial");
+        if (financial) {
+          const subtotal = Number(order.subtotal);
+          const discount = Number(order.discount) || 0;
+          financial.replaceChildren();
+          if (discount > 0 && Number.isFinite(subtotal)) {
+            const row = document.createElement("p");
+            row.textContent = "Subtotal: " + money(subtotal) + " · Desconto de 5%: −" + money(discount);
+            financial.append(row);
           }
         }
         $("#order-total").textContent = money(order.amount);
